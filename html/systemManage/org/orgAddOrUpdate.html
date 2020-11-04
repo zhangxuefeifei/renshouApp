@@ -1,0 +1,665 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>新增或修改组织机构页面</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/aui1.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/city/demo.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/city/ydui.css" />
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #FFF;
+        }
+
+        #wrap {
+            height: 100%;
+        }
+
+        .aui-bar-nav {
+            top: 0;
+            z-index: 3;
+            background-color: #fff;
+            color: #333333;
+            font-size: var(--fontsize9);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+        }
+
+        .aui-bar-nav .aui-btn .aui-iconfont {
+            color: #333333;
+            font-weight: 900;
+        }
+
+        .flex-con {
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .aui-list {
+            background-image: none;
+        }
+
+        .aui-list .aui-list-item-title {
+            font-size: var(--fontsize85);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #333333;
+        }
+
+        .aui-list .aui-list-item-text:first-child,
+        .aui-list .aui-list-item-text:last-child {
+            margin-bottom: 0;
+        }
+
+        .aui-list .aui-list-item-text {
+            font-size: var(--fontsize7);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+            margin-bottom: 0.65rem;
+        }
+
+        .aui-media-list .aui-list-item-inner {
+            padding: 0.75rem 0.75rem 0.75rem 0;
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+
+        .Title {
+            width: var(--width42);
+            display: inline-flex;
+            justify-content: flex-end;
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #333333;
+        }
+
+        .Text {
+            width: calc(100% - var(--width42) -0.2rem);
+            display: inline-flex;
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+            height: auto;
+        }
+
+        input::-webkit-input-placeholder,
+        textarea::-webkit-input-placeholder {
+            color: #999999;
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+        }
+
+        .contactLi {
+            padding-bottom: 0.75rem !important;
+            padding-left: 0.6rem !important;
+        }
+
+        .contactLi .aui-media-list .aui-list-item-inner {
+            padding-right: 0.6rem !important;
+        }
+
+        .contactCard {
+            width: calc(100% - 0.6rem);
+            height: auto;
+            background-color: #ffffff;
+            box-shadow: 0rem 0.2rem 0.68rem 0rem rgba(0, 0, 0, 0.2);
+            border: 1px solid #fff;
+            border-radius: 0.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .contactCard:last-child {
+            margin-bottom: 0
+        }
+
+        .aui-card-list {
+            height: 100%;
+            margin-bottom: 0;
+        }
+
+        .aui-card-list-content {
+            height: 100%;
+            padding: 1.2rem 0.8rem;
+        }
+
+        .cardRow {
+            height: auto;
+            display: -webkit-box;
+            margin-bottom: 1.2rem;
+            font-size: var(--fontsize65);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+        }
+
+        .cardRow:last-child {
+            margin-bottom: 0;
+        }
+
+        .aui-col-xs-6,
+        .aui-col-xs-12 {
+            display: flex;
+        }
+
+        .rowTitle {
+            width: var(--width2);
+            display: inline-flex;
+            justify-content: flex-end;
+            color: #333333;
+        }
+
+        .rowText {
+            width: calc(100% - var(--width2) - 0.7rem);
+        }
+
+        .rowTitle-12 {
+            width: var(--width34);
+            display: inline-flex;
+            justify-content: flex-end;
+            color: #333333;
+        }
+
+        .rowText-12 {
+            width: calc(100% - var(--width34) - 0.2rem);
+            display: inline-flex;
+        }
+
+        input {
+            height: inherit !important;
+            line-height: inherit !important;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999 !important;
+        }
+
+        .redDot {
+            color: #ff605f;
+        }
+
+        .dot {
+            color: transparent;
+        }
+
+        .aui-iconfont.aui-icon-right {
+            position: absolute;
+            right: 0.75rem;
+            font-size: var(--fontsize9);
+            color: #999999;
+            font-weight: 900;
+            pointer-events: none;
+        }
+
+        .aui-iconfont.aui-icon-close {
+            position: absolute;
+            right: 0.75rem;
+            font-size: var(--fontsize9);
+            color: #999999;
+            font-weight: 900;
+        }
+
+        .selectAreaText {
+            width: calc(100% - 0.9rem) !important;
+        }
+
+        .aui-list textarea {
+            margin: 0;
+            height: auto;
+            color: #999999;
+            font-size: var(--fontsize8) !important;
+            font-weight: normal;
+            letter-spacing: 0rem;
+            line-height: inherit;
+        }
+
+        #footer {
+            background-color: #f0f0f0;
+            padding: 0.63rem 1.88rem;
+        }
+
+        .sureOrgBtn {
+            background: #4f79e8;
+            color: #fff;
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0.08rem;
+            height: 2.2rem;
+            line-height: inherit;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrap" class="flex-wrap flex-vertical">
+        <header class="aui-bar aui-bar-nav aui-border-b" id="header">
+            <div class="aui-pull-left aui-btn" tapmode data-action="back">
+                <span class="aui-iconfont aui-icon-left"></span>
+            </div>
+            <div class="aui-title" id="headerTitle">新增组织机构</div>
+        </header>
+
+        <div class="flex-con">
+            <!-- <div class="aui-content">
+                <ul class="aui-list aui-media-list">
+                    <li class="aui-list-item aui-list-item-middle">
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-inner">
+                                <span class="redDot">*</span>
+                                <span class="Title">机构性质：</span>
+                                <span class="Text" id="nature" tapmode data-action="openNatureSelect">请选择机构性质</span>
+                                <span class="aui-iconfont aui-icon-right"></span>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="aui-list-item aui-list-item-middle">
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-inner">
+                                <span class="redDot">*</span>
+                                <span class="Title">上级：</span>
+                                <span class="Text" id="parent" tapmode data-action="selectParent">请选择上级</span>
+                                <span class="aui-iconfont aui-icon-right" tapmode data-action="selectParent"></span>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="aui-list-item aui-list-item-middle">
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-inner">
+                                <span class="redDot">*</span>
+                                <span class="Title">名称：</span>
+                                <span class="Text"><textarea   id="orgName" placeholder="请输入名称" rows="1"></textarea></span>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="aui-list-item aui-list-item-middle">
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-inner">
+                                <span class="redDot">*</span>
+                                <span class="Title">编号：</span>
+                                <span class="Text"><textarea   id="orgCode" placeholder="请输入编号" rows="1"></textarea></span>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="aui-list-item aui-list-item-middle">
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-inner">
+                                <span class="dot">*</span>
+                                <span class="Title">简称：</span>
+                                <span class="Text"><textarea   id="simpleName" placeholder="请输入简称" rows="1"></textarea></span>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="aui-list-item aui-list-item-middle">
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-inner">
+                                <span class="dot">*</span>
+                                <span class="Title">邮编：</span>
+                                <span class="Text"><input style="-webkit-user-select:auto;" contenteditable="true" type="tel" id="zipCode" placeholder="请输入邮编" maxlength="6"/></span>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="aui-list-item aui-list-item-middle">
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-inner">
+                                <span class="dot">*</span>
+                                <span class="Title">区域：</span>
+                                <span class="Text"><span class="selectAreaText" id="area">请选择区域</span></span>
+                                <span class="aui-iconfont aui-icon-right" id="selectArea"></span>
+                                <span class="aui-iconfont aui-icon-close" id="clearArea" style="display:none" tapmode></span>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="aui-list-item aui-list-item-middle">
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-inner">
+                                <span class="dot">*</span>
+                                <span class="Title">地址：</span>
+                                <span class="Text"><textarea   id="address" placeholder="请输入地址" rows="1"></textarea></span>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="aui-list-item aui-list-item-middle">
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-inner">
+                                <span class="dot">*</span>
+                                <span class="Title">备注：</span>
+                                <span class="Text"><textarea   id="remark" placeholder="请输入备注" rows="1"></textarea></span>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="aui-list-item aui-list-item-middle">
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-inner">
+                                <span class="redDot">*</span>
+                                <span class="Title">排序：</span>
+                                <span class="Text"><input type="tel" id="sort" placeholder="请输入排序" /></span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div> -->
+        </div>
+
+        <div id="footer">
+            <div class="aui-btn sureOrgBtn" tapmode data-action="sure">
+                确定
+            </div>
+        </div>
+
+    </div>
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/diy/public.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/city/jquery.min.js"></script>
+<script type="text/javascript" src="../../../script/diy/template.js"></script>
+<script type="text/javascript" src="../../../script/city/ydui.citys.js"></script>
+<script type="text/javascript" src="../../../script/city/ydui.js"></script>
+<script type="text/template" id="">
+</script>
+<script type="text/javascript">
+    var orgId;
+    apiready = function() {
+        api.addEventListener({
+            name: 'changedFontSize'
+        }, function(ret, err) {
+            if (ret) {
+                changeFontSize();
+            }
+        });
+        api.parseTapmode();
+        var header = $api.byId('header');
+        // 实现沉浸式状态栏效果
+        $api.fixStatusBar(header);
+        headerH = $api.offset(header).h;
+        type = api.pageParam.type; //判断是新增还是修改
+        natureData = api.pageParam.natureData; //获取机构性质数据，根据性质value查找对应名称来显示修改的默认机构性质
+        allOrgs = api.pageParam.allOrgs; //获取组织机构数据，根据机构Id查找对应名称来显示修改的默认上级
+        if (type == 'add') {
+
+        } else {
+            $('#headerTitle').html('修改组织机构');
+        }
+
+        //打开内容的frame，避免安卓端键盘弹出时win页面上不能上移
+        api.openFrame({
+            name: 'orgAddOrUpdate_frm',
+            url: './orgAddOrUpdate_frm.html',
+            rect: {
+                x: 0,
+                y: headerH,
+                w: api.winWidth,
+                h: 'auto',
+                marginLeft: 0,
+                marginTop: 0,
+                marginBottom: $api.dom('#footer').offsetHeight,
+                marginRight: 0
+            },
+            pageParam: {
+                id: api.pageParam.id,
+                type: api.pageParam.type,
+                natureData: natureData,
+                allOrgs: allOrgs
+            },
+            bounces: false,
+            bgColor: 'rgba(0,0,0,0)',
+            vScrollBarEnabled: true,
+            hScrollBarEnabled: true
+        });
+
+        //监听frame页面返回的数据
+        api.addEventListener({
+            name: 'clickedSureBtn'
+        }, function(ret, err) {
+            if (ret) {
+                var UpdateContactArray = ret.value.UpdateContactArray;
+                var AddContactArray = ret.value.AddContactArray;
+                var OrgDataForUpdate = ret.value.OrgDataForUpdate;
+                var OrgDataForAdd = ret.value.OrgDataForAdd;
+                if (type == 'add') {
+                    if (OrgDataForAdd.nature === null) {
+                        api.toast({
+                            msg: '请先选择机构性质！',
+                            duration: 2000,
+                            location: 'top'
+                        });
+                        return
+                    }
+                    if (OrgDataForAdd.parentId === null) {
+                        api.toast({
+                            msg: '请先选择上级！',
+                            duration: 2000,
+                            location: 'top'
+                        });
+                        return
+                    }
+                    if (OrgDataForAdd.orgName === "") {
+                        api.toast({
+                            msg: '请先输入名称！',
+                            duration: 2000,
+                            location: 'top'
+                        });
+                        return
+                    }
+                    if (OrgDataForAdd.orgCode === "") {
+                        api.toast({
+                            msg: '请先输入编号！',
+                            duration: 2000,
+                            location: 'top'
+                        });
+                        return
+                    }
+                    if (OrgDataForAdd.sort === "") {
+                        api.toast({
+                            msg: '请先输入排序！',
+                            duration: 2000,
+                            location: 'top'
+                        });
+                        return
+                    }
+                } else {
+                    if (OrgDataForUpdate.nature === null) {
+                        api.toast({
+                            msg: '请先选择机构性质！',
+                            duration: 2000,
+                            location: 'top'
+                        });
+                        return
+                    }
+                    if (OrgDataForUpdate.parentId === null) {
+                        api.toast({
+                            msg: '请先选择上级！',
+                            duration: 2000,
+                            location: 'top'
+                        });
+                        return
+                    }
+                    if (OrgDataForUpdate.orgName === "") {
+                        api.toast({
+                            msg: '请先输入名称！',
+                            duration: 2000,
+                            location: 'top'
+                        });
+                        return
+                    }
+                    if (OrgDataForUpdate.orgCode === "") {
+                        api.toast({
+                            msg: '请先输入编号！',
+                            duration: 2000,
+                            location: 'top'
+                        });
+                        return
+                    }
+                    if (OrgDataForUpdate.sort === "") {
+                        api.toast({
+                            msg: '请先输入排序！',
+                            duration: 2000,
+                            location: 'top'
+                        });
+                        return
+                    }
+                }
+                if (UpdateContactArray.length > 0) {
+                    fnPost('services/app/Contact/UpdateBatchContact', { //批量修改联系人信息
+                        body: JSON.stringify(UpdateContactArray)
+                    }, 'application/json', true, true, function(ret, err) {
+
+                    });
+                }
+                if (AddContactArray.length > 0) {
+                    fnPost('services/app/Contact/InsertBatchContact', { //批量新增联系人信息，返回的联系人id添加到组织机构的联系人id数组里
+                        body: JSON.stringify(AddContactArray)
+                    }, 'application/json', true, false, function(ret, err) {
+                        if (ret) {
+                            if (ret.success) {
+                                for (var i = 0; i < ret.result.length; i++) {
+                                    if (type == 'add') {
+                                        OrgDataForAdd.orgagencyContactIds.push(ret.result[i]);
+                                    } else {
+                                        OrgDataForUpdate.orgagencyContactIds.push(ret.result[i]);
+                                    }
+                                };
+                                if (type == 'add') {
+                                    fnPost('services/app/Orgagency/InsertOrgagency', { //新增组织机构
+                                        body: JSON.stringify(OrgDataForAdd)
+                                    }, 'application/json', true, false, function(ret, err) {
+                                        if (ret) {
+                                            if (ret.success) {
+                                                api.toast({
+                                                    msg: '新增成功！',
+                                                    duration: 2000,
+                                                    location: 'top'
+                                                });
+                                                setTimeout(function() {
+                                                    api.closeWin({});
+                                                    api.sendEvent({
+                                                        name: 'refreshOrgList',
+                                                        extra: {}
+                                                    });
+                                                }, 300);
+                                            }
+                                        }
+                                    })
+                                } else {
+                                    fnPost('services/app/Orgagency/UpdateOrgagency', { //修改组织机构
+                                        body: JSON.stringify(OrgDataForUpdate)
+                                    }, 'application/json', true, true, function(ret, err) {
+                                        if (ret) {
+                                            if (ret.success) {
+                                                api.toast({
+                                                    msg: '修改成功！',
+                                                    duration: 2000,
+                                                    location: 'top'
+                                                });
+                                                setTimeout(function() {
+                                                    api.closeWin({});
+                                                    api.sendEvent({
+                                                        name: 'refreshOrgList',
+                                                        extra: {}
+                                                    });
+                                                }, 300);
+                                            }
+                                        }
+                                    })
+                                }
+                            }
+                        }
+                    })
+                } else {
+                    if (type == 'add') {
+                        fnPost('services/app/Orgagency/InsertOrgagency', {
+                            body: JSON.stringify(OrgDataForAdd)
+                        }, 'application/json', true, false, function(ret, err) {
+                            if (ret) {
+                                if (ret.success) {
+                                    api.toast({
+                                        msg: '新增成功！',
+                                        duration: 2000,
+                                        location: 'top'
+                                    });
+                                    setTimeout(function() {
+                                        api.closeWin({});
+                                        api.sendEvent({
+                                            name: 'refreshOrgList',
+                                            extra: {}
+                                        });
+                                    }, 300);
+                                }
+                            }
+                        })
+                    } else {
+                        fnPost('services/app/Orgagency/UpdateOrgagency', {
+                            body: JSON.stringify(OrgDataForUpdate)
+                        }, 'application/json', true, true, function(ret, err) {
+                            if (ret) {
+                                if (ret.success) {
+                                    api.toast({
+                                        msg: '修改成功！',
+                                        duration: 2000,
+                                        location: 'top'
+                                    });
+                                    setTimeout(function() {
+                                        api.closeWin({});
+                                        api.sendEvent({
+                                            name: 'refreshOrgList',
+                                            extra: {}
+                                        });
+                                    }, 300);
+                                }
+                            }
+                        })
+                    }
+                }
+            }
+        });
+    };
+
+    var actionList = {
+        'back': function() {
+            api.closeWin();
+        },
+        'sure': function() {
+            api.sendEvent({
+                name: 'clickSureBtn',
+                extra: {}
+            });
+        }
+    }
+</script>
+
+</html>

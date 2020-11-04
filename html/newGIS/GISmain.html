@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>GIS主页</title>
+    <link rel="stylesheet" href="../../css/api.css">
+    <link rel="stylesheet" href="../../css/aui.css">
+    <link rel="stylesheet" href="./css/dialogAlert.css">
+    <link rel="stylesheet" href="./css/ol.css">
+    <link rel="stylesheet" href="./css/GISmain.css">
+    <link rel="stylesheet" href="./css/pointpipeinfo.css">
+    <style rel="stylesheet">
+
+    </style>
+
+</head>
+
+<body class="flex-box" id='flex-box'>
+    <header class="aui-bar aui-bar-nav" id='header'>
+        <div class="aui-pull-left aui-btn" onclick="closeWin()" tapmode>
+            <span class="aui-iconfont aui-icon-left"></span>
+        </div>
+        <div class="aui-title">管网GIS系统</div>
+    </header>
+    <!-- 搜索框 -->
+    <div class="search_box" id="search">
+        <div class="search_input" tapmode onclick="openSearchFrame()">
+            <i class="aui-iconfont aui-icon-search"></i>
+            <input type="text" placeholder="请输入搜索内容" id="search-input" readonly>
+        </div>
+        <div class="menu_close_box" tapmode onclick="openMainMenu(true)">
+            <div class="menu_close"></div>
+        </div>
+        <div class="main_menu">
+            <div class="aui-row">
+                <div class="aui-col-xs-3 aui-text-center" tapmode onclick="showMoreMenu(this,'location')">
+                    <div class="aui-col-xs-6 menu_location"></div>
+                    <div class="aui-col-xs-6" style="text-align:center;">定位</div>
+                </div>
+                <div class="aui-col-xs-3 aui-text-center"tapmode onclick="ClearAllActions()">
+                    <div class="aui-col-xs-6 menu_clear"></div>
+                    <div class="aui-col-xs-6" style="text-align:center;">清屏</div>
+                </div>
+                <div class="aui-col-xs-3 aui-text-center" tapmode onclick="resetMap()">
+                    <div class="aui-col-xs-6 menu_reset"></div>
+                    <div class="aui-col-xs-6" style="text-align:center;">复位</div>
+                </div>
+                <div class="aui-col-xs-3 aui-text-center" tapmode onclick="openLayerMenu(true)">
+                    <div class="aui-col-xs-6 menu_layer"></div>
+                    <div class="aui-col-xs-6" style="text-align:center;">图层</div>
+                </div>
+            </div>
+            <div class="menu_open_box" tapmode onclick="openMainMenu(false)">
+                <div class="menu_open"></div>
+            </div>
+
+        </div>
+    </div>
+    <!--  地图 -->
+    <div class="map" id="map">
+      <!-- 鹰眼 -->
+        <div id="overview" style="display:none;position: absolute;bottom:175px;left: 0px;z-index: 200;width: 196px;height:196px;background-color: #fff;border: 1px solid #7b98bc;border-radius: 3px;" ></div>
+    </div>
+    <!-- 右边菜单 -->
+    <div class="rightMenu">
+        <ul>
+            <li tapmode onclick="mapFast('pre')">
+            </li>
+            <li tapmode onclick="mapFast('next')">
+            </li>
+            <li tapmode onclick="mapFast('big')">
+            </li>
+            <li tapmode onclick="mapFast('small')">
+            </li>
+            <!-- <li tapmode onclick="mapFast('smallmap')"></li> -->
+        </ul>
+    </div>
+
+    <!-- 选择图层菜单 -->
+    <!-- 选择层遮罩层 -->
+    <div class="layer_box_mask" tapmode onclick="openLayerMenu(false)"></div>
+    <div class="layer_box" id='layer_box'>
+        <div class="aui-row aui-row-border">
+            <div class="aui-col-xs-12">
+                <span class='layer_title'>底图选择</span>
+            </div>
+            <div class="aui-col-xs-6" tapmode onclick='layerActive(this,"2D")'>
+                <div class="aui-col-xs-12 aui-text-center">
+                    <div class="layerimg layer_2D_img layer_moon_img_border"></div>
+                    <div class="layer_checked" id='layerchecked'></div>
+                </div>
+                <div class="aui-col-xs-12 aui-text-center">
+                    <span class="small_title">2D平面图</span>
+                </div>
+            </div>
+            <div class="aui-col-xs-6" tapmode onclick='layerActive(this,"moon")'>
+                <div class="aui-col-xs-12 aui-text-center">
+                    <div class="layerimg layer_moon_img"></div>
+                    <div class="layer_checked" id='moonchecked'></div>
+                </div>
+                <div class="aui-col-xs-12 aui-text-center">
+                    <span class="small_title">卫星图</span>
+                </div>
+
+            </div>
+        </div>
+        <div class="aui-row aui-row-border">
+            <div class="aui-col-xs-12">
+                <span class='layer_title'>图层选择</span>
+            </div>
+            <div class="aui-row aui-margin-b-15">
+                <div class="aui-col-xs-6 aui-text-center aui-padded-l-10">
+                    <span class="small_title aui-margin-r-10">管点</span>
+                    <div class="aui-switch" name='管点' tapmode onclick="closeOrOpenLayer(this)" id="pointswitch"></div>
+                </div>
+                <div class="aui-col-xs-6 aui-text-center">
+                    <span class="small_title aui-margin-r-10">管线</span>
+                    <div class="aui-switch" name='管线' tapmode onclick="closeOrOpenLayer(this)" id="lineswitch"></div>
+                </div>
+            </div>
+        </div>
+        <div class="aui-row aui-row-border">
+            <div class="aui-col-xs-12">
+                <span class='layer_title'>专题图选择</span>
+                <span class="aui-pull-right themtice_more aui-margin-r-10" tapmode onclick="moreThematicMap()">更多</span>
+            </div>
+            <div class="aui-row aui-margin-b-15" tapmode onclick="thematicMapWin('guanjing','管径','line')">
+                <div class="aui-col-xs-2">
+                    <div class="title_icon"></div>
+                </div>
+                <div class="aui-col-xs-6 aui-text-left aui-padded-l-10"><span class="small_title1">管径专题</span></div>
+                <div class="aui-col-xs-4 aui-text-right aui-padded-r-10">
+                    <span class="aui-iconfont aui-icon-right"></span>
+                </div>
+            </div>
+            <div class="aui-row aui-margin-b-15" tapmode onclick="thematicMapWin('guancai','管材','line')">
+                <div class="aui-col-xs-2">
+                    <div class="title_icon"></div>
+                </div>
+                <div class="aui-col-xs-6 aui-text-left aui-padded-l-10"> <span class="small_title1">管材专题</span></div>
+                <div class="aui-col-xs-4 aui-text-right aui-padded-r-10">
+                    <span class="aui-iconfont aui-icon-right"></span>
+                </div>
+            </div>
+            <div class="aui-row aui-margin-b-15" tapmode onclick="thematicMapWin('guanwang','管网类别','line')">
+                <div class="aui-col-xs-2">
+                    <div class="title_icon"></div>
+                </div>
+                <div class="aui-col-xs-6 aui-text-left aui-padded-l-10"><span class="small_title1">管网类别专题</span></div>
+                <div class="aui-col-xs-4 aui-text-right aui-padded-r-10">
+                    <span class="aui-iconfont aui-icon-right"></span>
+                </div>
+            </div>
+            <div class="aui-row" tapmode onclick="thematicMapWin('xiaofangshuan','消防栓','point','xiaofangshuan')">
+                <div class="aui-col-xs-2">
+                    <div class="title_icon"></div>
+                </div>
+                <div class="aui-col-xs-6 aui-text-left aui-padded-l-10"><span class="small_title1">消防栓专题</span></div>
+                <div class="aui-col-xs-4 aui-text-right aui-padded-r-10">
+                    <span class="aui-iconfont aui-icon-right"></span>
+                </div>
+            </div>
+        </div>
+        <div class="aui-row">
+            <div class="aui-col-xs-12">
+                <span class='layer_title'>收藏</span>
+            </div>
+            <div class="aui-row aui-margin-b-15">
+                <div class="aui-col-xs-6 aui-text-center aui-padded-l-10">
+                    <span class="small_title aui-margin-r-10">管点</span>
+                    <div  class="aui-switch" name='已收藏管点' tapmode onclick="closeOrOpenLayer(this)"></div>
+                </div>
+                <div class="aui-col-xs-6 aui-text-center">
+                    <span class="small_title aui-margin-r-10">管线</span>
+                    <div  class="aui-switch" name='已收藏管线' tapmode onclick="closeOrOpenLayer(this)"></div>
+                </div>
+            </div>
+
+        </div>
+        <div class="aui-row">
+            <div class="aui-col-xs-12">
+                <span class='layer_title'>其他</span>
+            </div>
+            <div class="aui-row aui-margin-b-15">
+                <div class="aui-col-xs-6 aui-text-center aui-padded-l-10">
+                    <span class="small_title aui-margin-r-10">标注</span>
+                    <div class="aui-switch" name='标注' tapmode onclick="closeOrOpenLayer(this)"></div>
+                </div>
+                <div class="aui-col-xs-6 aui-text-center">
+                    <span class="small_title aui-margin-r-10">鹰眼</span>
+                    <div  class="aui-switch" name='鹰眼' tapmode onclick="closeOrOpenLayer(this)"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- 选择图层菜单结束 -->
+
+    <!-- 定位更多菜单 -->
+    <div class="location_more_box">
+        <div tapmode onclick="myLocation()">我的位置</div>
+        <div tapmode onclick='loacionFrm()'>坐标定位</div>
+    </div>
+
+    <!-- 新增管线更多菜单  addPointClick方法在-addordeletelayer.js -->
+    <div class="new_add_pipe_box">
+        <div class='aui-margin-b-10' tapmode onclick="addPointClick()">生成管线</div>
+        <div tapmode onclick='addNewPipeDraw()'>地图画线</div>
+    </div>
+    <!-- 新增管点更多菜单 -->
+    <div class="new_add_point_box">
+        <div class='aui-margin-b-10' tapmode onclick="newAddPoint('map')">地图点击</div>
+        <div tapmode onclick="newAddPoint('custom')">输入坐标</div>
+    </div>
+
+    <!-- 底部菜单  -->
+    <div class="footer_menu ">
+        <div class="menu_show aui-pull-left" tapmode onclick="showFooterMenu(this,'show')">
+        </div>
+        <div class="menu_content aui-pull-left " id='footer_menu_content'>
+            <div class="menu_content_left aui-pull-left">
+                <ul class='footer_main_menu aui-pull-left'>
+                    <div class="main" id='footer_main_menu'>
+                        <li tapmode onclick="showChild(this,'tagging')">地图标注</li>
+                        <li tapmode onclick="showChild(this,'meter')">地图测量</li>
+                        <li tapmode onclick="showChild(this,'addnewdata')">新增管网</li>
+                        <li tapmode onclick="editorialManagement(this)">编辑管理</li>
+                        <li tapmode onclick="showMonitoring(this)">监控分布</li>
+                    </div>
+                    <div class="main_tagging">
+                        <li tapmode onclick="openMapMarkWin(this)">列表</li>
+                        <li tapmode onclick="addOrDeleteMapMark(this,'add')">添加</li>
+                        <li tapmode name ='labelDetele' onclick="addOrDeleteMapMark(this,'delete')">删除</li>
+                        <li tapmode name ='label' onclick="showChild(this,'goback')">返回</li>
+
+                    </div>
+                    <div class="main_meter">
+                        <li tapmode onclick="getMeasure(this,'length')">长度</li>
+                        <li tapmode tapmode onclick="getMeasure(this,'area')">面积</li>
+                        <li tapmode tapmode onclick="calculateAngle(this)">角度</li>
+                        <li tapmode tapmode onclick="calculateElement(this)">高程</li>
+                        <li tapmode  onclick="showChild(this,'goback')">返回</li>
+                    </div>
+                    <div class="main_addnewdata">
+                        <li tapmode onclick="showMoreMenu(this,'addpoint')" id='addpoint'>管点</li>
+                        <li tapmode onclick="showMoreMenu(this,'addpipe')" id='addpipe'>管线</li>
+                        <li tapmode name ='line' onclick="showChild(this,'goback')">返回</li>
+                    </div>
+                </ul>
+            </div>
+            <div class="menu_content_right aui-pull-left">
+                <div class="menu_hide aui-pull-right" id='footer_menu_hide' tapmode onclick="showFooterMenu(this,'hide')">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 管点。管线信息框 -->
+    <div class="point_pipe_mask" tapmode onclick="hidePointOrPipeInfo()">
+    </div>
+    <div class="point_pipe_box">
+
+    </div>
+    <!-- 长度，距离的显示信息 -->
+
+    <div id="lengthArea" class="lengthArea">
+      <div class="icon aui-pull-left"></div><div class="length_content aui-pull-left" id='length_content'></div>
+    </div>
+    <!--管点，管线 搜周边或者导航 -->
+    <div class="point_point_overlay" id='pointOrPipeNav'>
+        <div class="aui-margin-r-10" id='searchAound' tapmode onclick="searchAound(this,'noNewAdd')">搜周边</div>
+        <div id='goNav' tapmode onclick="goNavHere(this)">到这去</div>
+    </div>
+    <!--管点，管线 搜周边或者导航 -->
+    <div class="point_point_overlay" id='longpresspointOrPipeNav'>
+        <div class="aui-margin-r-10" id='longPressAddPoint' tapmode onclick="longPressAddPoint(this)">新增</div>
+        <div class="aui-margin-r-10" id='longPresssearchAound' tapmode onclick="searchAound(this,'noNewAdd')">搜周边</div>
+        <div id='longPressgoNav' tapmode onclick="goNavHere(this)">到这去</div>
+    </div>
+    <!-- 提交审核后的提示 -->
+    <div class="toast_box">
+        <span>已提交后台审核</span>
+    </div>
+    <!-- label信息 -->
+    <div class="label_box">
+      <span></span>
+    </div>
+</body>
+
+
+
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/remote.js"></script>
+<script type="text/javascript" src="../../script/zepto.js"></script>
+<script type="text/javascript" src="../../script/aui-popup.js"></script>
+<script type="text/javascript" src="../../script/template.js"></script>
+<script type="text/javascript" src="./script/common.js"></script>
+<script type="text/javascript" src="./script/ol-debug.js"></script>
+<script type="text/javascript" src="./script/base64.js"></script>
+
+<script type="text/javascript" src="./script/coordtransform.js"></script>
+<!-- 初始化地图 -->
+<script type="text/javascript" src="./script/initmap.js"></script>
+<!-- 添加图层js,管点管线等操作  -->
+<script type="text/javascript" src="./script/addordeletelayer.js"></script>
+<!-- 收藏的管点管线信息js,GISmain中需要调用 -->
+<script type="text/javascript" src="./script/searchQueryInfomation.js"></script>
+<!-- 地图主页js -->
+<script type="text/javascript" src="./script/GISmain.js"></script>
+<!--地图测量 js -->
+<script type="text/javascript" src="./script/mapsurvey.js"></script>
+<!-- 管点信息模板 bookmarkPointOrPipeLine()方法在common.js中，因为多个地方用到-->
+<!-- 清屏 -->
+<script type="text/javascript" src="./script/clearAllActions.js"></script>
+
+<script type="text/template" id='pointInfoDemo'>
+    <div class="btns">
+        <div class='infoDetails' tapmode onclick='DetailsPointOrPipeLine(this,"Point","{{pointnumbe}}")'></div>
+        <div class='infoDelete' tapmode onclick='deletePointOrPipeLine(this,"Point","{{pointnumbe}}")'></div>
+        <div class='infoEdite' tapmode  onclick='editPointOrPipeLine(this,"Point","{{pointnumbe}}")'></div>
+        {{ if bookmork}}
+        <div class='hasbookmark' id='pointbookmarkImage' tapmode number = '{{pointnumbe}}' name ="{{pointtype}}" location = "{{location}}"  onclick='bookmarkPointOrPipeLine(this,"Point")'></div>
+        {{else}}
+        <div class='no_bookmark' id='pointbookmarkImage' tapmode number = '{{pointnumbe}}' name ="{{pointtype}}" location = "{{location}}"  onclick='bookmarkPointOrPipeLine(this,"Point")'></div>
+        {{/if}}
+    </div>
+    <div class="aui-row m_t_1rem">
+        <div class="aui-col-xs-12 aui-text-left">管点编号: <span>{{pointnumbe}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"> <span class='dot'></span> 经度: <span>{{lon}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>纬度: <span>{{lat}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>设备类型: <span>{{pointtype}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>高程: <span>{{elevation}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>埋深: <span>{{deep}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>埋设日期: <span>{{buildtime}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>型号: <span>{{unittype}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-12 aui-text-left"><span class='dot'></span>所属道路: <span>{{location}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-12 aui-text-left"><span class='dot'></span>材料厂商: <span>{{firm}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-12 aui-text-left"><span class='dot'></span>所属单位: <span>{{buildunit}}</span></div>
+    </div>
+</script>
+<!-- 管线信息模板 -->
+<script type="text/template" id='pipeInfoDemo'>
+    <div class="btns">
+      <div class='infoDetails' tapmode onclick='DetailsPointOrPipeLine(this,"Line","{{pointnumbe}}")'></div>
+      <div class='infoDelete' tapmode  onclick='deletePointOrPipeLine(this,"Line","{{linenumber}}")'></div>
+      <div class='infoEdite' tapmode  onclick='editPointOrPipeLine(this,"Line","{{linenumber}}")'></div>
+        {{ if bookmork}}
+      <div class='hasbookmark' id='linebookmarkImage' tapmode number = '{{linenumber}}' name ="{{materename}}"location = "{{location}}"  onclick='bookmarkPointOrPipeLine(this,"Line")'></div>
+      {{else}}
+      <div class='no_bookmark' id='linebookmarkImage' tapmode number = '{{linenumber}}' name ="{{materename}}" location = "{{location}}"  onclick='bookmarkPointOrPipeLine(this,"Line")'></div>
+      {{/if}}
+    </div>
+    <div class="aui-row m_t_1rem">
+        <div class="aui-col-xs-12 aui-text-left">管线编号: <span>{{linenumber}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>起始编号: <span>{{fromnumber}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>终端编号: <span>{{tonumber}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>起始高程: <span>{{fromelevat}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>终端高程: <span>{{toelevat}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>起始埋深: <span>{{fromdeep}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>终端埋深: <span>{{todeep}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>管线管长: <span>{{length}}&nbsp;&nbsp;米</span></div>
+        {{if stateClass == 1}}
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>状态类别: <span>现有</span></div>
+        {{else if stateClass == 2}}
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>状态类别: <span>废弃</span></div>
+        {{else if stateClass == 3}}
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>状态类别: <span>在建</span></div>
+        {{else}}
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>状态类别: <span>规划</span></div>
+       {{/if}}
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>埋设日期: <span>{{buildtime}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>管线管径: <span>{{unittype}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>管线管材: <span>{{materename}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>埋设类型: <span>{{BuriedType}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>所属单位: <span>{{buildunit}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>所属道路: <span>{{location}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-12 aui-text-left"><span class='dot'></span>材料厂商: <span>{{firm}}</span></div>
+    </div>
+</script>
+<!-- 角度测量模板 -->
+<script type="text/template" id='AngleInfoDemo'>
+  <div class="btns">
+    <div class='infoDelete' tapmode  onclick='closewindow()'></div>
+  </div>
+  <div class="aui-row">
+      <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>参照点经度: <span id="cankaodianx">{{x}}</span></div>
+      <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>参照点纬度: <span id="cankaodiany">{{y}}</span></div>
+  </div>
+  <div class="aui-row">
+      <span class='dot' style="margin-left:35px;"></span>距离(米):
+      <span><input type="number" placeholder="" id="distence" style="height:23px;"></span>
+  </div>
+  <div class="aui-row">
+    <span class='dot' style="margin-left:35px;"></span>角度(度):
+    <span><input type="number" id="jiaodu" placeholder="" style="height:23px;"></span>
+  </div>
+
+  <div class="aui-row" style="color:#00BFFF;text-align:center;">
+    （备注：以当前定位点为基准，与目标定位点的水平夹角角度）
+  </div>
+  <div class="aui-row">
+      <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>定位点经度: <span id="calculatex">{{}}</span></div>
+      <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>定位点纬度: <span id="calculatey">{{}}</span></div>
+  </div>
+  <div class="aui-row">
+    <div class="aui-list-item-inner aui-list-item-center aui-list-item-btn" style="text-align:center;">
+        <div class="aui-btn aui-btn-info aui-margin-r-5" onclick="calculate()">计算</div>
+        <div class="aui-btn aui-btn-danger aui-margin-l-5" onclick="reset()">重置</div>
+    </div>
+  </div>
+</script>
+<!-- 高程测量模板 -->
+<script type="text/template" id='ElementInfoDemo'>
+  <div class="btns">
+    <div class='infoDelete' tapmode  onclick='closewindow()'></div>
+  </div>
+  <div class="aui-row">
+      <div class="aui-col-xs-12 aui-text-left"><span class='dot'></span>高程值: <span id="cankaodianx">{{element}}</span></div>
+  </div>
+</script>
+
+
+<script type="text/javascript">
+    apiready = function() {
+        api.setWinAttr({
+            bounces: false
+        });
+        // 初始化，包括沉浸式等
+        initWindow();
+        // 获取地图的配置
+        // getAppMapSet();
+        // 延迟300
+        loadDelayTHMS(function(){
+          getAppMapSet();
+          // 初始化地图
+          initMap();
+          // 默认显示的图层
+          defaultShowLayers();
+          // 底部菜单单击样式初始化
+          footerLiActive();
+          mapLongPress();
+          // 最开始的地图中心坐标
+          initialPposition();
+        });
+
+        // 面积搜索
+        api.addEventListener({
+            name: 'areasearch'
+           }, function(ret, err) {
+            if (ret) {
+                api.toast({
+                    msg: '请绘制搜索范围',
+                    duration: 1500,
+                    location: 'middle'
+                });
+                addOrDeletePoint('add', 18,true); //添加管点图层
+                addOrDeletePipeLine('add',18,true); //添加管线图层
+                // 绘制面积
+                addLineLayer();
+            }
+        });
+
+        //  根据坐标位置定位
+        api.addEventListener({
+            name: 'coordinateLaction'
+           }, function(ret, err) {
+            if (ret) {
+                var data = ret.value.data;
+                var lon = parseFloat(data.lon);
+                var lat = parseFloat(data.lat);
+                locationFeature([lon, lat]);
+            }
+        });
+
+
+      // 管点管线提交审核后的提示
+      api.addEventListener({
+          name: 'submitAudit'
+      }, function(ret, err){
+          if( ret ){
+            whetherToDisaplayLayers();
+            map.getView().setZoom(18);
+              $('.toast_box').show();
+              setTimeout(()=>{
+                $('.toast_box').hide();
+              },1500);
+          }
+      });
+
+    // 新增管线页面关闭监听
+    api.addEventListener({
+        name: 'newAddPipelineCloseWin'
+    }, function(ret, err){
+        if( ret ){
+          map.getView().setZoom(18);
+        }
+    });
+
+    // 监听新增收藏
+    api.addEventListener({
+        name: 'addBookMarkSuccess'
+    }, function(ret, err){
+        if( ret ){
+            var type = ret.value.type;
+            if(type == 'Point'){
+              $('#pointbookmarkImage').removeClass('no_bookmark').addClass('hasbookmark');
+            } else {
+              $('#linebookmarkImage').removeClass('no_bookmark').addClass('hasbookmark');
+            }
+        }
+    });
+  //  监听移除收藏后，更新收藏的数据
+   api.addEventListener({
+       name: 'UpdateBookmark'
+   }, function(ret, err){
+       if( ret ){
+        var defaultLayers=$api.getStorage('defaultLayers');
+      for(let i=0;i<defaultLayers.length;i++){
+        if(defaultLayers[i].name='已收藏管点' && defaultLayers[i].show){
+            updateBookeMarkIcon();
+            GetAllCollectPoint('remove','Point'); //移除后重新加载
+            GetAllCollectPoint('add','Point');
+            continue;
+        }
+        if(defaultLayers[i].name='已收藏管点' && defaultLayers[i].show){
+            updateBookeMarkIcon();
+            GetAllCollectLine('remove','Line'); //管线收藏
+            GetAllCollectLine('add','Line');
+            continue;
+        }
+      }
+       }
+   });
+  //  标注删除成功
+  api.addEventListener({
+      name: 'LabelSuccess'
+  }, function(ret, err){
+      if( ret ){
+          var data = {
+            lon:ret.value.x,
+            lat:ret.value.y,
+            remarks:ret.value.remarks,
+            id:ret.value.id
+          }
+          addNewLabel(data);
+      }
+  });
+  // 标注列表页面关闭后重新加载标注图标
+  api.addEventListener({
+      name: 'updatePageLabel'
+  }, function(ret, err){
+      if( ret ){
+        if(ret.value.from =='list'){
+          GetAllLabel('remove');
+          GetAllLabel('add'); //重新加载标注，用于刷新（更新列表的操作）
+        } else {
+          GetAllLabel('remove');
+          GetAllLabel('add'); //重新加载标注，用于刷新（更新列表的操作）
+        }
+
+      }
+  });
+
+
+
+
+  // 管点管线编辑修改成功
+  api.addEventListener({
+      name: 'updatePointOrLineSuccess'
+  }, function(ret, err){
+      if( ret ){
+        var data =$api.getStorage('selectPointOrLine');
+        $('.toast_box').show();
+        if(ret.value.type == 'Point'){
+          $('.point_pipe_box').html('');
+          var str = template('pointInfoDemo', data);
+          $('.point_pipe_box').append(str);
+          $('.toast_box span').text('已提交后台审核!');
+        }else {
+          $('.point_pipe_box').html('');
+          var str = template('pipeInfoDemo', data);
+          $('.point_pipe_box').append(str);
+          $('.toast_box span').text('已提交后台审核!');
+        }
+      setTimeout(()=>{
+        $('.toast_box').hide();
+      },2000);
+      }
+  });
+    }
+</script>
+
+</html>

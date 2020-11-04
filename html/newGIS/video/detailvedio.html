@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>备注资料管理</title>
+    <link rel="stylesheet" href="../../../css/api.css">
+    <link rel="stylesheet" href="../../../css/aui.css">
+    <link rel="stylesheet" href="../../../css/rolldate.css">
+    <link rel="stylesheet" href="../css/dialogAlert.css">
+    <link rel="stylesheet" href="../css/ol.css">
+    <link rel="stylesheet" href="../css/pointpipeinfo.css">
+    <style rel="stylesheet">
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #EEEEEE;
+        }
+
+        header.aui-bar-nav {
+            background: #EEEEEE;
+            font-size: 0.8rem;
+            font-family: PingFangSC-Semibold, PingFang SC;
+            font-weight: 600;
+            color: #333;
+        }
+
+        header.aui-bar-nav .aui-btn .aui-iconfont {
+            color: #333;
+            width: 1.2rem;
+            height: 1.2rem;
+            font-weight: bold;
+            border: none;
+        }
+
+        header .aui-icon-left:before {
+            content: url('../image/closeWin.png');
+            width: 1.2rem;
+            height: 1.2rem;
+        }
+
+        header .screen_box {
+            width: auto;
+            height: 2.2rem;
+            line-height: 2.2rem;
+            display: flex;
+            flex-direction: row;
+        }
+        /*分页*/
+
+        .page_box {
+            width: 100%;
+            position: absolute;
+            bottom: 0rem;
+            font-size: 0.7rem;
+            color: #333;
+            height: 2.65rem;
+            background: #eee;
+            padding-top: 0.5rem;
+            display: none;
+        }
+
+        .page_box .aui-iconfont {
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav" id='header'>
+        <div class="aui-pull-left aui-btn aui-margin-l-10" onclick="closeWin()" tapmode>
+            <span class="aui-iconfont aui-icon-left"></span>
+        </div>
+        <div class="aui-title">备注资料管理</div>
+    </header>
+    <!-- 上传 -->
+    <br />
+    <div style="text-align:center;">
+        <div style="margin:0 auto;line-height: 35px;width:303px;height:35px;background-color:#6F7EF6;border-radius:17px;color:white;text-align:center;" onclick="upvideo();">上&nbsp;传</div>
+    </div>
+    <div style="height:20px;"></div>
+
+    <div class="aui-content aui-margin-b-15" style="background:#F2F2F2;">
+        <ul class="aui-list aui-media-list" style="background:#F2F2F2;">
+            <li class="aui-list-item" style="background:#F2F2F2;">
+                <div class="aui-list-item-inner">
+                    <div class="aui-row aui-row-padded" id="vediobody">
+
+                        <!-- <div class="aui-col-xs-6" onclick="alert(1)">
+                            <img src="../image/moon.png" />
+                            <div class="aui-list-item-text">
+                                <span style="font-weight:bold;">张三</span><span>2020/03/10 17:44</span>
+                            </div>
+                            <div class="aui-list-item-text">
+                                在下方我们加入了信息条就觉得的……
+                            </div>
+                        </div>
+                        <div class="aui-col-xs-6" onclick="alert(5)">
+                            <img src="../image/2D.png" />
+                            <div class="aui-list-item-text">
+                                <span style="font-weight:bold;">张三</span><span>2020/03/10 17:44</span>
+                            </div>
+                            <div class="aui-list-item-text">
+                                在下方我们加入了信息条就觉得的……
+                            </div>
+                        </div> -->
+
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <!-- 分页 -->
+    <div class="page_box">
+        <div class="row">
+            <div class="aui-col-xs-4 aui-text-right" tapmode onclick="Pages('pre')">
+                <i class="aui-iconfont aui-icon-left not_next"></i>
+            </div>
+            <div class="aui-col-xs-4 aui-text-center"><span id='currentPage'>1</span>/<span id='allPages'></span></div>
+            <div class="aui-col-xs-4 aui-text-left" tapmode onclick="Pages('next')">
+                <i class="aui-iconfont aui-icon-right"></i>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/aui-dialog.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/moment.js"></script>
+<script type="text/javascript" src="../../../script/rolldateMin.js"></script>
+<script type="text/javascript" src="../../../script/aui-tab.js"></script>
+<script type="text/javascript" src="../../../script/hammer.min.js"></script>
+<script type="text/javascript" src="../../../script/template.js"></script>
+
+
+<script type="text/javascript" src="../script/common.js"></script>
+
+
+
+<script type="text/javascript">
+    var PageIndex = 1;
+    apiready = function() {
+        api.parseTapmode();
+        // 页面初始化，沉浸式等
+        initWindow();
+        //加载多媒体文件数据列表
+        vediolist();
+        //刷新页面数据
+        api.addEventListener({
+            name: 'refreshvediolist'
+        }, function(ret, err) {
+            vediolist();
+        });
+    }
+
+    //上传多媒体
+    function upvideo() {
+        api.actionSheet({
+            cancelTitle: '取消',
+            buttons: ['相册', '拍摄']
+        }, function(ret, err) {
+            var index = ret.buttonIndex;
+            switch (index) {
+                case 1:
+                    openVideo();
+                    break;
+                case 2:
+                    shootVideo();
+                    break;
+                default:
+
+            }
+        });
+    }
+    //打开相册多媒体
+    function openVideo() {
+        var UIAlbumBrowser = api.require('UIAlbumBrowser');
+        UIAlbumBrowser.open({
+            max: 1,
+            type: 'all',
+            styles: {
+                bg: '#fff',
+                mark: {
+                    icon: '',
+                    position: 'bottom_left',
+                    size: 20
+                },
+                nav: {
+                    bg: 'rgba(0,0,0,0.6)',
+                    titleColor: '#fff',
+                    titleSize: 18,
+                    cancelColor: '#fff',
+                    cancelSize: 16,
+                    finishColor: '#fff',
+                    finishSize: 16
+                }
+            },
+            rotation: true
+        }, function(ret) {
+            if (ret.eventType != "cancel") {
+                if (ret.list.length != 0) {
+                    api.openWin({
+                        name: 'detailtextManagement',
+                        url: 'detailtext.html',
+                        bounces: false,
+                        pageParam: {
+                            ret: ret,
+                            number: api.pageParam.number
+                        }
+                    });
+                } else {
+                    api.toast({
+                        msg: '文件未选择',
+                        duration: 2000,
+                        location: 'middle'
+                    });
+                }
+            }
+        });
+    }
+    //拍摄
+    function shootVideo() {
+        api.getPicture({
+            sourceType: 'camera',
+            encodingType: 'jpg',
+            mediaValue: 'video',
+            destinationType: 'url',
+            allowEdit: true,
+            quality: 100,
+            videoQuality: 'medium',
+            targetWidth: 100,
+            targetHeight: 100,
+            saveToPhotoAlbum: false
+        }, function(ret, err) {
+            if (ret.data!="") {
+                api.openWin({
+                    name: 'detailtextManagement',
+                    url: 'detailtext.html',
+                    bounces: false,
+                    pageParam: {
+                        ret: ret,
+                        number: api.pageParam.number
+                    }
+                });
+            } else {
+                api.toast({
+                    msg: '视频无效',
+                    duration: 2000,
+                    location: 'middle'
+                });
+            }
+        });
+    }
+
+
+    //加载多媒体文件列表
+    function vediolist() {
+        var html = "";
+        fnGet('services/SNTGIS/GISRemarks/GetLayerList?PageIndex=' + $('#currentPage').text() + '&MaxResultCount=6&Number=' + api.pageParam.number + '', {}, false, function(ret, err) {
+            if (ret && ret.success) {
+                if (ret.result.remarks.length > 0) {
+                    $('.page_box').show();
+                    $('#allPages').text(ret.result.pageCount);
+                    for (var i = 0; i < ret.result.remarks.length; i++) {
+                        var videourl = apiUrl + ret.result.remarks[i].videoUrl;
+                        var thumbnailUrl;
+                        html += "<div class=\"aui-col-xs-6\" style=\"position: relative;\">";
+                        if (ret.result.remarks[i].thumbnailUrl != "") {
+                            thumbnailUrl = apiUrl + ret.result.remarks[i].thumbnailUrl;
+                            html += "<img src=\"../image/videoplays.png\" style=\"width:32px;height:32px;position: absolute;top: 45px;left: 69px;margin: auto;\" onclick=\"videodetial('"+ videourl +"');\"/>";
+
+                            html += "<img src=\"" + thumbnailUrl + "\" style=\"width:170px;height:110px;\" onclick=\"videodetial('"+ videourl +"');\"/>";
+                        } else {
+                            thumbnailUrl = apiUrl + ret.result.remarks[i].videoUrl;
+                            html += "<img src=\"" + thumbnailUrl + "\" style=\"width:170px;height:110px;\" onclick=\"picturedetial('"+ videourl +"');\"/>";
+                        }
+
+                        html += "<div class=\"aui-list-item-text\" onclick=\"infodetial('"+ ret.result.remarks[i].submitter +"','"+ ret.result.remarks[i].remark +"','"+ret.result.remarks[i].submitTime.replace('T', ' ') +"');\" >";
+                        var name;
+                        if (ret.result.remarks[i].submitter.length > 3) {
+                            name = ret.result.remarks[i].submitter.substring(0, 3) + '…';
+                        } else {
+                            name = ret.result.remarks[i].submitter;
+                        }
+                        html += '<span style="font-weight:bold;font-size: 12px;">' + name + '</span><span style="font-size: 12px;">' + ret.result.remarks[i].submitTime.replace("T", " "); + '</span>';
+                        html += '</div>';
+                        html += '<div class="aui-list-item-text" style="font-size: 12px;">';
+                        var remark;
+                        if (ret.result.remarks[i].remark.length > 12) {
+                            remark = ret.result.remarks[i].remark.substring(0, 12) + '…';
+                        } else {
+                            remark = ret.result.remarks[i].remark;
+                        }
+                        html += '' + remark + '';
+                        html += '</div></div>';
+                    }
+                    document.getElementById("vediobody").innerHTML = html;
+
+                } else {
+                    api.toast({
+                        msg: '暂无多媒体文件',
+                        duration: 2000,
+                        location: 'middle'
+                    });
+                }
+
+            }
+        })
+    }
+
+
+
+    //  页码
+    function Pages(type) {
+        var pagecurrent = parseInt($('#currentPage').text());
+        var pagecount = parseInt($('#allPages').text());
+        switch (type) {
+            case 'pre':
+                if (pagecurrent > 1) {
+                    $('#currentPage').text(pagecurrent - 1);
+                }
+                break;
+            case 'next':
+                if (pagecurrent < pagecount) {
+                    $('#currentPage').text(pagecurrent + 1);
+                }
+                break;
+            default:
+
+        }
+        vediolist();
+
+    }
+
+    //点击播放详情
+    function videodetial(url) {
+      api.openVideo({
+      　　url:url
+      });
+    }
+
+    //放大图片
+    function picturedetial(vediourl){
+      var photoBrowser = api.require('photoBrowser');
+      photoBrowser.open({
+          images: [vediourl],
+          placeholderImg: 'widget://res/img/apicloud.png',
+          bgColor: '#000'
+      }, function(ret, err) {
+          if (ret) {
+            if (ret.eventType == 'click') {
+                photoBrowser.close();
+            }
+          }
+      });
+    }
+
+    //点击查看详情
+    function infodetial(submiter,text,subtime){
+      api.openFrame({
+              name: 'dialog',
+              url: 'dialog.html',
+              rect: {
+                      x:0,
+                      y:0,
+                      w:api.winWidth,
+                      h:api.winHeight
+              },
+              bgColor: 'rgba(0,0,0,0.6)',
+              bounces: false,
+              pageParam: {
+                  remark: text,
+                  submiter: submiter,
+                  subtime: subtime
+              }
+      });
+
+    }
+
+</script>
+
+</html>

@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>搜索页面</title>
+    <link rel="stylesheet" href="../../../css/api.css">
+    <link rel="stylesheet" href="../../../css/aui.css">
+    <style rel="stylesheet">
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            overflow-y: hidden;
+            background: #fff;
+        }
+
+        .flex-box {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            overflow-y: hidden;
+        }
+
+        header.aui-bar-nav {
+            background: #fff;
+            font-size: 0.8rem;
+            font-family: PingFangSC-Semibold, PingFang SC;
+            font-weight: 600;
+            color: #333;
+        }
+
+        header.aui-bar-nav .aui-btn .aui-iconfont {
+            color: #333;
+            width: 1.2rem;
+            height: 1.2rem;
+            font-weight: bold;
+            border: none;
+        }
+
+        header .aui-icon-left:before {
+            content: url('../image/closeWin.png');
+            width: 1.2rem;
+            height: 1.2rem;
+        }
+
+        header .aui-goback {
+            color: #333;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .aui-searchbar {
+            width: 100%;
+            height: 4rem;
+            margin-bottom: 0.5rem;
+            background: #fff;
+        }
+
+        .aui-searchbar .aui-iconfont {
+            color: #999!important;
+            font-weight: bold;
+        }
+
+        .aui-searchbar-clear-btn {
+            top: 0.75rem;
+        }
+        .aui-text-info {
+        	color: #6F7EF6!important;
+        }
+        .aui-searchbar-input {
+            width: 15.35rem!important;
+            height: 2.4rem;
+            line-height: 2.4rem;
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0rem 0.2rem 0.4rem 0rem rgba(0, 0, 0, 0.08), 0rem 0rem 0.05rem 0rem rgba(0, 0, 0, 0.08);
+            border-radius: 1.5rem;
+            margin: 0 1.2rem;
+        }
+
+        .aui-searchbar-input input {
+            height: 2.2rem;
+            line-height: 2.2rem;
+            margin-top: 0.1rem;
+        }
+
+        .fast_search_box {
+            width: 100%;
+            height: 4rem;
+            border-bottom: 6px solid #F6F6F6;
+        }
+
+        .fast_search_box .aui-row {
+            width: 100%;
+            margin: 0 auto;
+            height: 3rem;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 0.3rem;
+            font-size: 0.7rem;
+            letter-spacing: 0.1rem;
+            color: #666;
+            padding-right: 0.5rem;
+        }
+
+        .tab_title {
+            width: 100%;
+            text-align: center;
+            color: #666;
+            font-size: 0.7rem;
+            padding-left: 0.7rem;
+            margin-top: 0.2rem;
+        }
+
+        .tab_point {
+            width: 2rem;
+            height: 1.25rem;
+            background: url('../image/search/point.png');
+            background-repeat: no-repeat;
+            background-position: 0.6rem;
+            margin: 0 auto;
+        }
+
+        .tab_pipe {
+            width: 2rem;
+            height: 1.2rem;
+            background: url('../image/search/pipe.png');
+            background-repeat: no-repeat;
+            background-position: 0.6rem;
+            margin: 0 auto;
+        }
+
+        .tab_area {
+            width: 2rem;
+            height: 1.2rem;
+            background: url('../image/search/area.png');
+            background-repeat: no-repeat;
+            background-position: 0.6rem;
+            margin: 0 auto;
+        }
+
+        .tab_bookmark {
+            width: 2rem;
+            height: 1.25rem;
+            background: url('../image/search/bookmark.png');
+            background-repeat: no-repeat;
+            background-position: 0.6rem;
+            margin: 0 auto;
+        }
+
+        .span_active {
+            color: blue;
+        }
+
+        .histroy_box {
+            width: 100%;
+            min-height: 7rem;
+            max-height: 28rem;
+            font-size: 0.7rem;
+            background: #fff;
+            overflow: hidden;
+            overflow-y: scroll;
+            -webkit-overflow-scrolling: touch;
+            padding-left: 0.75rem;
+            display: none;
+        }
+
+        .histroy_box .aui-row,
+        .search_content .aui-row {
+            height: 3.2rem;
+            line-height: 3.2rem;
+            border: none;
+            background-size: 100% 1px;
+            background-repeat: no-repeat;
+            background-position: 0.75rem bottom;
+            background-image: linear-gradient(0, #eee, #eee 50%, transparent 50%);
+            background-image: -webkit-linear-gradient(90deg, #eee, #eee 50%, transparent 50%);
+        }
+
+         .histroy_box .aui-row:first-child{
+           height: 1.5rem;
+           line-height: 1.5rem;
+         }
+        .histroy_box .aui-row{
+            background-image: none;
+            background-image: none;
+        }
+
+        .histroy_box .aui-row.aui-active {
+            width: 92%;
+            margin: 0 auto;
+            background: #eee;
+            opacity: 0.6;
+        }
+        .histroy_box .aui-col-xs-10{
+          color: #666;
+          font-size: 0.8rem;
+        }
+        .histroy_box .aui-col-xs-2{
+          padding-top: 0.6rem;
+        }
+         .histroy_box .aui-icon-search:before {
+          content: url('../image/search/clock.png');
+          width: 2rem;
+          height: 2rem;
+         }
+
+
+        .clear_search {
+            font-size: 0.6rem;
+            color: rgba(36, 52, 176, 0.5);
+        }
+
+        .search_content {
+            width: 100%;
+            height: 23rem;
+            font-size: 0.7rem;
+            background: #fff;
+            margin: 0 auto;
+            overflow: hidden;
+            overflow-y: scroll;
+            -webkit-overflow-scrolling: touch;
+            position: relative;
+            margin-bottom: 3rem;
+            padding-left: 0.75rem;
+        }
+
+        .search_content .aui-row-other {
+            height: 4.5rem;
+            line-height: 4.5rem;
+            border: none;
+            background-size: 100% 1px;
+            background-repeat: no-repeat;
+            background-position: 0.75rem bottom;
+            background-image: linear-gradient(0, #eee, #eee 50%, transparent 50%);
+            background-image: -webkit-linear-gradient(90deg, #eee, #eee 50%, transparent 50%);
+            padding-top: 0.3rem;
+        }
+        .aui-row-other.active{
+          background: #eee;
+        }
+
+        .aui-row-other .aui-col-xs-12{
+            margin-top: 0.25rem;
+            height: 0.85rem;
+            line-height: 0.85rem;
+            color: #999999;
+            font-size: 0.6rem;
+            font-weight: normal;
+        }
+        .aui-row-other .aui-col-xs-12:first-child {
+            height: 1.1rem;
+            line-height: 1.1rem;
+            font-size: 0.8rem;
+            color: #666666;
+            font-weight: 600;
+        }
+
+
+
+        .aui-row-other .lon {
+            margin-right: 1.75rem;
+        }
+
+        .page_box {
+            width: 100%;
+            position: absolute;
+            bottom: 0rem;
+            font-size: 0.7rem;
+            color: #333;
+            height: 2.65rem;
+            background: #fff;
+            padding-top: 0.5rem;
+            display: none;
+        }
+
+        .page_box .aui-iconfont {
+            font-weight: bold;
+        }
+        .not_next{
+          color: #eee;
+        }
+    </style>
+  <style media="screen">
+  .page_box{
+    display: none;
+  }
+  .content_other_box{
+    height: 60vh;
+    display: none;
+    /*position: relative;*/
+  }
+  .content_other_box .aui-row:first-child{
+    background-image: none;
+  }
+  </style>
+</head>
+
+<body class="flex-box" id='flex-box'>
+    <header class="aui-bar aui-bar-nav" id='header'>
+        <div class="aui-pull-left aui-btn aui-margin-l-10" onclick="closeWin()" tapmode>
+            <span class="aui-iconfont aui-icon-left aui-margin-r-10"></span>
+            <span class="aui-goback">返回</span>
+        </div>
+    </header>
+    <!-- 搜索框 -->
+    <div class="aui-searchbar" id="search">
+        <div class="aui-searchbar-input aui-border-radius">
+            <i class="aui-iconfont aui-icon-search"></i>
+            <input type="text"  placeholder="请输入搜索内容" id="search-input">
+            <div class="aui-searchbar-clear-btn">
+                <i class="aui-iconfont aui-icon-close"></i>
+            </div>
+        </div>
+        <div class="aui-searchbar-btn" tapmode>取消</div>
+    </div>
+    <!-- 快捷搜索 -->
+    <div class="fast_search_box">
+        <div class="aui-row">
+            <div class="aui-col-xs-3 aui-text-center" tapmode onclick="searchCondition(this,'point')">
+                <div class="tab_point"></div>
+                <div class="tab_title">管点</div>
+            </div>
+            <div class="aui-col-xs-3 aui-text-center" tapmode onclick="searchCondition(this,'pipeline')">
+                <div class="tab_pipe"></div>
+                <div class="tab_title">管线</div>
+            </div>
+            <div class="aui-col-xs-3 aui-text-center" tapmode onclick="searchCondition(this,'area')">
+                <div class="tab_area"></div>
+                <div class="tab_title">范围搜索</div>
+            </div>
+            <div class="aui-col-xs-3 aui-text-center" tapmode onclick="searchCondition(this,'bookmark')">
+                <div class="tab_bookmark"></div>
+                <div class="tab_title">收藏夹</div>
+            </div>
+        </div>
+    </div>
+    <!-- 搜索历史记录 -->
+    <div class="histroy_box aui-margin-t-10" id='historySearchsBox'>
+
+
+    </div>
+   <div class="content_other_box">
+     <div class="aui-row aui-padded-l-15 aui-text-left" id='pageCountTitle'>
+        <span class='clear_search aui-padded-l-10'>共<span id='resuiltCount'>0</span>条搜索结果,总共<span id='pageCount'>0</span>页</span>
+     </div>
+     <!-- 搜索到的内容 -->
+     <div class="search_content">
+
+
+     </div>
+   </div>
+    <div class="page_box">
+        <div class="row">
+            <div class="aui-col-xs-4 aui-text-right" tapmode onclick="Pages('pre')">
+                <i class="aui-iconfont aui-icon-left not_next"></i>
+            </div>
+            <div class="aui-col-xs-4 aui-text-center"><span id='currentPage'>1</span>/<span id='allPages'></span></div>
+            <div class="aui-col-xs-4 aui-text-left"tapmode onclick="Pages('next')">
+                <i class="aui-iconfont aui-icon-right"></i>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/moment.js"></script>
+<script type="text/javascript" src="../../../script/template.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/template" id='historySearchsDemo'>
+     <div class="aui-row aui-padded-l-15 aui-text-left">
+      <span class='clear_search'>历史搜索</span>
+    </div>
+    {{each list value i}}
+    <div class="aui-row aui-padded-l-10" tapmode onclick="getHistorySearch(this)" params="{{value.content}}">
+        <div class="aui-col-xs-2 aui-text-center"><i class="aui-iconfont aui-icon-search"></i></div>
+        <div class="aui-col-xs-10">{{value.content}}</div>
+    </div>
+    {{/each}}
+    <div class="aui-row aui-padded-l-10 aui-text-center" tapmode onclick="clearHistory()">
+        <span class='clear_search'>清空搜索列表</span>
+    </div>
+
+</script>
+<script type="text/template" id='searchDemo'>
+  {{ if pipeAttribute.length > 0}}
+{{each pipeAttribute value i }}
+<div class="aui-row aui-padded-l-15 aui-row-other" params = '{{value}}' tapmode onclick="openInfomationWin(this)">
+    <div class="content_box aui-pull-left">
+      {{if value.type == 'Point'}}
+      <div class="aui-col-xs-12" >管点编号: <span>{{value.number}}</span></div>
+      {{else}}
+      <div class="aui-col-xs-12" >管线编号: <span>{{value.number}}</span></div>
+      {{/if}}
+        <div class="aui-col-xs-12">名称: <span class="lon">{{value.name}}</div>
+        <div class="aui-col-xs-12">道路: <span class="lon">{{value.location}}</div>
+    </div>
+</div>
+{{/each}}
+{{else}}
+<div class="aui-row aui-text-center no-data">
+    <span class='clear_search'>暂无数据!</span>
+</div>
+{{/if}}
+</script>
+<script type="text/javascript">
+    var isCloseWin = true;
+    var PageIndex = 1; //分页
+    apiready = function() {
+            api.setWinAttr({
+                bounces: false
+            });
+            // 页面初始化，沉浸式等
+            initWindow();
+            initInputSearch();
+            initHistroySearch();
+
+            api.addEventListener({
+                name: 'removeActive'
+            }, function(ret, err){
+                if( ret ){
+                  setTimeout(()=>{
+                    $('.search_content').find('.active').removeClass('active');
+                  },500)
+                }
+            });
+
+        }
+        // 关闭窗口
+    function closeWin() {
+        if (isCloseWin) {
+            api.closeWin();
+        } else {
+            api.openWin({
+                name: 'GISmain',
+                url: '../GISmain.html',
+            });
+            setTimeout(() => {
+                api.closeWin({
+                  name:'search'
+                });
+                api.closeWin({
+                  name:'areasearchresult'
+                });
+            }, 500)
+        }
+    }
+    // 初始化历史搜索
+    function initHistroySearch() {
+        var historySearchs = $api.getStorage('historySearchs');
+        if (historySearchs != undefined) {
+            $('.histroy_box').show();
+            var data = {
+                list: historySearchs
+            }
+            var str = template('historySearchsDemo', data);
+            $('#historySearchsBox').append(str);
+        }
+    }
+
+    // 搜索框
+    function initInputSearch() {
+        var searchBar = document.querySelector(".aui-searchbar");
+        var searchBarInput = document.querySelector(".aui-searchbar input");
+        var searchBarBtn = document.querySelector(".aui-searchbar .aui-searchbar-btn");
+        var searchBarClearBtn = document.querySelector(".aui-searchbar .aui-searchbar-clear-btn");
+        if (searchBar) {
+            searchBarInput.onclick = function() {
+                searchBarBtn.style.marginRight = 0;
+            }
+            searchBarInput.oninput = function() {
+                if (this.value.length) {
+                    searchBarClearBtn.style.display = 'block';
+                    searchBarBtn.classList.add("aui-text-info");
+                    searchBarBtn.textContent = "搜索";
+                    $('.histroy_box').hide();
+                    if(this.value.length > 10){
+                      $(this).val($(this).val().substring(0,10));
+                    }
+                } else {
+                    searchBarClearBtn.style.display = 'none';
+                    searchBarBtn.classList.remove("aui-text-info");
+                    searchBarBtn.textContent = "取消";
+                    $('.histroy_box').show();
+                }
+            }
+        }
+        searchBarClearBtn.onclick = function() {
+            this.style.display = 'none';
+            searchBarInput.value = '';
+            searchBarBtn.classList.remove("aui-text-info");
+            searchBarBtn.textContent = "取消";
+            PageIndex = 1;
+            $('.content_other_box').hide();
+            $('.page_box').hide();
+            $('.search_content').html('');
+            $('.histroy_box').show();
+        }
+        searchBarBtn.onclick = function() {
+            var keywords = searchBarInput.value;
+            if (keywords.length) {
+                searchBarInput.blur();
+                // 存储历史搜索数据
+                setHistory(keywords);
+                SearchPipe(keywords);  //搜索
+
+            } else {
+                this.style.marginRight = "-" + this.offsetWidth + "px";
+                searchBarInput.value = '';
+                searchBarInput.blur();
+            }
+        }
+    }
+
+  // 输入框模糊查询
+   function SearchPipe(keywords){
+     fnPost('services/SNTGIS/SearchPipe/SearchPipe', {
+         body: JSON.stringify({
+           pageIndex: PageIndex,
+           maxResultCount: 10,
+           searchText:keywords
+         })
+     }, 'application/json', true, false, function(ret, err) {
+       api.hideProgress();
+         if ( ret && ret.success) {
+           var result = ret.result;
+           if(result.pipeAttribute.length>0){
+             //  初始化页码 common.js
+             initPages(result.pipeAttribute,result.pageCount,result.resuiltCount,PageIndex);
+           }
+              $('.histroy_box').hide();
+              $(".content_other_box").show();
+             $('.search_content').html('');
+             var str = template('searchDemo',result);
+             $('.search_content').append(str);
+
+         } else {
+            //  api.toast({
+            //      msg: '',
+            //      duration: 2000,
+            //      location: 'top'
+            //  });
+         }
+     });
+   }
+
+
+     //  页码
+     function Pages(type){
+        changePages(type,PageIndex,function(index){
+          PageIndex = index;
+          var keywords = $('#search-input').val();
+          SearchPipe(keywords);
+        }); //type 前一页或者后一页，PageIndex当前页数，initListDatas 请求数据方法名
+     }
+
+     // 打开信息页面
+     function openInfomationWin(that){
+       $(that).addClass('active');
+       $(that).siblings().removeClass('active');
+         var params = JSON.parse($(that).attr('params'));
+         params.bookmark = false;
+           api.openWin({
+               name: 'pointOrlineInfomation',
+               url: './pointOrlineInfomation.html',
+               pageParam: params
+           });
+      }
+
+
+    // 条件搜索
+    function searchCondition(that, type) {
+        $(that).siblings().find('span').removeClass('span_active');
+        if (!($(that).find('span').hasClass('span_active'))) {
+            $(that).find('span').addClass('span_active');
+        }
+        switch (type) {
+            case 'point':
+                api.openWin({
+                    name: 'pointsearch',
+                    url: './pointsearch.html',
+                });
+                // api.openWin({
+                //     name: 'ceshivue',
+                //     url: './ceshivue.html',
+                // });
+                break;
+            case 'pipeline':
+                api.openWin({
+                    name: 'pipelinesearch',
+                    url: './pipelinesearch.html',
+                });
+
+                break;
+            case 'area':
+                api.openWin({
+                    name: 'GISmain',
+                    url: '../GISmain.html',
+                });
+                api.sendEvent({
+                    name: 'areasearch',
+                });
+                isCloseWin = false;
+                break;
+            case 'bookmark':
+                api.openWin({
+                    name: 'bookmark',
+                    url: './bookmark.html',
+                });
+                break;
+            default:
+        }
+        setTimeout(() => {
+            $(that).find('span').removeClass('span_active');
+        }, 500);
+    }
+
+    // 存储历史搜索数据
+    function setHistory(keywords) {
+        var keywords = keywords.replace(/\s/g, ""); //去除字符串中所有空格
+        var time = moment(new Date()).format('YYYY-MM-DD HH:mm');
+        var historySearchs = $api.getStorage('historySearchs') != undefined ? $api.getStorage('historySearchs') : [];
+        if (historySearchs != undefined) {
+            if (historySearchs.length > 0) {
+                var number = 0;
+                for (var i = 0; i < historySearchs.length; i++) {
+                    if (historySearchs[i].content == keywords) {
+                        historySearchs[i].content = keywords;
+                        historySearchs[i].time = time;
+                        break;
+                    } else {
+                        number += 1;
+                    }
+                }
+                if (number == historySearchs.length) {
+                    // unshift()向数组的开头添加一个或更多元素，并返回新的长度
+                    historySearchs.unshift({
+                        content: keywords,
+                        time: time
+                    })
+                }
+            } else {
+                // unshift()向数组的开头添加一个或更多元素，并返回新的长度
+                historySearchs.unshift({
+                    content: keywords,
+                    time: time
+                })
+            }
+            if (historySearchs.length > 20) {
+                // splice（）返回被删除的数组
+                historySearchs = historySearchs.splice(0, 20);
+            }
+        }
+        $api.setStorage('historySearchs', historySearchs);
+    }
+
+    // 根据历史记录搜索
+    function getHistorySearch(that) {
+        $(that).siblings().removeClass('aui-active');
+        if (!($(that).hasClass('aui-active'))) {
+            $(that).addClass('aui-active')
+        }
+        setTimeout(() => {
+            $(that).removeClass('aui-active');
+        }, 1000)
+        var params = $(that).attr('params');
+        $('#search-input').val(params);
+        var searchBarBtn = document.querySelector(".aui-searchbar .aui-searchbar-btn");
+        var searchBarClearBtn = document.querySelector(".aui-searchbar .aui-searchbar-clear-btn");
+        searchBarClearBtn.style.display = 'block';
+        searchBarBtn.classList.add("aui-text-info");
+        searchBarBtn.style.marginRight = 0;
+        searchBarBtn.textContent = "搜索";
+    }
+
+    //  清空历史记录
+    function clearHistory() {
+        $api.rmStorage('historySearchs');
+        $('.histroy_box').hide();
+    }
+</script>
+
+</html>

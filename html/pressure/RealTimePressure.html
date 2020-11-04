@@ -1,0 +1,987 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>实时压力页面</title>
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/dialog.css" />
+    <link rel="stylesheet" type="text/css" href="../../script/gis/openlayers/ol.css" />
+    <link rel="stylesheet" type="text/css" href="../sort/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="../sort/css/animation.css">
+    <style>
+        * {
+            touch-action: pan-y;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #FFF;
+        }
+
+        .overHidden {
+            overflow: hidden;
+        }
+
+        .aui-bar-nav {
+            top: 0;
+            z-index: 3;
+            background-color: #fff;
+            color: #333333;
+            font-size: 1rem;
+            font-weight: 600;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            box-shadow: 0rem 0rem 1rem 0rem rgba(210, 210, 210, 0.77);
+        }
+
+        .aui-bar-nav .aui-btn {
+            position: absolute;
+        }
+
+        .aui-bar-nav .aui-btn .aui-iconfont {
+            color: #333333;
+            font-weight: 900;
+        }
+
+        .aui-bar-nav .aui-title {
+            position: relative;
+            right: 0;
+            left: 0;
+        }
+
+        .aui-searchbar {
+            background-color: #fff !important;
+            padding: 1.05rem 0.75rem;
+            width: auto;
+            height: auto;
+            color: #212121;
+            z-index: 3;
+        }
+
+        .aui-searchbar span {
+            font-size: var(--fontsize75);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #333333;
+        }
+
+        .aui-searchbar .arrow {
+            width: 0.8rem;
+            height: 0.8rem;
+            background: url(../../image/main_frame/orgDownArrow.png);
+            background-size: 0.7rem 0.38rem;
+            background-position: center center;
+            background-repeat: no-repeat;
+            -webkit-transition: 200ms;
+            transition: 200ms;
+        }
+
+        .aui-searchbar-input input {
+            height: 1rem;
+            line-height: 1rem;
+        }
+
+        .aui-searchbar-input {
+            height: 1.6rem;
+            background-color: #f0f0f0;
+            border-radius: 0.8rem;
+            line-height: 1.6rem;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+            display: flex;
+            align-items: center;
+        }
+
+        .aui-searchbar-clear-btn {
+            background-color: #999999;
+            position: initial;
+            width: 0.8rem;
+            height: 0.8rem;
+        }
+
+        .aui-searchbar-clear-btn .aui-iconfont {
+            color: #FFF !important;
+            top: -5px;
+            font-size: var(--fontsize5);
+        }
+
+        .showFilter {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .flex-con {
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 0.7rem 4vw;
+        }
+
+        #presureList .aui-list,
+        #presureList .aui-list .aui-list-item {
+            background-image: none;
+        }
+
+        #presureList .aui-list .aui-list-item {
+            padding: 0.8rem;
+            padding-right: 0;
+        }
+
+        #presureList .aui-card-list {
+            width: 92vw;
+            border: 1px solid rgba(238, 238, 238, 1);
+            box-shadow: 0rem 0rem 1rem 0rem rgba(210, 210, 210, 0.77);
+            border-radius: 0.3rem
+        }
+
+        #presureList .aui-card-list-content,
+        #presureList .aui-card-list-content-padded {
+            padding: 0;
+        }
+
+        #presureList .aui-list {
+            border-radius: 0.3rem
+        }
+
+        #presureList .aui-list-item-inner .aui-media-list-item-inner:first-child {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: rgba(51, 51, 51, 1);
+        }
+
+        #presureList .aui-list-item-inner .aui-media-list-item-inner {
+            align-items: center;
+        }
+
+        #presureList .aui-list .aui-list-item-middle > * {
+            align-items: stretch;
+        }
+
+        #presureList .dot {
+            width: 0.25rem;
+            height: 0.25rem;
+            background: rgba(75, 119, 190, 1);
+            border-radius: 50%;
+            margin-right: 0.25rem;
+            margin-bottom: 0.1rem;
+        }
+
+        #presureList .Text {
+            display: flex;
+            align-items: baseline;
+        }
+
+        #presureList .text1 {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: rgba(102, 102, 102, 1);
+        }
+
+        #presureList .text2 {
+            font-size: 1rem;
+            font-weight: 500;
+            color: rgba(75, 119, 190, 1);
+            margin-right: 0.03rem;
+        }
+
+        #presureList .text3 {
+            font-size: 0.6rem;
+            font-weight: 500;
+            color: rgba(153, 153, 153, 1);
+        }
+
+        #presureList .aui-list .aui-list-item-media {
+            width: 2.8rem;
+            padding: 0;
+            padding-right: 0;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .aui-media-list .aui-list-item-inner {
+            padding-top: 0;
+            padding-bottom: 0;
+            width: calc(100% - 2.8rem);
+            padding-right: 0;
+        }
+
+        .collectImg {
+            width: 1.2rem;
+            height: 1.2rem;
+            background-image: url('../../image/gis/collection.png');
+            background-repeat: no-repeat;
+            background-size: 100%;
+        }
+
+        .collect_active {
+            background-image: url('../../image/gis/collection_active.png');
+        }
+
+        .filterDiv {
+            position: absolute;
+            width: 100%;
+            top: -2000px;
+            -webkit-transition: all 0.5s;
+            transition: all 0.5s;
+            z-index: 2;
+        }
+
+        .filterDiv input {
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+            height: auto !important;
+            line-height: inherit !important;
+            text-align: right;
+        }
+
+        .filterDiv .aui-list .aui-list-item:active {
+            background-color: #fff !important;
+        }
+
+        .arrow.active {
+            -webkit-transform: rotate(180deg);
+            transform: rotate(180deg);
+        }
+
+        .filterDiv .aui-content {
+            width: 100%
+        }
+
+        .filterDiv .aui-list-item-inner {
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #262626;
+        }
+
+        .aui-list .aui-list-item-text {
+            width: 100%;
+        }
+
+        .filterDiv .aui-list .aui-list-item-inner {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .selectTime {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .selectTime span {
+            float: right;
+            color: #333333;
+            font-weight: 900;
+        }
+
+        .close {
+            float: right;
+            width: 16px;
+            height: 16px;
+            background: url(../../image/message_frame/close2.png);
+            background-size: 16px 16px;
+            background-position: center center;
+            background-repeat: no-repeat;
+            -webkit-transition: 200ms;
+            transition: 200ms;
+        }
+
+        .filterDiv .aui-list .aui-list-item-right,
+        .aui-list-item-title-row em {
+            margin-right: 15% !important;
+            max-width: 100% !important;
+        }
+
+        .aui-list-item-arrow:before {
+            border-color: #A2A2A2 !important;
+        }
+
+        .aui-list-item-arrow.change:before {
+            border-color: #A2A2A2 !important;
+            right: 0.6rem !important;
+            margin-top: -0.3rem !important;
+        }
+
+        .aui-list:after {
+            border: none !important;
+        }
+
+        .shade {
+            background: rgba(0, 0, 0, 0.4);
+            position: absolute;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .aui-list-buttons {
+            padding-left: 0 !important;
+            padding: 0.55rem 1.85rem !important;
+            display: flex !important;
+            justify-content: space-between;
+            background-color: #fff;
+        }
+
+        .filterDiv button {
+            border-radius: 4.4vw;
+            justify-content: center;
+            height: 1.65rem;
+            line-height: 1.65rem;
+            width: 37.33vw;
+            display: flex;
+            font-size: var(--fontsize75);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0.08rem;
+            outline: none;
+        }
+
+        .sureBtn {
+            background: #4f79e8 !important;
+            color: #fff;
+        }
+
+        .cancelBtn {
+            background: #fff;
+            color: #4f79e8;
+        }
+
+        .cancelBtn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            border: 1px solid #4f79e8;
+            border-radius: 2.5rem !important;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            width: 200%;
+            height: 200%;
+            -webkit-transform: scale(0.5);
+            transform: scale(0.5);
+            -webkit-transform-origin: left top;
+            transform-origin: left top;
+            pointer-events: none;
+        }
+
+        #pressureFilter .aui-list {
+            background-image: none;
+            max-height: 50vh;
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #pressureFilter .aui-list .aui-list-item {
+            font-size: 0.75rem;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            color: #666666;
+            letter-spacing: 0.02rem;
+        }
+
+        #pressureFilter .aui-media-list .aui-list-item-inner {
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        #pressureFilter .aui-radio {
+            display: inline-table;
+            width: 0.9rem;
+            height: 0.9rem;
+            margin-right: 0.4rem;
+            box-sizing: border-box;
+        }
+
+        .aui-radio:checked,
+        .aui-radio.aui-checked,
+        .aui-checkbox:checked,
+        .aui-checkbox.aui-checked {
+            background-color: #4f79e8;
+            border: solid 1px #4f79e8;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrap" class="flex-wrap flex-vertical">
+
+        <header class="aui-bar aui-bar-nav" id="header">
+            <div class="aui-title">
+                <div class="aui-pull-left aui-btn" tapmode data-action="back">
+                    <span class="aui-iconfont aui-icon-left"></span>
+                </div>
+                实时数据</div>
+            <div class="aui-searchbar" id="searchPressure">
+                <div class="showFilter" tapmode data-action="showFilter">
+                    <span>筛选</span>
+                    <div class="arrow" id="myArrow"></div>
+                </div>
+                <div class="aui-searchbar-input aui-border-radius">
+                    <i class="aui-iconfont aui-icon-search"></i>
+                    <input type="search" placeholder="请输入关键词搜索" id="mySearchInput">
+                    <div class="aui-searchbar-clear-btn">
+                        <i class="aui-iconfont aui-icon-close"></i>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="filterDiv" id="pressureFilter">
+            <div class="aui-content">
+                <ul class="aui-list aui-media-list" id="presureArea">
+                    <!-- <li class="aui-list-item aui-list-item-middle" tapmode data-action="select">
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-inner">
+                                <div class="aui-radio"></div>
+                                工单
+                            </div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item aui-list-item-middle" data-param="{{value}}" tapmode data-action="select">
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-inner">
+                                <div class="aui-radio"></div>
+                                工单
+                            </div>
+                        </div>
+                    </li> -->
+                </ul>
+                <div class="aui-list-buttons">
+                    <button type="button" class="sureBtn" name="button" tapmode data-action="sure">确认</button>
+                    <button type="button" class="cancelBtn" name="button" tapmode data-action="cancel">取消</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="shade" id="shade">
+
+        </div>
+
+        <div class="flex-con" id="presureList">
+            <!-- <div class="aui-card-list" id="uli">
+                <div class="aui-card-list-content-padded">
+                    <ul class="aui-list aui-media-list">
+                        <li class="aui-list-item aui-list-item-middle" tapmode data-action="history">
+                            <div class="aui-media-list-item-inner">
+                                <div class="aui-list-item-inner">
+                                    <div class="aui-media-list-item-inner">
+                                        <span class="dot"></span>采集点1
+                                    </div>
+                                    <div class="aui-media-list-item-inner">
+                                        <div class="Text">
+                                            <span class="text1"><span class="dot"></span>实时压力：</span>
+                                            <span class="text2">0.65</span>
+                                            <span class="text3">Mpa</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="aui-list-item-media">
+                                    <div class="collectImg"></div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="aui-card-list" id="uli">
+                <div class="aui-card-list-content-padded">
+                    <ul class="aui-list aui-media-list">
+                        <li class="aui-list-item aui-list-item-middle" tapmode data-action="history">
+                            <div class="aui-media-list-item-inner">
+                                <div class="aui-list-item-inner">
+                                    <div class="aui-media-list-item-inner">
+                                        <span class="dot"></span>采集点2
+                                    </div>
+                                    <div class="aui-media-list-item-inner">
+                                        <div class="Text">
+                                            <span class="text1"><span class="dot"></span>实时压力：</span>
+                                            <span class="text2">0.65</span>
+                                            <span class="text3">Mpa</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="aui-list-item-media">
+                                    <div class="collectImg"></div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div> -->
+        </div>
+    </div>
+
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/diy/public.js"></script>
+<script type="text/javascript" src="../../script/remote.js"></script>
+<script type="text/javascript" src="../../script/zepto.js"></script>
+<script type="text/javascript" src="../../script/moment.js"></script>
+<script type="text/javascript" src="../../script/aui-dialog.js"></script>
+<script type="text/javascript" src="../../script/diy/template.js"></script>
+<script type="text/template" id="presureListTpl">
+    {{each items value i}}
+    <div class="aui-card-list" id="uli">
+        <div class="aui-card-list-content-padded">
+            <ul class="aui-list aui-media-list">
+                <li class="aui-list-item aui-list-item-middle" data-param="{{value}}" tapmode data-action="history">
+                    <div class="aui-media-list-item-inner">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-media-list-item-inner">
+                                <span class="dot"></span>{{value.Name}}
+                            </div>
+                            <div class="aui-media-list-item-inner">
+                                <div class="Text">
+                                    <span class="text1"><span class="dot"></span>测量结果：</span>
+                                    <span class="text2" id="Device{{value.Id}}">{{value.Value}}</span>
+                                    <span class="text3">{{value.Unit}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="aui-list-item-media" id="Collect{{value.Id}}" tapmode data-action="collect" data-param="{{value}}">
+                            <div class="collectImg"></div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    {{/each}}
+</script>
+<script type="text/template" id="presureAreaTpl">
+    {{if items.length != 0}} {{each items value i}}
+    <li class="aui-list-item aui-list-item-middle" id="{{value.Id}}" data-param="{{value.Id}}" tapmode data-action="select">
+        <div class="aui-media-list-item-inner">
+            <div class="aui-list-item-inner">
+               {{if i == 0}}
+                <div class="aui-radio aui-checked"></div>
+                {{else}}
+                <div class="aui-radio"></div>
+                {{/if}}
+                {{value.Name}}
+            </div>
+        </div>
+    </li>
+    {{/each}} {{else}}
+    <li class="aui-list-item aui-list-item-middle">
+        <div class="aui-media-list-item-inner">
+            <div class="aui-list-item-inner">
+                暂无线路范围！
+            </div>
+        </div>
+    </li>{{/if}}
+</script>
+<script type="text/javascript">
+    var GetScadaDominUrl;
+    apiready = function() {
+        api.parseTapmode();
+        var header = $api.byId('header');
+        myFilter = $api.byId('pressureFilter');
+        // 实现沉浸式状态栏效果
+        $api.fixStatusBar(header);
+        // 计算header和tab元素的高度
+        headerH = $api.offset(header).h;
+        userId = $api.getStorage('cloudUserId');
+        fnReady();
+        setTimeout(function() {
+            getAreaList();
+        }, 300);
+        GetScadaDominUrl = $api.getStorage('GetScadaDomin');
+        api.addEventListener({
+            name: 'refreshRealTimePressureList'
+        }, function(ret, err) {
+            if (ret) {
+                getPressureList();
+            }
+        });
+
+    };
+
+    var Id = null;
+
+    var actionList = {
+        'back': function() {
+            api.closeWin();
+        },
+        'history': function() {
+            var data = JSON.parse($(this).attr('data-param'));
+            api.openWin({
+                name: 'HistoryDatas',
+                url: './HistoryDatas.html',
+                pageParam: {
+                    id: data.Id
+                }
+            });
+        },
+        'collect': function(e) {
+            e = e || window.event;
+            e.stopPropagation();
+            var data = JSON.parse($(this).attr('data-param'));
+            var headers = {
+                "Content-Type": 'application/x-www-form-urlencoded'
+            };
+            var collectData = {
+                UserId: userId,
+                PointId: data.Id
+            }
+            var postData = {
+                values: collectData
+            }
+            var url;
+            var that = $(this).find('.collectImg');
+            if (that.hasClass('collect_active')) {
+                url = 'api/Foci/PostRemove';
+            } else {
+                url = 'api/Foci/PostSet';
+            }
+            api.ajax({
+                url: GetScadaDominUrl + url,
+                method: 'post',
+                timeout: 15,
+                dataType: 'json',
+                returnAll: false,
+                headers: headers,
+                data: postData
+            }, function(ret, err) {
+                if (ret) {
+                    that.toggleClass('collect_active');
+                    api.sendEvent({
+                        name: 'refreshMyCollectList',
+                        extra: {
+
+                        }
+                    });
+                }
+            })
+        },
+        'select': function() {
+            var preList = $(this).prevAll();
+            for (var i = 0; i < preList.length; i++) {
+                $(preList[i]).find('.aui-radio').removeClass('aui-checked');
+            }
+            var nextList = $(this).nextAll();
+            for (var i = 0; i < nextList.length; i++) {
+                $(nextList[i]).find('.aui-radio').removeClass('aui-checked');
+            }
+            $(this).find('.aui-radio').toggleClass('aui-checked')
+        },
+        'sure': function() {
+            var checked = $('.aui-checked');
+            if (noAreaData) {
+                api.toast({
+                    msg: '暂无线路范围，无法筛选',
+                    duration: 2000,
+                    location: 'top'
+                });
+                return
+            }
+            if (checked.length == 0) {
+                Id = "";
+            } else {
+                Id = parseInt($('.aui-checked').parents('li').attr('data-param'));
+            }
+            getPressureList();
+            $('#shade').hide();
+            $('#pressureFilter').css('top', '' + topHide + ' !important');
+            $('#myArrow').removeClass('active');
+        },
+        'cancel': function() {
+            if (Id == null) {
+                $('#pressureFilter').find('.aui-radio').removeClass('aui-checked');
+            }
+            $('#shade').hide();
+            $('#pressureFilter').css('top', '' + topHide + ' !important');
+            $('#myArrow').removeClass('active');
+        },
+        'showFilter': function() {
+            $('#pressureFilter').find('.aui-radio').removeClass('aui-checked');
+            if (Id != null && Id != "") {
+                $('#' + Id + '').find('.aui-radio').addClass('aui-checked');
+            }
+            showFilter();
+        }
+    }
+
+    var noAreaData = false;
+
+    function getAreaList() {
+        api.showProgress({
+            title: '加载中',
+            modal: false
+        });
+        api.ajax({
+            url: '' + GetScadaDominUrl + 'api/util/GetAreas',
+            method: 'get',
+        }, function(ret, err) {
+            api.hideProgress();
+            if (ret) {
+                var data = ret.Data;
+                if (data.length == 0) {
+                    noAreaData = true;
+                } else {
+                    noAreaData = false;
+                }
+                var list = {
+                    items: data
+                };
+                var str = template('presureAreaTpl', list);
+                $('#presureArea').prepend(str);
+                operationDom();
+                api.parseTapmode();
+                myFilterH = $api.offset(myFilter).h;
+                topH = headerH;
+                topHide = -myFilterH + 'px';
+                topActive = topH + 'px';
+                $('.filterDiv').css('top', '' + topHide + '');
+                $('.shade').css('height', 'calc( 100% - ' + topActive + ' )');
+                $('.shade').css('top', '' + topActive + '');
+                $('.shade').hide();
+                if(data.length >0){
+                  Id = data[0].Id;
+                  getPressureList();
+                }
+            }
+        });
+    }
+
+    //搜索条设置
+    var searchBar = document.querySelector("#searchPressure");
+    var searchBarInput = document.querySelector("#searchPressure input");
+    var searchBarClearBtn = document.querySelector("#searchPressure .aui-searchbar-clear-btn");
+    if (searchBar) {
+        searchBarInput.oninput = function() {
+            if (this.value.length) {
+                searchBarClearBtn.style.display = 'block';
+            } else {
+                searchBarClearBtn.style.display = 'none';
+            }
+        }
+    }
+    searchBarClearBtn.onclick = function() {
+        this.style.display = 'none';
+        searchBarInput.value = '';
+        keyword = "";
+        getPressureList();
+    }
+
+    var keyword = "";
+
+    var flag = false;
+    $('#mySearchInput').on({
+        'compositionstart': function() {
+            flag = true;
+        },
+        'compositionend': function() {
+            flag = false;
+            if (!flag) {
+                // if (isCloseShow) {
+                //     $('#myMessage .aui-radio').fadeOut(100);
+                //     $('.close').hide();
+                // }
+                keyword = $(this).val();
+                getPressureList();
+            }
+        },
+        'input propertychange': function() {
+            ``
+            if (!flag) {
+                // if (isCloseShow) {
+                //     $('#myMessage .aui-radio').fadeOut(100);
+                //     $('.close').hide();
+                // }
+                keyword = $(this).val();
+                getPressureList();
+            }
+        }
+    });
+
+    //向下滑动显示筛选
+    function showFilter() {
+        $('#myArrow').toggleClass('active');
+        if ($('#myArrow').hasClass('active')) {
+            $('#pressureFilter').css('top', '' + topActive + ' !important');
+            $('#shade').show();
+        } else {
+            $('#shade').hide();
+            $('#pressureFilter').css('top', '' + topHide + ' !important');
+        }
+    }
+
+    //点击遮罩层隐藏筛选
+    $('.shade').on('touchstart', function() {
+        if ($('#myArrow').hasClass('active')) {
+            $('#shade').hide();
+            $('#pressureFilter').css('top', '' + topHide + ' !important');
+            $('#myArrow').removeClass('active');
+        }
+    })
+
+    function getPressureList() {
+        // clearInterval(timer);
+        api.showProgress({
+            title: '加载中',
+            modal: false
+        });
+        var headers = {
+            "Content-Type": 'application/x-www-form-urlencoded'
+        };
+        var filterData = {
+            AreaId: Id == null ? "" : Id,
+            Name: keyword
+        }
+        var data = {
+            values: filterData
+        }
+        $('#presureList').html('');
+        api.ajax({
+            url: '' + GetScadaDominUrl + 'api/gis/PostSearch',
+            method: 'post',
+            timeout: 15,
+            dataType: 'json',
+            returnAll: false,
+            headers: headers,
+            data: data
+        }, function(ret, err) {
+            api.hideProgress();
+            if (ret) {
+                var data = ret.Data;
+                var infoData = [];
+                for (var i = 0; i < data.length; i++) {
+                    var name = data[i].Name;
+                    if (data[i].Devices.length != 0 && data[i].Devices != undefined) {
+                        var deData = data[i].Devices;
+                        for (var j = 0; j < deData.length; j++) {
+                            if (deData[j].Infos.length != 0 && deData[j].Infos != undefined) {
+                                var inData = deData[j].Infos;
+                                for (var k = 0; k < inData.length; k++) {
+                                    inData[k].Name = name + '-' + inData[k].Name;
+                                    inData[k].Value = parseFloat(inData[k].Value).toFixed(2);
+                                    infoData.push(inData[k]);
+                                }
+                            }
+                        }
+                    }
+                }
+                var list = {
+                    items: infoData
+                };
+                var str = template('presureListTpl', list);
+                $('#presureList').html(str);
+                getCollectionList();
+                operationDom();
+                api.parseTapmode();
+                // refreshData();
+                setTimeout(function () {
+                  getPressure();
+                }, 5000);
+            }
+        });
+    }
+
+    function getCollectionList() {
+        api.ajax({
+            url: '' + GetScadaDominUrl + 'api/Foci/get/' + userId + '',
+            method: 'get',
+        }, function(ret, err) {
+            if (ret) {
+                var data = ret.Data;
+                var infoData = [];
+                for (var i = 0; i < data.length; i++) {
+                    var name = data[i].Name;
+                    if (data[i].Devices.length != 0 && data[i].Devices != undefined) {
+                        var deData = data[i].Devices;
+                        for (var j = 0; j < deData.length; j++) {
+                            if (deData[j].Infos.length != 0 && deData[j].Infos != undefined) {
+                                var inData = deData[j].Infos;
+                                for (var k = 0; k < inData.length; k++) {
+                                    inData[k].Name = name + '-' + inData[k].Name;
+                                    inData[k].Value = parseFloat(inData[k].Value).toFixed(2);
+                                    infoData.push(inData[k]);
+                                }
+                            }
+                        }
+                    }
+                }
+                for (var i = 0; i < infoData.length; i++) {
+                    var id = infoData[i].Id;
+                    $('#Collect' + id + '').find('.collectImg').addClass('collect_active');
+                }
+            }
+        });
+    }
+
+    var getPressure = function () {
+        var headers = {
+            "Content-Type": 'application/x-www-form-urlencoded'
+        };
+        var filterData = {
+            AreaId: Id == null ? "" : Id,
+            Name: keyword
+        };
+        var data = {
+            values: filterData
+        };
+        api.ajax({
+            url: '' + GetScadaDominUrl + 'api/gis/PostSearch',
+            method: 'post',
+            timeout: 15,
+            dataType: 'json',
+            returnAll: false,
+            headers: headers,
+            data: data
+        }, function(ret, err) {
+            if (ret) {
+                var data = ret.Data;
+                var infoData = [];
+                for (var i = 0; i < data.length; i++) {
+                    var name = data[i].Name;
+                    if (data[i].Devices.length != 0 && data[i].Devices != undefined) {
+                        var deData = data[i].Devices;
+                        for (var j = 0; j < deData.length; j++) {
+                            if (deData[j].Infos.length != 0 && deData[j].Infos != undefined) {
+                                var inData = deData[j].Infos;
+                                for (var k = 0; k < inData.length; k++) {
+                                    inData[k].Name = name + '-' + inData[k].Name;
+                                    inData[k].Value = parseFloat(inData[k].Value).toFixed(2);
+                                    infoData.push(inData[k]);
+                                }
+                            }
+                        }
+                    }
+                }
+                for (var i = 0; i < infoData.length; i++) {
+                    var id = infoData[i].Id;
+                    $('#Device' + id + '').html(infoData[i].Value);
+                }
+            }
+            setTimeout(getPressure,5000);
+        });
+    }
+
+    // var timer;
+    //
+    // function refreshData() {
+    //     clearInterval(timer);
+    //     timer = setInterval(function() {
+    //         getPressure();
+    //     }, 5000)
+    // }
+</script>
+
+</html>

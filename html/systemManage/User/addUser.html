@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>添加用户页面</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/aui1.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/city/demo.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/city/ydui.css" />
+    <style type="text/css">
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #FFF;
+        }
+
+        .overHidden{
+          overflow: hidden;
+        }
+
+        .aui-bar-nav {
+            top: 0;
+            z-index: 3;
+            background-color: #fff;
+            color: #333333;
+            font-size: var(--fontsize9);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            border: none;
+            background-size: 100% 1px;
+            background-repeat: no-repeat;
+            background-position: bottom;
+            background-image: linear-gradient(0, #dddddd, #dddddd 50%, transparent 50%);
+            background-image: -webkit-linear-gradient(90deg, #dddddd, #dddddd 50%, transparent 50%);
+        }
+
+        .aui-bar-nav .aui-btn .aui-iconfont {
+            color: #333333;
+            font-weight: 900;
+        }
+
+        .aui-list {
+            background-image: none;
+        }
+
+        .aui-list.aui-list-in .aui-list-item {
+            background-position: 0rem bottom;
+        }
+
+        .aui-col-xs-3 {
+            text-align: right;
+            height: 2.2rem;
+           line-height: 2.2rem;
+        }
+
+        .aui-col-xs-8 {
+            padding-left: 0.75rem;
+            height: 2.2rem;
+           line-height: 2.2rem;
+
+        }
+
+        .aui-col-xs-1 span {
+            color: red;
+        }
+
+        .aui-list-item {
+            line-height: 2rem;
+        }
+
+        .aui-list-item .aui-list-item-inner {
+            padding-top: 0.15rem;
+            padding-bottom: 0.15rem;
+        }
+
+        .aui-list-item .row {
+            width: 100%;
+        }
+
+        .footer {
+            position: absolute;
+            /*bottom: -18.5rem;*/
+            width: 100%;
+            height: 4rem;
+            line-height: 4rem;
+        }
+
+        .footer .submit {
+            width: 15rem;
+            height: 2rem;
+            background-color: #4f79e8;
+            border-radius: 1rem;
+            margin: 0 auto;
+        }
+
+        .footer .submit span {
+            position: absolute;
+            top: -1rem;
+            left: 8.3rem;
+            color: #fff;
+            font-family: PingFang-SC-Medium;
+            font-size: 1rem;
+        }
+
+        .flex-con {
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 2.4rem;
+        }
+
+        .aui-radio {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        .aui-radio:checked,
+        .aui-radio.aui-checked,
+        .aui-checkbox:checked,
+        .aui-checkbox.aui-checked {
+            background-color: #4F79E8;
+            border: solid 1px #4f79e8;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav" id='header'>
+        <div class="aui-pull-left aui-btn" tapmode data-action="back">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </div>
+        <div class="aui-title">新增用户</div>
+    </header>
+    <div class="flex-con">
+        <div class="aui-content aui-margin-b-15" id="listDemo">
+            <ul class="aui-list aui-list-in" id='AddContact'>
+                <li class="aui-list-item aui-list-item-middle" tapmode data-action='selectParent'>
+                    <div class="aui-list-item-inner aui-list-item-arrow">
+                        <div class="row">
+                            <div class="aui-col-xs-1"><span>*</span></div>
+                            <div class="aui-col-xs-3">组织机构&nbsp;:</div>
+                            <div class="aui-col-xs-8"><input type="text" name="" value="" placeholder="请选择组织机构" id="orgId" orgId='0'  onchange="GetDictionaryByCateCode()" readonly="readonly"></div>
+                        </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="row">
+                            <div class="aui-col-xs-1"><span>*</span></div>
+                            <div class="aui-col-xs-3">姓名&nbsp;:</div>
+                            <div class="aui-col-xs-8"><input type="text" name="" value="" placeholder="请输入姓名" id="trueName"></div>
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="row">
+                            <div class="aui-col-xs-1"><span>*</span></div>
+                            <div class="aui-col-xs-3">登录名&nbsp;:</div>
+                            <div class="aui-col-xs-8"><input type="text" name="" value="" placeholder="请输入登录名" id="loginAccount"></div>
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="row">
+                            <div class="aui-col-xs-1"><span>*</span></div>
+                            <div class="aui-col-xs-3">密码&nbsp;:</div>
+                            <div class="aui-col-xs-8"><input type="password" name="" value="" placeholder="请输入密码" id="loginPassword"></div>
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="row">
+                            <div class="aui-col-xs-1"><span></span></div>
+                            <div class="aui-col-xs-3">性别&nbsp;:</div>
+                            <div class="aui-col-xs-8">
+                                <div class="aui-list-item-input">
+                                    <label><input class="aui-radio" type="radio" name="sex" value='1'> 男</label>
+                                    <label><input class="aui-radio" type="radio" name="sex" value='2'> 女</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="row">
+                            <div class="aui-col-xs-1"><span></span></div>
+                            <div class="aui-col-xs-3">身份证号&nbsp;:</div>
+                            <div class="aui-col-xs-8"><input type="text" name="" value="" placeholder="请输入身份证号" id="cardNumber"></div>
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="row">
+                            <div class="aui-col-xs-1"><span></span></div>
+                            <div class="aui-col-xs-3">员工号&nbsp;:</div>
+                            <div class="aui-col-xs-8"><input type="text" name="" value="" placeholder="请输入员工号" id="workNo"></div>
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="row">
+                            <div class="aui-col-xs-1"><span></span></div>
+                            <div class="aui-col-xs-3">职务&nbsp;:</div>
+                            <div class="aui-col-xs-8">
+                                <!-- <input type="text" name="" value="" placeholder="请选择职务" id="position"> -->
+                                <select name="position" id="position" placeholder="请选择职务">
+
+                              </select>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="row">
+                            <div class="aui-col-xs-1"><span></span></div>
+                            <div class="aui-col-xs-3">电话&nbsp;:</div>
+                            <div class="aui-col-xs-8"><input type="text" name="" value="" placeholder="请输入电话" id="mobile"></div>
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="row">
+                            <div class="aui-col-xs-1"><span></span></div>
+                            <div class="aui-col-xs-3">手机&nbsp;:</div>
+                            <div class="aui-col-xs-8"><input type="text" name="" value="" placeholder="请输入手机" id="tel"></div>
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="row">
+                            <div class="aui-col-xs-1"><span></span></div>
+                            <div class="aui-col-xs-3">邮箱&nbsp;:</div>
+                            <div class="aui-col-xs-8"><input type="text" name="" value="" placeholder="请输入邮箱" id="email"></div>
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="row">
+                            <div class="aui-col-xs-1"><span></span></div>
+                            <div class="aui-col-xs-3">微信&nbsp;:</div>
+                            <div class="aui-col-xs-8"><input type="text" name="" value="" placeholder="请输入微信" id="wexin"></div>
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="row">
+                            <div class="aui-col-xs-1"><span></span></div>
+                            <div class="aui-col-xs-3">QQ&nbsp;:</div>
+                            <div class="aui-col-xs-8"><input type="text" name="" value="" placeholder="请输入QQ" id="qq"></div>
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="row">
+                            <div class="aui-col-xs-1"><span></span></div>
+                            <div class="aui-col-xs-3">钉钉&nbsp;:</div>
+                            <div class="aui-col-xs-8"><input type="text" name="" value="" placeholder="请输入钉钉" id="dingding"></div>
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="row">
+                            <div class="aui-col-xs-1"><span></span></div>
+                            <div class="aui-col-xs-3">地址&nbsp;:</div>
+                            <div class="aui-col-xs-8">
+                                <!-- <input type="text" name="" value="" placeholder="请输入地址"> -->
+                                <div class="aui-col-xs-10">
+                                    <!-- <textarea type="text" rows="1" class="selectAreaText" id="address" placeholder="请选择区域" readonly="true"></textarea> -->
+                                    <input type="text" name="" placeholder="请输入地址" id="address" readonly="true">
+                                </div>
+                                <div class="aui-col-xs-2 aui-text-right">
+                                    <span class="aui-iconfont aui-icon-right" id="selectArea"></span>
+                                    <span class="aui-iconfont aui-icon-close" id="clearArea1" style="display:none" tapmode></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="row">
+                            <div class="aui-col-xs-1"><span></span></div>
+                            <div class="aui-col-xs-3">备注&nbsp;:</div>
+                            <div class="aui-col-xs-8">
+                                <!-- <input type="text" name="" value="" placeholder="请输入备注" id="remark"> -->
+                                <textarea name="name" placeholder="请输入备注" rows="8" cols="80" id="remark"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="row">
+                            <div class="aui-col-xs-1"><span>*</span></div>
+                            <div class="aui-col-xs-3">排序&nbsp;:</div>
+                            <div class="aui-col-xs-8"><input type="number" oninput = "value=value.replace(/[^\d]/g,'')" pattern="[0-9]*" maxlength='10'
+ name="" value="" placeholder="0" id="sort"></div>
+                        </div>
+                    </div>
+                </li>
+
+            </ul>
+            </div>
+            <div class='footer' id="footer">
+                <div class="submit" data-action='SubmitSave'>
+                    <span>保存</span>
+                </div>
+            </div>
+        </div>
+
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/diy/public.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/hammer.min.js"></script>
+<!-- <script type="text/javascript" src="../../../script/zepto.js"></script> -->
+<script type="text/javascript" src="../../../script/city/jquery.min.js"></script>
+<script type="text/javascript" src="../../../script/city/ydui.citys.js"></script>
+<script type="text/javascript" src="../../../script/city/ydui.js"></script>
+<script type="text/javascript" src="../../../script/diy/template.js"></script>
+<script type="text/javascript" src="../../../script/city/ydui.citys.js"></script>
+<script type="text/javascript" src="../../../script/city/ydui.js"></script>
+<script type="text/template" id='contactDetail'>
+    <ul class="aui-list aui-list-in">
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="row">
+                    <div class="aui-col-xs-1"><span></span></div>
+                    <div class="aui-col-xs-3">组织机构&nbsp;:</div>
+                    <div class="aui-col-xs-8">
+                        <p>{{list.orgNameList}}</p>
+                    </div>
+                </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="row">
+                    <div class="aui-col-xs-1"><span></span></div>
+                    <div class="aui-col-xs-3">姓名&nbsp;:</div>
+                    <div class="aui-col-xs-8">
+                        <p>{{list.trueName}}</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="row">
+                    <div class="aui-col-xs-1"><span></span></div>
+                    <div class="aui-col-xs-3">登录名&nbsp;:</div>
+                    <div class="aui-col-xs-8">
+                        <p>{{list.loginAccount}}</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="row">
+                    <div class="aui-col-xs-1"><span></span></div>
+                    <div class="aui-col-xs-3">密码&nbsp;:</div>
+                    <div class="aui-col-xs-8">
+                        <p>{{list.loginPassword}}</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="row">
+                    <div class="aui-col-xs-1"><span></span></div>
+                    <div class="aui-col-xs-3">性别&nbsp;:</div>
+                    <div class="aui-col-xs-8">
+                        <p>{{list.genderString}}</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="row">
+                    <div class="aui-col-xs-1"><span></span></div>
+                    <div class="aui-col-xs-3">身份证号&nbsp;:</div>
+                    <div class="aui-col-xs-8">
+                        <p>{{list.cardNumber}}</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="row">
+                    <div class="aui-col-xs-1"><span></span></div>
+                    <div class="aui-col-xs-3">员工号&nbsp;:</div>
+                    <div class="aui-col-xs-8">
+                        <p>{{list.workNo}}</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="row">
+                    <div class="aui-col-xs-1"><span></span></div>
+                    <div class="aui-col-xs-3">职务&nbsp;:</div>
+                    <div class="aui-col-xs-8">
+                        <p>{{list.positionString}}</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="row">
+                    <div class="aui-col-xs-1"><span></span></div>
+                    <div class="aui-col-xs-3">电话&nbsp;:</div>
+                    <div class="aui-col-xs-8">
+                        <p>{{list.mobile}}</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="row">
+                    <div class="aui-col-xs-1"><span></span></div>
+                    <div class="aui-col-xs-3">手机&nbsp;:</div>
+                    <div class="aui-col-xs-8">
+                        <p>{{list.tel}}</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="row">
+                    <div class="aui-col-xs-1"><span></span></div>
+                    <div class="aui-col-xs-3">邮箱&nbsp;:</div>
+                    <div class="aui-col-xs-8">
+                        <p>{{list.email}}</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="row">
+                    <div class="aui-col-xs-1"><span></span></div>
+                    <div class="aui-col-xs-3">微信&nbsp;:</div>
+                    <div class="aui-col-xs-8">
+                        <p>{{list.wexin}}</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="row">
+                    <div class="aui-col-xs-1"><span></span></div>
+                    <div class="aui-col-xs-3">QQ&nbsp;:</div>
+                    <div class="aui-col-xs-8">
+                        <p>{{list.qq}}</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="row">
+                    <div class="aui-col-xs-1"><span></span></div>
+                    <div class="aui-col-xs-3">钉钉&nbsp;:</div>
+                    <div class="aui-col-xs-8">
+                        <p>{{list.dingding}}</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="row">
+                    <div class="aui-col-xs-1"><span></span></div>
+                    <div class="aui-col-xs-3">地址&nbsp;:</div>
+                    <div class="aui-col-xs-8">
+                        <p>{{list.address}}</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="row">
+                    <div class="aui-col-xs-1"><span></span></div>
+                    <div class="aui-col-xs-3">备注&nbsp;:</div>
+                    <div class="aui-col-xs-8">
+                        <p>{{list.remark}}</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="row">
+                    <div class="aui-col-xs-1"><span></span></div>
+                    <div class="aui-col-xs-3">排序&nbsp;:</div>
+                    <div class="aui-col-xs-8">
+                        <p>{{list.sort}}</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+
+    </ul>
+</script>
+<script type="text/javascript">
+    // 页面加载的类型
+    var Type = 'addUser';
+    // 用户信息
+    var paramDetail;
+    apiready = function() {
+        api.addEventListener({
+            name: 'changedFontSize'
+        }, function(ret, err) {
+            if (ret) {
+                changeFontSize();
+            }
+        });
+        api.parseTapmode();
+        var header = $api.byId('header');
+        // 实现沉浸式状态栏效果
+        $api.fixStatusBar(header);
+        // 苹果适配，下面返回键不挡住内容
+        // var footer = $api.byId('footer');
+        // $api.fixTabBar(footer);
+        fnReady();
+        GetDictionaryByCateCode();
+        init();
+
+
+        Top = null;
+
+        api.addEventListener({
+            name: 'lockScroll'
+        }, function(ret, err) {
+            if (ret) {
+                Top = $(window).scrollTop();
+                $('body').css("top", -Top + "px"); //给body一个负的top值；
+                $('body').addClass('overHidden'); //使网页不可滚动
+            }
+        });
+
+        api.addEventListener({
+            name: 'unlockSrcoll'
+        }, function(ret, err) {
+            if (ret) {
+                $(window).scrollTop(Top);
+                $('body').removeAttr("style"); //去掉内联样式
+                $('body').removeClass('overHidden'); //使网页恢复可滚动
+            }
+        });
+
+        // 组织机构选择
+        api.addEventListener({
+            name: 'addUserOrg'
+        }, function(ret, err) {
+            if (ret) {
+                var value = ret.value.selectedOrg;
+                $('#orgId').attr('orgId', value.id);
+                $('#orgId').val(value.orgName);
+            }
+        });
+    };
+
+    operationDom();
+    var actionList = {
+        'back': function() {
+            api.closeWin();
+            if (Type != 'UserDetail') {
+                api.sendEvent({
+                    name: 'updateUserList',
+                });
+            }
+        },
+
+        'selectParent': function() {
+            var OrgId = $('#orgId').attr('orgId') ? $('#orgId').attr('orgId') : 0;
+            api.openWin({
+                name: 'orgSelect',
+                url: '../org/orgSelect.html',
+                pageParam: {
+                    orgId: OrgId,
+                    from: 'addUser'
+                }
+            });
+        },
+        'SubmitSave': function() {
+            if (Type == 'addUser') {
+                Insert_UpdateUser(Type);
+            } else if (Type == 'updateUser') {
+                Insert_UpdateUser(Type);
+            }
+        }
+
+    }
+
+    function init() {
+        paramDetail = api.pageParam.datas;
+        if (paramDetail != undefined) {
+            paramDetail = JSON.parse(api.pageParam.datas);
+            var type = api.pageParam.type;
+            if (type == 'updateUser') {
+                $('.aui-title').text('修改用户');
+                Type = 'updateUser';
+                GetUserDetailById(Type);
+
+            } else if (type == 'UserDetail') {
+                $('.aui-title').text('用户详情');
+                $('#AddContact').hide();
+                $('#footer').hide();
+                Type = 'UserDetail';
+                GetUserDetailById(Type);
+            }
+        }
+    }
+
+    // 城市选择
+    var $target = $('#address');
+    var $clear = $('#clearArea');
+    $target.on('click', function(event) {
+        event.stopPropagation();
+        $target.citySelect('open');
+    });
+
+    $clear.on('click', function(event) {
+        $target.val('');
+        $target.citySelect('clear');
+        $('#clearArea').hide();
+        $('#selectArea').show();
+    });
+    var addressCode;
+    $target.on('done.ydui.cityselect', function(ret) {
+        $(this).val(ret.provance.n + ' ' + ret.city.n + ' ' + ret.area.n);
+        $(this).attr('provanceCode', ret.provance.code);
+        $(this).attr('cityCode', ret.city.code);
+        $(this).attr('areaCode', ret.area.code);
+        $('#clearArea').show();
+        $('#selectArea').hide();
+    });
+
+    // 修改用户时设置地址选择默认值
+    function AddressSelect() {
+        var arguments = arguments;
+        if (arguments[0] != undefined) {
+            // console.log(JSON.stringify(arguments[0]));
+            // 设置默认值
+            $target.val(arguments[0].address);
+            // 设置插件默认选中
+            $target.citySelect({
+                provance: {
+                    n: arguments[0].province,
+                    code: arguments[0].provinceCode
+                },
+                city: {
+                    n: arguments[0].city,
+                    code: arguments[0].cityCode
+                },
+                area: {
+                    n: arguments[0].district,
+                    code: arguments[0].districtCode
+                }
+            });
+        }
+    }
+
+    // 根据组织机构调用字典显示职务
+    function GetDictionaryByCateCode() {
+        var orgId = $('#orgId').attr('orgId') ? $('#orgId').attr('orgId') : 0;
+        fnGet('services/app/Dictionary/GetDictionaryByCateCode?cateCode=PositionType&orgId=' + orgId + '', {}, false, function(ret, err) {
+            if (ret) {
+                if (ret.success && ret.result.length != 0) {
+                    $('#position').html('');
+                    var result = ret.result;
+                    var optionHtml = '<option value="0" style="color:#eee">请选择职务</option>';
+                    for (i in result) {
+                        optionHtml += '<option value=' + result[i].value + '>' + result[i].name + '</option>';
+                    }
+                    $('#position').append(optionHtml);
+                } else {
+                    api.toast({
+                        msg: '数据请求失败',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+
+                }
+            }
+            api.hideProgress();
+        });
+    }
+
+
+
+    //  新增用户
+    function Insert_UpdateUser(type) {
+        // var orgId = $('#orgId').val() ? $('#orgId').val() :0;
+        var loginAccount = $('#loginAccount').val();
+        var loginPassword = $('#loginPassword').val();
+        var trueName = $('#trueName').val();
+        var sort = $('#sort').val();
+        var address = $('#address').val();
+        var gender = $('.aui-checked').val();
+        var orgIdName = $('#orgId').val();
+        var orgId = 0;
+
+        var provinceCode, cityCode, districtCode;
+        if (orgIdName == '') {
+            api.toast({
+                msg: '组织机构不能为空',
+                duration: 2000,
+                location: 'bottom'
+            });
+            return false;
+        } else {
+            orgId = $('#orgId').attr('orgId') ? $('#orgId').attr('orgId') : 0;
+        }
+        if (loginAccount == '') {
+            api.toast({
+                msg: '登陆名不能为空',
+                duration: 2000,
+                location: 'bottom'
+            });
+            return false;
+        }
+        if (loginPassword == '') {
+            api.toast({
+                msg: '登陆密码不能为空',
+                duration: 2000,
+                location: 'bottom'
+            });
+            return false;
+        }
+         if (trueName == '') {
+            api.toast({
+                msg: '姓名不能为空',
+                duration: 2000,
+                location: 'bottom'
+            });
+            return false;
+        }
+        if(sort.length >10){
+          api.toast({
+              msg: '排序最大10位',
+              duration: 2000,
+              location: 'bottom'
+          });
+          return false;
+        } else if (sort == ''){
+            api.toast({
+                msg: '排序不能为空',
+                duration: 2000,
+                location: 'bottom'
+            });
+            return false;
+          }
+
+        if (address != '') {
+            provinceCode = $('#address').attr('provanceCode');
+            cityCode = $('#address').attr('cityCode');
+            districtCode = $('#address').attr('areaCode');
+        }
+        if (gender == '') {
+            gender = 0;
+        }
+        var body = {
+            body: JSON.stringify({
+                "orgId": orgId,
+                "loginAccount": loginAccount,
+                "trueName": trueName,
+                "loginPassword": loginPassword,
+                "workNo": $('#workNo').val() ? $('#workNo').val() : '',
+                "gender": gender,
+                "position": $('#position').val()? $('#position').val() : 0,
+                "cardNumber": $('#cardNumber').val() ? $('#cardNumber').val() : '',
+                "sort": sort,
+                "remark": $('#remark').val() ? $('#remark').val() : '',
+                "provinceCode": provinceCode ? provinceCode : 0,
+                "cityCode": cityCode ? cityCode : 0,
+                "districtCode": districtCode ? districtCode : 0,
+                "address": address,
+                "tel": $('#tel').val() ? $('#tel').val() : '',
+                "mobile": $('#mobile').val() ? $('#mobile').val() : '',
+                "email": $('#email').val() ? $('#email').val() : '',
+                "qq": $('#qq').val() ? $('#qq').val() : '',
+                "dingding": $('#dingding').val() ? $('#dingding').val() : '',
+                "wexin": $('#wexin').val() ? $('#wexin').val() : '',
+
+            })
+        };
+        if (type == 'addUser') {
+            fnPost('services/app/User/InsertUser', body, 'application/json', true, false, function(ret, err) {
+                if (ret) {
+                    if (ret.success) {
+                        api.toast({
+                            msg: '操作成功',
+                            duration: 2000,
+                            location: 'top'
+                        });
+                        clearValue();
+                        api.closeWin();
+                        api.sendEvent({
+                            name: 'updateUserList',
+                        });
+
+                    } else {
+                        api.toast({
+                            msg: '新增失败',
+                            duration: 2000,
+                            location: 'top'
+                        });
+                    }
+                }
+                api.hideProgress();
+            });
+        } else if (type == 'updateUser') {
+            var body = body.body;
+            body = JSON.parse(body);
+            body.id = paramDetail.id;
+            var body1 = {
+                body: JSON.stringify(body)
+            };
+            fnPost('services/app/User/UpdateUser', body1, 'application/json', true, true, function(ret, err) {
+                if (ret) {
+                    if (ret.success) {
+                        api.toast({
+                            msg: '操作成功',
+                            duration: 2000,
+                            location: 'top'
+                        });
+                        api.closeWin();
+                        api.sendEvent({
+                            name: 'updateUserList',
+                        });
+                    } else {
+                        api.toast({
+                            msg: '修改失败',
+                            duration: 2000,
+                            location: 'top'
+                        });
+                    }
+                }
+                api.hideProgress();
+            });
+
+        }
+
+
+
+    }
+
+
+    // 新增后清空值
+    function clearValue() {
+        $('#orgId').val('');
+        $('#loginAccount').val('');
+        $('#trueName').val('');
+        $('#loginPassword').val('');
+        $('#workNo').val('');
+        $('input:radio[name=sex]').attr('checked', false);
+        $('#position').val('');
+        $('#cardNumber').val('');
+        $('#sort').val('');
+        $('#remark').val('');
+        $('#address').val('');
+        $('#tel').val('');
+        $('#mobile').val('');
+        $('#email').val('');
+        $('#qq').val('');
+        $('#dingding').val('');
+        $('#wexin').val('');
+        $('#clearArea').css({
+            'display': 'none'
+        });
+    }
+     var position;
+    //根据Id查找用户的详情
+    function GetUserDetailById(type) {
+        fnGet('services/app/User/GetUserDetail?Id=' + paramDetail.id + '', {}, false, function(ret, err) {
+            if (ret) {
+                if (ret.success && ret.result != '') {
+                    var result = ret.result;
+                    if (type == 'updateUser') {
+                         position = result.position;
+                        $('#orgId').val(result.orgNameList);
+                        $('#orgId').attr('orgId', result.orgId);
+                        $('#loginAccount').val(result.loginAccount);
+                        $('#trueName').val(result.trueName);
+                        $('#loginPassword').val(result.loginPassword);
+                        $('#workNo').val(result.workNo);
+                        $('input:radio[value=' + result.gender + ']').attr('checked', true);
+                        $('#cardNumber').val(result.cardNumber);
+                        $('#sort').val(result.sort);
+                        $('#remark').val(result.remark);
+                        $('#address').val(result.address);
+                        $('#tel').val(result.tel);
+                        $('#mobile').val(result.mobile);
+                        $('#email').val(result.email);
+                        $('#qq').val(result.qq);
+                        $('#dingding').val(result.dingding);
+                        $('#wexin').val(result.wexin);
+                        $('#position option[value='+position+']').attr("selected", true);
+                        // 性别默认显示，职务默认显示
+                        AddressSelect(result);
+                    } else if (type == 'UserDetail') {
+                        var datas = {
+                            list: result,
+                        }
+                        var str = template('contactDetail', datas);
+                        $('#listDemo').append(str);
+                    }
+
+                } else {
+                    api.toast({
+                        msg: '数据请求失败',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+
+                }
+            }
+            api.hideProgress();
+        });
+    }
+
+
+
+
+    // 解决键盘弹出时保存按钮向上弹起问题，监听页面高度，高度小于一定高度的时候，隐藏按钮，否则显示
+    var winHeight = $(window).height(); //获取当前页面高度
+    $(window).resize(function() {
+        var thisHeight = $(this).height();
+        if (winHeight - thisHeight > 50) {
+            $('#footer').hide();
+        } else {
+            $('#footer').show();
+            operationDom();
+
+        }
+    });
+</script>
+
+</html>

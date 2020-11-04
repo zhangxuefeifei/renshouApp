@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>收藏夹页面</title>
+    <link rel="stylesheet" href="../../../css/api.css">
+    <link rel="stylesheet" href="../../../css/aui.css">
+    <link rel="stylesheet" href="../css/ol.css">
+    <link rel="stylesheet" href="../css/dialogAlert.css">
+    <link rel="stylesheet" href="../css/markOrareasearch.css">
+    <style rel="stylesheet">
+    .page_box{
+      display: none;
+    }
+    .not_next{
+      color: #eee;
+    }
+    .box_active{
+      background: #eee!important;
+    }
+    .active{
+    background-image: -webkit-linear-gradient(90deg, #fff, #fff 50%, transparent 50%)!important;
+    }
+    </style>
+
+</head>
+
+<body class="flex-box" id='flex-box'>
+    <header class="aui-bar aui-bar-nav" id='header'>
+        <div class="aui-pull-left aui-btn aui-margin-l-10" onclick="closeWin()" tapmode>
+            <span class="aui-iconfont aui-icon-left"></span>
+        </div>
+        <div class="aui-title">收藏夹</div>
+
+    </header>
+    <!-- tab切换 -->
+    <div class="aui-tab" id="tab">
+        <div class="aui-tab-item aui-active">管点</div>
+        <div class="aui-tab-item">管线</div>
+    </div>
+
+    <!-- 搜索到的内容 -->
+    <div class="content_other_box">
+      <div class="aui-row aui-padded-l-15 aui-text-left" id='pageCountTitle'>
+            <span class='clear_search aui-padded-l-10'>共<span id='resuiltCount'>0</span>条搜索结果,总共<span id='pageCount'>0</span>页</span>
+      </div>
+      <div class="search_content  aui-padded-l-10">
+      </div>
+    </div>
+
+    <div class="page_box">
+        <div class="row">
+            <div class="aui-col-xs-4 aui-text-right" tapmode onclick="Pages('pre')">
+                <i class="aui-iconfont aui-icon-left not_next"></i>
+            </div>
+            <div class="aui-col-xs-4 aui-text-center"><span id='currentPage'>1</span>/<span id='allPages'></span></div>
+            <div class="aui-col-xs-4 aui-text-left"tapmode onclick="Pages('next')">
+                <i class="aui-iconfont aui-icon-right"></i>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/template.js"></script>
+<script type="text/javascript" src="../../../script/aui-tab.js"></script>
+<script type="text/javascript" src="../../../script/hammer.min.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/template" id='pointDemo'>
+  {{ if collectList.length > 0}}
+    {{each collectList value i }}
+    <div class="aui-row aui-padded-l-15 aui-row-other">
+        <div class="content_box aui-pull-left">
+            <div class="aui-col-xs-12" params = '{{value}}' tapmode onclick="openInfomationWin(this)">管点编号: <span>{{value.number}}</span></div>
+            <div class="aui-col-xs-12">名称: <span class="lon">{{value.name}}</div>
+            <div class="aui-col-xs-12">道路: <span class="lon">{{value.location}}</div>
+            <div class="aui-col-xs-12">备注: <span class="lon">{{value.remarks}}</div>
+        </div>
+        <div class="delete_btn aui-pull-left" tapmode onclick="deleteBookMark(this)" params='{{value}}'>
+            删除
+        </div>
+    </div>
+    {{/each}}
+    {{else}}
+    <div class="aui-row aui-text-center no-data">
+    <span class='clear_search'>暂无数据!</span>
+    </div>
+    {{/if}}
+</script>
+<script type="text/template" id='lineDemo'>
+    {{ if collectList.length > 0}}
+  {{each collectList value i }}
+  <div class="aui-row aui-padded-l-15 aui-row-other">
+      <div class="content_box aui-pull-left">
+          <div class="aui-col-xs-12" params = '{{value}}' tapmode onclick="openInfomationWin(this)">管线编号: <span>{{value.number}}</span></div>
+          <div class="aui-col-xs-12">名称: <span class="lon">{{value.name}}</div>
+          <div class="aui-col-xs-12">道路: <span class="lon">{{value.location}}</div>
+          <div class="aui-col-xs-12">备注: <span class="lon">{{value.remarks}}</div>
+      </div>
+      <div class="delete_btn aui-pull-left" tapmode onclick="deleteBookMark(this)" params='{{value}}'>
+          删除
+      </div>
+  </div>
+  {{/each}}
+  {{else}}
+  <div class="aui-row aui-text-center no-data">
+      <span class='clear_search'>暂无数据!</span>
+  </div>
+  {{/if}}
+</script>
+<script type="text/javascript">
+    var PageIndex = 1;
+    var filterType = 'Point';
+    apiready = function() {
+        // 页面初始化，沉浸式等
+        initWindow();
+        // console.log(JSON.parse(api.pageParam.data));
+        // 初始化页面数据。默认显示管点数据
+        loadDelayTHMS(function(){
+        initListDatas();
+        });
+
+        initTab();
+        initHummer();
+        // 信息页面管点或者管线移除收藏夹后监听，刷新数据
+        api.addEventListener({
+            name: 'infoDeleteUpdate'
+        }, function(ret, err){
+            if( ret ){
+              PageIndex = 1;
+              $('.aui-icon-left').addClass('not_next');
+              $('#currentPage').text(1);
+              initListDatas();
+            }
+        });
+        // 监听新增收藏
+        api.addEventListener({
+            name: 'addBookMarkSuccess'
+        }, function(ret, err) {
+            if (ret) {
+              PageIndex = 1;
+              $('.aui-icon-left').addClass('not_next');
+              $('#currentPage').text(1);
+              initListDatas();
+            }
+        });
+        api.addEventListener({
+            name: 'removeActive'
+        }, function(ret, err){
+            if( ret ){
+              setTimeout(()=>{
+                $('.search_content').find('.active').removeClass('active');
+                $('.search_content').find('.box_active').removeClass('box_active');
+              },500)
+            }
+        });
+    }
+
+    // 数据列表请求
+   function initListDatas(){
+      fnGet(`services/SNTGIS/PipeCollect/GetCollect?type=${filterType}&PageIndex=${PageIndex}&MaxResultCount=10`, null, false, function(ret,err){
+            if(ret && ret.success){
+              var result = ret.result;
+              if(result.collectList.length >0){
+                initPages(result.collectList,result.pageCount,result.resuiltCount,PageIndex);
+                $('.search_content').html('');
+                if(filterType == 'Point'){
+                  var str = template('pointDemo', result);
+                  $('.search_content').append(str);
+                }else {
+                  var str = template('lineDemo', result);
+                  $('.search_content').append(str);
+                }
+                initHummer();
+              }else {
+                $('.search_content').html('');
+                var str = template('pointDemo', result);
+                $('.search_content').append(str);
+              }
+
+            }
+            api.hideProgress();
+      })
+    }
+    // 初始化tab切换
+    function initTab() {
+        var tab = new auiTab({
+            element: document.getElementById("tab"),
+        }, function(ret) {
+            if (ret) {
+                var data = {
+                    list: []
+                }
+                if (ret.index == 1) {
+                 PageIndex = 1;
+                 filterType = 'Point';
+                } else {
+                  PageIndex = 1;
+                  filterType = 'Line';
+                }
+                initListDatas();
+            }
+        });
+
+    }
+  // 打开信息页面
+  function openInfomationWin(that){
+      var params = JSON.parse($(that).attr('params'));
+      $(that).parents('.aui-row-other').addClass('box_active');
+      $(that).addClass('active');
+      $(that).parents('.aui-row-other').siblings().removeClass('box_active');
+      $(that).parents('.aui-row-other').siblings().find('.active').removeClass('active');
+        params.bookmark = true;
+        api.openWin({
+            name: 'pointOrlineInfomation',
+            url: './pointOrlineInfomation.html',
+            pageParam: params
+        });
+   }
+
+  //  页码
+  function Pages(type){
+     changePages(type,PageIndex,function(index){
+       PageIndex = index;
+       initListDatas();
+     }); //type 前一页或者后一页，PageIndex当前页数，initListDatas 请求数据方法名
+  }
+
+
+
+  //  初始化向左滑动
+    function initHummer() {
+        var lists = $('.aui-row-other');
+        for (let i = 0; i < lists.length; i++) {
+            (function(i) {
+                var hammer = new Hammer(lists[i],{
+                  touchAction:'pan-y', //解决阻止滚动问题
+                });
+                var that = lists[i];
+                hammer.get('swipe').set({
+                    direction: Hammer.DIRECTION_ALL
+                });
+                hammer.on('swipeleft', function(ev) {
+                    $(that).find('.content_box').removeClass('content_box_show').addClass('content_box_hide');
+                    $(that).find('.delete_btn').removeClass('delete_btn_hide').addClass('delete_btn_show');
+                    $(that).siblings().find('.content_box').removeClass('content_box_hide').addClass('content_box_show');
+                    $(that).siblings().find('.delete_btn').removeClass('delete_btn_show').addClass('delete_btn_hide');
+                }).on('tap', function(ev) {
+                    $(that).find('.content_box').removeClass('content_box_hide').addClass('content_box_show');
+                    $(that).find('.delete_btn').removeClass('delete_btn_show').addClass('delete_btn_hide');
+                    $(that).siblings().find('.content_box').removeClass('content_box_hide').addClass('content_box_show');
+                    $(that).siblings().find('.delete_btn').removeClass('delete_btn_show').addClass('delete_btn_hide');
+                }).on('swiperight', function(ev) {
+                    $(that).find('.content_box').removeClass('content_box_hide').addClass('content_box_show');
+                    $(that).find('.delete_btn').removeClass('delete_btn_show').addClass('delete_btn_hide');
+                    $(that).siblings().find('.content_box').removeClass('content_box_hide').addClass('content_box_show');
+                    $(that).siblings().find('.delete_btn').removeClass('delete_btn_show').addClass('delete_btn_hide');
+                });
+            })(i);
+        }
+
+    }
+
+    // 删除收藏夹
+    function deleteBookMark(that) {
+      dialogAlert({
+          title: '提示',
+          content: '确定删除吗?',
+          buttons: ['确定', '取消'],
+      }, function(ret) {
+          if (ret.buttonIndex == 1) {
+            var params =JSON.parse($(that).attr('params'));
+            fnGet(`services/SNTGIS/PipeCollect/DeleteCollect?number=${params.number}`, null, true, function(ret,err){
+                  if(ret && ret.success){
+                    PageIndex = 1;
+                    $('.aui-icon-left').addClass('not_next');
+                    $('#currentPage').text(1);
+                     initListDatas();
+                  } else {
+                    api.toast({
+                        msg: ret.error.message,
+                        duration: 2000,
+                        location: 'top'
+                    });
+                  }
+                  api.hideProgress();
+            })
+          }
+      });
+    }
+</script>
+
+</html>

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>管线搜索页面</title>
+    <link rel="stylesheet" href="../../../css/api.css">
+    <link rel="stylesheet" href="../../../css/aui.css">
+    <link rel="stylesheet" href="../css/ol.css">
+    <link rel="stylesheet" href="../css/pointPipelinesearch.css">
+    <style rel="stylesheet">
+        .map {
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+
+</head>
+
+<body class="flex-box" id='flex-box'>
+    <header class="aui-bar aui-bar-nav" id='header'>
+        <div class="aui-pull-left aui-btn aui-margin-l-10" onclick="closeWin()" tapmode id='goback'>
+            <span class="aui-iconfont aui-icon-left"></span>
+        </div>
+        <div class="aui-title">管线搜索</div>
+        <div class="aui-pull-right" tapmode onclick="showOrCloseMap('close')">
+            <span class="aui-iconfont aui-icon-close map_close"></span>
+        </div>
+    </header>
+    <!--搜索条件区域 -->
+    <div class="condition_box aui-margin-t-15">
+        <ul class="aui-list aui-form-list aui-padded-l-10">
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        <span class="dot"></span>管线编号
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input type="text" placeholder="请输入管线编号" id='pipelinecode'>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        <span class="dot"></span>所属道路
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input type="text" placeholder="请输入管点编号" id='ownedroad'>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        <span class="dot"></span>管径
+                    </div>
+                    <div class="aui-list-item-input">
+                      <input type="text" placeholder="请输入管径" id='guanjing'>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        <span class="dot"></span>管材
+                    </div>
+                    <div class="aui-list-item-input">
+                        <select id='guancai' required>
+                     </select>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        <span class="dot"></span>材料厂商
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input type="text" placeholder="请输入材料厂商" id='materialfrom'>
+                    </div>
+                </div>
+            </li>
+
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        <span class="dot"></span>所属单位
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input type="text" placeholder="请输入阀门卡号" id='company'>
+                    </div>
+                </div>
+            </li>
+            <div class="btns_box">
+                <div class="btn aui-margin-r-5" tapmode onclick="clearContent()">清空</div>
+                <div class="btn btn-active  aui-margin-l-5" tapmode onclick="searchLine()">搜索</div>
+            </div>
+        </ul>
+    </div>
+
+    <!-- 搜索到的内容 -->
+    <div class="content_other_box">
+        <div class="aui-row aui-padded-l-15 aui-text-left" id='pageCountTitle'>
+            <span class='clear_search aui-padded-l-10'>共<span id='resuiltCount'>0</span>条搜索结果,总共<span id='pageCount'>0</span>页</span>
+        </div>
+        <div class="search_content">
+        </div>
+        <div class="map_btn_box" tapmode onclick="showOrCloseMap('show')">
+            <div class="map_btn">地图显示</div>
+        </div>
+        <div class="page_box">
+            <div class="row">
+                <div class="aui-col-xs-4 aui-text-right" tapmode onclick="Pages('pre')">
+                    <i class="aui-iconfont aui-icon-left not_next"></i>
+                </div>
+                <div class="aui-col-xs-4 aui-text-center"><span id='currentPage'>1</span>/<span id='allPages'></span></div>
+                <div class="aui-col-xs-4 aui-text-left" tapmode onclick="Pages('next')">
+                    <i class="aui-iconfont aui-icon-right"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="map" id="map">
+
+    </div>
+    <div class="point_pipe_box">
+    </div>
+
+
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/moment.js"></script>
+<script type="text/javascript" src="../../../script/template.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/ol-debug.js"></script>
+<script type="text/javascript" src="../script/initmap.js"></script>
+<script type="text/javascript" src="../script/searchQueryInfomation.js"></script>
+<script type="text/template" id='searchResultDemo'>
+    {{ if lineAttribute.length > 0}}
+     {{each lineAttribute value i }}
+    <div class="aui-row aui-padded-l-15 aui-row-other" params='{{value}}' tapmode onclick="openInfomationWin(this)">
+        <div class="content_box aui-pull-left">
+            <div class="aui-col-xs-12">管线编号: <span>{{value.lineNumber}}</span></div>
+            <div class="aui-col-xs-12">名称: <span class="lon">{{value.material}}</div>
+        <div class="aui-col-xs-12">道路: <span class="lon">{{value.location}}</div>
+    </div>
+</div>
+{{/each}}
+{{else}}
+<div class="aui-row aui-text-center no-data">
+    <span class='clear_search'>暂无数据!</span>
+            </div>
+            {{/if}}
+</script>
+<!-- 管线信息模板 -->
+<script type="text/template" id='pipeInfoDemo'>
+    <div class="btns">
+        <!-- <div tapmode params='{{result}}' onclick='deletePointOrPipeLine(this,"pipeline")'></div>
+      <div tapmode params='{{result}}' onclick='editPointOrPipeLine(this,"pipeline")'></div> -->
+        {{if bookmark}}
+        <div class='hasbookmark' id='linebookmarkImage' tapmode number = '{{linenumber}}' name ="{{materename}}"location = "{{location}}" params='{{result}}' onclick='bookmarkPointOrPipeLine(this,"Line","info")'></div>
+        {{else}}
+        <div class='no_bookmark' id='linebookmarkImage' tapmode number = '{{linenumber}}' name ="{{materename}}"location = "{{location}}" params='{{result}}' onclick='bookmarkPointOrPipeLine(this,"Line","info")'></div>
+        {{/if}}
+    </div>
+    <div class="aui-row m_t_1rem">
+        <div class="aui-col-xs-12 aui-text-left">管线编号: <span>{{linenumber}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>起始编号: <span>{{fromnumber}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>终端编号: <span>{{tonumber}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>起始高程: <span>{{fromelevat}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>终端高程: <span>{{toelevat}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>起始埋深: <span>{{fromdeep}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>终端埋深: <span>{{todeep}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>管线管长: <span>{{length}}&nbsp;&nbsp;米</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>状态类别: <span>{{buriedtype}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>埋设日期: <span>{{buildtime}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>管线管径: <span>{{unittype}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>管线管材: <span>{{materename}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>所属道路: <span>{{location}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-12 aui-text-left"><span class='dot'></span>所属单位: <span>{{buildunit}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-12 aui-text-left"><span class='dot'></span>材料厂商: <span>{{firm}}</span></div>
+    </div>
+</script>
+
+
+
+<script type="text/javascript">
+    var isCloseWin = true;
+    var PageIndex = 1;
+    var requBody = null;
+    apiready = function() {
+            // 页面初始化，沉浸式等
+            initWindow();
+            // 初始化选择框
+            initCheckbox();
+            // 管材类型
+            searchAllClass('Material','#guancai');
+            api.addEventListener({
+                name: 'removeActive'
+            }, function(ret, err) {
+                if (ret) {
+                    setTimeout(() => {
+                        $('.search_content').find('.active').removeClass('active');
+                    }, 500)
+                }
+            });
+        }
+        // 关闭窗口
+    function closeWin() {
+        if (isCloseWin) {
+            api.closeWin();
+        } else {
+            $('#map').hide();
+            $('.condition_box').show();
+            $('.content_other_box').hide();
+            isCloseWin = true;
+        }
+
+    }
+    // 清空
+    function clearContent() {
+        $('#pipelinecode').val('');
+        $('#ownedroad').val('');
+        $('#guanjing').val('');
+        $('#guancai').val('');
+        $('#materialfrom').val('');
+        $('#company').val('');
+        PageIndex = 1;
+
+    }
+    // 搜索
+    function searchLine() {
+        isCloseWin = false;
+        var body = {
+          body:JSON.stringify({
+            lineNumber: $('#pipelinecode').val(),
+            location: $('#ownedroad').val(),
+            unitType: $('#guanjing').val(),
+            material: $('#guancai').val(),
+            firm: $('#materialfrom').val(),
+            buildUnit: $('#company').val(),
+            pageIndex: PageIndex,
+            maxResultCount: 10
+          })
+        }
+        requBody = {
+          body:JSON.stringify({
+            lineNumber: $('#pipelinecode').val(),
+            location: $('#ownedroad').val(),
+            unitType: $('#guanjing').val(),
+            material: $('#guancai').val(),
+            firm: $('#materialfrom').val(),
+            buildUnit: $('#company').val()
+          })
+        }
+        fnPost('services/SNTGIS/SearchPipe/SearchLine', body, 'application/json', true, false, function(ret, err) {
+            if (ret && ret.success) {
+                $('.map_btn_box').hide();
+                var result = ret.result;
+                if(result.lineAttribute.length>0){
+                  initPages(result.lineAttribute,result.pageCount,result.resuiltCount,PageIndex);
+                $('.map_btn_box').show();
+                }
+                $('.condition_box').hide();
+                $('.content_other_box').show();
+                $('.search_content').html('');
+                var data = result;
+                var str = template('searchResultDemo', data);
+                $('.search_content').append(str);
+
+            } else {
+                //  api.toast({
+                //      msg: '',
+                //      duration: 2000,
+                //      location: 'top'
+                //  });
+            }
+        });
+
+
+
+    }
+
+    //  页码
+    function Pages(type) {
+        changePages(type, PageIndex, function(index) {
+            PageIndex = index;
+            searchLine();
+        }); //type 前一页或者后一页，PageIndex当前页数，initListDatas 请求数据方法名
+    }
+
+    // 打开信息页面
+    function openInfomationWin(that) {
+        $(that).addClass('active');
+        $(that).siblings().removeClass('active');
+        var Params = JSON.parse($(that).attr('params'));
+        var params = {
+            bookmark: false,
+            type: 'Line',
+            number: Params.lineNumber
+        }
+        api.openWin({
+            name: 'pointOrlineInfomation',
+            url: './pointOrlineInfomation.html',
+            pageParam: params
+        });
+    }
+
+
+
+    // 显示地图
+    function showOrCloseMap(type) {
+        if (type == 'show') {
+            // 初始化地图
+            $('.condition_box').hide();
+            $('.content_other_box').hide();
+            $('.map_close').show();
+            $('#map').show();
+            initMap();
+            fnPost('services/SNTGIS/SearchPipe/SearchAllLine', requBody, 'application/json', true, false, function(ret, err) {
+                  if(ret && ret.success){
+                 lineSearchMapShow(ret.result);
+                  }
+                api.hideProgress();
+               })
+         $('#goback').hide();
+        } else {
+            $('.condition_box').hide();
+            $('.content_other_box').show();
+            $('.map_close').hide();
+            $('#map').hide();
+            $('.point_pipe_box').hide();
+            $('#goback').show();
+            clearSelect();
+            // removeAddLayer('lineSearchMapShowLayer',8);
+        }
+
+    }
+</script>
+
+</html>

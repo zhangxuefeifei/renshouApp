@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>详情弹框</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/api.css" />
+    <link rel="stylesheet" href="../../../css/aui.css">
+    <style>
+        html,
+        body {
+            height: 98%;
+            background: transparent;
+            /*-webkit-touch-callout: none;*/
+        }
+
+        #dialog {
+            background-color: #e7e7e7;
+            border-radius: 6px;
+            position: absolute;
+            margin: auto;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 237px;
+            height: 225px;
+            -webkit-transition: all .1s;
+            transition: all .1s;
+            -webkit-transform: scale(0);
+            transform: scale(0);
+            opacity: 0;
+            padding: 15px;
+            overflow-x: scroll;
+        }
+
+        #dialog.in {
+            -webkit-transform: scale(1);
+            transform: scale(1);
+            opacity: 1;
+        }
+        #centent{
+          border: 1px solid #fff;
+          line-height: 1.5em;
+          letter-spacing:1px;
+          font-weight:normal;
+          font-size: 13px;
+          text-indent: 2em;
+          padding: 10px;
+        }
+        #submiter{
+          font-size: 12px;
+        }
+        #subtime{
+          font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="dialog">
+      <div id="submiter"></div>
+      <div style="width:100%;height:10px;"></div>
+      <div id="centent"></div>
+      <div style="width:100%;height:10px;"></div>
+      <div id="subtime"></div>
+    </div>
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript">
+    $('#dialog').addClass('in');
+    apiready = function() {
+        var remark = api.pageParam.remark;
+        var submiter = api.pageParam.submiter;
+        var subtime = api.pageParam.subtime;
+        $('#centent').text(remark);
+        $('#submiter').text("提交人："+submiter);
+        $('#subtime').text("提交时间："+subtime);
+        $(document.body).on('touchend', function(e) {
+            var dialog = $("#dialog")[0];
+            if (!$.contains(dialog, e.target)) {
+                $('#dialog').removeClass('in');
+                setTimeout(function() {
+                    api.closeFrame();
+                }, 200);
+            }
+        });
+    };
+</script>
+
+</html>

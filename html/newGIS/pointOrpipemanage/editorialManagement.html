@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>编辑管理</title>
+    <link rel="stylesheet" href="../../../css/api.css">
+    <link rel="stylesheet" href="../../../css/aui.css">
+    <link rel="stylesheet" href="../../../css/rolldate.css">
+    <link rel="stylesheet" href="../css/dialogAlert.css">
+    <link rel="stylesheet" href="../css/ol.css">
+    <link rel="stylesheet" href="../css/pointpipeinfo.css">
+    <style rel="stylesheet">
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #EEEEEE;
+        }
+
+        .flex-box {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            /*justify-content: flex-start;*/
+        }
+
+        header.aui-bar-nav {
+            background: #EEEEEE;
+            font-size: 0.8rem;
+            font-family: PingFangSC-Semibold, PingFang SC;
+            font-weight: 600;
+            color: #333;
+        }
+
+        header.aui-bar-nav .aui-btn .aui-iconfont {
+            color: #333;
+            width: 1.2rem;
+            height: 1.2rem;
+            font-weight: bold;
+            border: none;
+        }
+
+        header .aui-icon-left:before {
+            content: url('../image/closeWin.png');
+            width: 1.2rem;
+            height: 1.2rem;
+        }
+
+        header .screen_box {
+            width: auto;
+            height: 2.2rem;
+            line-height: 2.2rem;
+            display: flex;
+            flex-direction: row;
+        }
+
+        .screen_other {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .screen_box .editmap {
+            width: 1rem;
+            height: 1rem;
+            background: url('../image/editmap.png');
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+            margin-right: 0.3rem;
+        }
+
+        .screen_box .screen {
+            width: 1.2rem;
+            height: 0.9rem;
+            background: url('../image/screen.png');
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+        }
+
+        .screen_condition_mask {
+            width: 100%;
+            height: 32.35rem;
+            background: rgba(0, 0, 0, 0.5);
+            position: absolute;
+            z-index: 10;
+            top: 6.65rem;
+            overflow: hidden;
+            display: none;
+        }
+
+        .screen_condition_content {
+            width: 100%;
+            height: auto;
+            background: #fff;
+            position: absolute;
+            top: -15.3rem;
+            z-index: 11;
+            padding-top: 1.1rem;
+            display: none;
+        }
+
+        .screen_condition_content_up {
+            top: -15.3rem;
+            transition: 0.3rem;
+        }
+
+        .screen_condition_content_down {
+            top: 4.2rem;
+            transition: 0.3rem;
+        }
+
+        .screen_condition_content .aui-row {
+            width: 100%;
+            height: 4.5rem;
+            padding-left: 1.4rem;
+        }
+
+        .screen_condition_content .title {
+            width: 100%;
+            height: 1.5rem;
+            line-height: 1.5rem;
+            color: #333;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-align: left;
+            margin-bottom: 0.85rem;
+        }
+
+        .screen_condition_content .btns {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+        }
+
+        .screen_condition_content .btns div {
+            width: 3rem;
+            height: 1.5rem;
+            line-height: 1.5rem;
+            font-size: 0.6rem;
+            color: #666666;
+            text-align: center;
+            margin-right: 1.1rem;
+            border-radius: 1rem;
+            border: 0.05rem solid rgba(204, 204, 204, 1);
+        }
+
+        .btns div.btns_active {
+            background: rgba(230, 233, 255, 1);
+            border: 0.05rem solid rgba(111, 126, 246, 1);
+            color: #6F7EF6;
+        }
+
+        .operationBtns {
+            height: 100%;
+            line-height: 4.5rem;
+            display: flex;
+            flex-flow: row;
+            justify-content: center;
+            margin-left: -1.4rem;
+        }
+
+        .operationBtns div {
+            width: 7.5rem;
+            height: 2rem;
+            line-height: 2rem;
+            border-radius: 2.5rem;
+            text-align: center;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            font-weight: 600;
+            margin: auto;
+        }
+
+        .operationBtns div:first-child {
+            background: #6F7EF6;
+            color: #fff;
+        }
+
+        .operationBtns div:last-child {
+            background: #ccc;
+            color: #333;
+        }
+        /*tab切换*/
+
+        .aui-tab {
+            width: 100%;
+            height: 3rem;
+            line-height: 3rem;
+            padding-left: 1.3rem;
+            background: #eee;
+        }
+
+        .aui-tab-item {
+            width: auto;
+            color: #999;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-right: 1rem;
+        }
+
+        .aui-tab-item:first-child {
+            margin-right: 1.6rem;
+        }
+
+        .aui-tab-item.aui-active {
+            font-size: 0.9rem;
+            color: #6F7EF6;
+            border-bottom: 2px solid #6F7EF6;
+        }
+        /*内容*/
+
+        .tab_content {
+            width: 93%;
+            height: 29rem;
+            border-bottom: 6px solid #fff;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+
+        .content_header {
+            width: 100%;
+            height: 3rem;
+            line-height: 3rem;
+            background: #EEEFFF;
+            /*border-radius: 0.3rem 0rem 0rem 0.3rem;*/
+            border: 0.05rem solid rgba(238, 238, 238, 1);
+            font-size: 0.6rem;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .content_body {
+            width: 100%;
+            height: 25.07rem;
+            overflow: hidden;
+            overflow-y: scroll;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .content_body .item {
+            width: 100%;
+            height: 3rem;
+            line-height: 3rem;
+            /*border-radius: 0.3rem 0rem 0rem 0.3rem;*/
+            border: 0.05rem solid rgba(238, 238, 238, 1);
+            font-size: 0.6rem;
+            color: #666;
+            padding: 0 0.2rem;
+        }
+
+        .content_body .item .item_content {
+            width: 100%;
+            height: 100%;
+            margin-left: 0rem;
+        }
+
+        .item_content_left {
+            margin-left: -5.8rem!important;
+            transition: 0.3rem;
+        }
+
+        .item_content_right {
+            margin-left: 0rem!important;
+            transition: 0.3rem;
+        }
+
+        .content_body .item .item_btns {
+            width: 6rem;
+            height: 100%;
+            margin-right: -0.2rem;
+            display: none;
+        }
+
+        .content_body .item .item_btns div {
+            width: 3rem;
+            height: 100%;
+            float: left;
+            color: #fff;
+        }
+
+        .content_body .item .item_btns div:first-child {
+            background: #CCCCCC;
+        }
+
+        .content_body .item .item_btns div:last-child {
+            background: #6F7EF6;
+        }
+
+        .content_body .item:nth-child(odd) {
+            background: #eee;
+        }
+
+        .content_body .item:nth-child(even) {
+            background: #fff;
+        }
+
+        .content_body .item div,
+        .content_header div {
+            float: left;
+            width: 20%;
+            text-align: center;
+        }
+        /*分页*/
+
+        .page_box {
+            width: 100%;
+            position: absolute;
+            bottom: 0rem;
+            font-size: 0.7rem;
+            color: #333;
+            height: 2.65rem;
+            background: #eee;
+            padding-top: 0.5rem;
+            display: none;
+        }
+
+        .page_box .aui-iconfont {
+            font-weight: bold;
+        }
+
+        .aui-bar-nav .map_close.aui-iconfont {
+            display: none;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .not_next {
+            color: #333;
+            opacity: 0.2;
+        }
+
+        .map_box {
+            width: 100%;
+            height: 90%;
+            position: absolute;
+            bottom: 0;
+            display: none;
+            z-index: 1000;
+        }
+
+        .map {
+            width: 100%;
+            height: 100%;
+        }
+        /*未通过提示原因*/
+
+        .aui-tips {
+            width: 16.4rem;
+            height: auto;
+            border-radius: 0.5rem;
+            margin: 0 auto;
+            bottom: 20rem;
+            justify-content: inherit;
+            -webkit-align-items: flex-start;
+            align-items: flex-start;
+            flex-direction: column;
+            text-align: left;
+            padding-bottom: 0.5rem;
+            display: none;
+            /*margin-left:1.6rem;*/
+        }
+
+        .aui-tips .aui-iconfont {
+            position: absolute;
+            right: 0.5rem;
+            top: -0.2rem;
+        }
+
+        .rolldate-container header {
+            background: #6F7EF6!important;
+            color: #fff!important;
+        }
+
+        .rolldate-container .rolldate-confirm {
+            float: left;
+            background: #6F7EF6!important;
+            color: #fff!important;
+        }
+
+        .time_row div {
+            width: auto;
+        }
+
+        .time_row input {
+            width: 7.5rem;
+            height: 1.7rem;
+            background: rgba(238, 238, 238, 1);
+            border-radius: 0.6rem;
+            line-height: 2rem;
+            padding-left: 0.5rem;
+        }
+
+        .time_row .btns div {
+            height: 1.7rem;
+            line-height: 1.7rem;
+            width: 7.5rem;
+            border: none;
+            border-radius: 0.1rem;
+        }
+
+        .clear_search {
+            font-size: 0.6rem;
+            color: rgba(36, 52, 176, 0.5);
+        }
+    </style>
+    <style media="screen">
+        .showNumber {
+            position: absolute;
+            top: 0rem;
+            background: #fff;
+            height: 1rem;
+            line-height: 1rem;
+            width: auto!important;
+            padding: 0rem 0.3rem 0 0;
+            border-radius: 0.3rem;
+            display: none;
+        }
+
+        .content_body .item {
+            position: relative;
+        }
+
+        .not_pass {
+            color: red!important;
+            /*text-decoration: underline;*/
+        }
+
+        .numberColor {
+            color: #6F7EF6;
+            /*text-decoration: underline;*/
+        }
+        .point_pipe_box .btns {
+            position: absolute;
+            top: -1rem;
+            display: flex;
+            justify-content: flex-end;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav" id='header'>
+        <div class="aui-pull-left aui-btn aui-margin-l-10" onclick="closeWin()" tapmode>
+            <span class="aui-iconfont aui-icon-left"></span>
+        </div>
+        <div class="aui-title">编辑管理</div>
+        <div class="screen_box aui-pull-right">
+            <div class="screen_other">
+                <div class="editmap" tapmode onclick="openMap(true)"></div>
+                <div class="screen" tapmode onclick="goUPorDown()"></div>
+            </div>
+            <span class="aui-iconfont aui-icon-close map_close" tapmode onclick="openMap(false)"></span>
+        </div>
+    </header>
+    <!-- 筛选 -->
+    <div class="screen_condition_mask"></div>
+    <div class="screen_condition_content">
+        <div class="aui-row aui-margin-b-10">
+            <div class="title">操作类型</div>
+            <div class="btns" id='OperationType'>
+                <div class="btns_active" OperationType='' tapmode onclick="addBtnsActive(this)">所有</div>
+                <div OperationType='新增' tapmode onclick="addBtnsActive(this)">新增管网</div>
+                <div OperationType='修改' tapmode onclick="addBtnsActive(this)">编辑管网</div>
+                <div OperationType='删除' tapmode onclick="addBtnsActive(this)">删除管网</div>
+            </div>
+        </div>
+        <div class="aui-row">
+            <div class="title">管网类型</div>
+            <div class="btns" id='PipeType'>
+                <div class="btns_active" PipeType='' tapmode onclick="addBtnsActive(this)">所有</div>
+                <div PipeType='管点' tapmode onclick="addBtnsActive(this)">管点</div>
+                <div PipeType='管线' tapmode onclick="addBtnsActive(this)">管线</div>
+            </div>
+        </div>
+        <div class="aui-row time_row">
+            <div class="title">提交时间</div>
+            <div class="btns">
+                <div><input type="text" placeholder="请选择" id='FromTime'></div>
+                <div><input type="text" placeholder="请选择" id='ToTime'></div>
+            </div>
+        </div>
+        <div class="aui-row">
+            <div class="operationBtns">
+                <div tapmode onclick="GetAllSubmit(true)">确定</div>
+                <div tapmode onclick="screenSureOrCancel('cancel')">取消</div>
+            </div>
+        </div>
+    </div>
+    <!-- tab切换 -->
+    <div class="aui-tab" id="tab">
+        <div class="aui-tab-item aui-active">全部</div>
+        <div class="aui-tab-item">待审核</div>
+        <div class="aui-tab-item">未通过</div>
+        <div class="aui-tab-item">已通过</div>
+    </div>
+
+    <div class="tab_content">
+        <!-- 表头 -->
+        <div class="content_header">
+            <div>设备编号</div>
+            <div>管网类型</div>
+            <div>审核状态</div>
+            <div>操作类型</div>
+            <div>提交日期</div>
+        </div>
+        <!-- 表内容  -->
+        <div class="content_body">
+            <!-- <div class="item itemHasHammer">
+              <div class="item_content">
+                  <div class="showNumber">{{value.number}}</div>
+                  <div number = '{{value.number}}' class="longPressNumber">15615615</div>
+                  <div>12005</div>
+                    <div>02305</div>
+                  <div>056165489</div>
+                  <div>018485</div>
+              </div>
+          </div> -->
+        </div>
+    </div>
+
+
+    <!-- 分页 -->
+    <div class="page_box">
+        <div class="row">
+            <div class="aui-col-xs-4 aui-text-right" tapmode onclick="Pages('pre')">
+                <i class="aui-iconfont aui-icon-left not_next"></i>
+            </div>
+            <div class="aui-col-xs-4 aui-text-center"><span id='currentPage'>1</span>/<span id='allPages'></span></div>
+            <div class="aui-col-xs-4 aui-text-left" tapmode onclick="Pages('next')">
+                <i class="aui-iconfont aui-icon-right"></i>
+            </div>
+        </div>
+    </div>
+    <!--未通过提示原因  -->
+    <div class="aui-tips aui-margin-b-15" id="tips-1">
+        <!-- <i class="aui-iconfont aui-icon-info"></i> -->
+        <div class="aui-tips-title">未通过原因:</div>
+        <div class="aui-tips-title tips-title-content"></div>
+        <i class="aui-iconfont aui-icon-close" tapmode onclick="openOrcloseTips(this,'close')"></i>
+    </div>
+    <div class="point_pipe_box">
+    </div>
+    <div class="map_box">
+        <div class="map" id="map"></div>
+    </div>
+
+
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/moment.js"></script>
+<script type="text/javascript" src="../../../script/rolldateMin.js"></script>
+<script type="text/javascript" src="../../../script/aui-tab.js"></script>
+<script type="text/javascript" src="../../../script/hammer.min.js"></script>
+<script type="text/javascript" src="../../../script/template.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/ol-debug.js"></script>
+<script type="text/javascript" src="../script/base64.js"></script>
+<!-- 初始化地图 -->
+<script type="text/javascript" src="../script/initmap.js"></script>
+
+<script type="text/template" id='listDemo'>
+    {{if editOutput.length > 0}} {{each editOutput value i}} {{if value.checkState == '未通过'}}
+    <div class="item itemHasHammer">
+        {{else}}
+        <div class="item">
+            {{/if}}
+            <div class="item_content">
+                <div class="showNumber">{{value.number}}</div>
+                 {{if value.checkState == '未通过'}}
+                   <div class="longPressNumber numberColor" params='{{value}}' tapmode onclick="queryDetail(this,true)">{{value.number.substring(0,10)}}...</div>
+                 {{else}}
+                   <div class="longPressNumber numberColor" params='{{value}}' tapmode onclick="queryDetail(this,false)">{{value.number.substring(0,10)}}...</div>
+                 {{/if}}
+                <!-- <div class="longPressNumber numberColor">{{value.number.substring(0,10)}}...</div> -->
+                {{ if value.pipeType == "Point"}}
+                <div>管点</div>
+                {{else}}
+                <div>管线</div>
+                {{/if}} {{if value.checkState == '未通过'}}
+                <div class='not_pass' params='{{value.referReason}}' tapmode onclick="openOrcloseTips(this,'open')">{{value.checkState}}</div>
+                {{else}}
+                <div>{{value.checkState}}</div>
+                {{/if}}
+                <div>{{value.operationType}}</div>
+                <div>{{value.submitTime}}</div>
+            </div>
+            <div class="item_btns">
+                {{if value.pipeType == 'Point'}}
+                <div params='{{value}}' tapmode onclick="editPointOrPipeLine(this,'Point','{{value.id}}')">更改</div>
+                {{else}}
+                <div params='{{value}}' tapmode onclick="editPointOrPipeLine(this,'Line','{{value.id}}')">更改</div>
+                {{/if}}
+                <div params='{{value}}' tapmode onclick="deleteItem(this,'{{value.id}}')">撤销</div>
+            </div>
+        </div>
+        {{/each}} {{else}}
+        <div class="item itemHasHammer aui-text-center">
+            <span class='clear_search'>暂无数据!</span>
+        </div>
+        {{/if}}
+</script>
+<script type="text/template" id='pointInfoDemo'>
+  {{if notPass}}
+  <div class="btns">
+      <div class='infoDelete'tapmode onclick="deleteItem(this,'{{id}}')" ></div>
+      <div class='infoEdite' tapmode onclick="editPointOrPipeLine(this,'Point','{{id}}')"></div>
+  </div>
+  {{/if}}
+    <div class="aui-row m_t_1rem">
+        <div class="aui-col-xs-12 aui-text-left">管点编号: <span>{{number}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"> <span class='dot'></span> 经度: <span>{{lon}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>纬度: <span>{{lat}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>设备类型: <span>{{pointName}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>高程: <span>{{pointElevation}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>埋深: <span>{{pointDeep}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>埋设日期: <span>{{buildTime}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>型号: <span>{{unitType}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-12 aui-text-left"><span class='dot'></span>所属道路: <span>{{location}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-12 aui-text-left"><span class='dot'></span>材料厂商: <span>{{firm}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-12 aui-text-left"><span class='dot'></span>所属单位: <span>{{buildUnit}}</span></div>
+    </div>
+</script>
+<!-- 管线信息模板 -->
+<script type="text/template" id='pipeInfoDemo'>
+  {{if notPass}}
+  <div class="btns">
+    <div class='infoDelete'tapmode onclick="deleteItem(this,'{{id}}')" ></div>
+    <div class='infoEdite' tapmode onclick="editPointOrPipeLine(this,'Line','{{id}}')"></div>
+  </div>
+  {{/if}}
+    <div class="aui-row m_t_1rem">
+        <div class="aui-col-xs-12 aui-text-left">管线编号: <span>{{number}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>起始编号: <span>{{fromNumber}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>终端编号: <span>{{toNumber}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>起始高程: <span>{{fromElevate}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>终端高程: <span>{{toElevate}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>起始埋深: <span>{{fromDeep}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>终端埋深: <span>{{toDeep}}</span></div>
+    </div>
+    <div class="aui-row">
+        {{if stateClass == 1}}
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>状态类别: <span>现有</span></div>
+        {{else if stateClass == 2}}
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>状态类别: <span>废弃</span></div>
+        {{else if stateClass == 3}}
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>状态类别: <span>在建</span></div>
+        {{else}}
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>状态类别: <span>规划</span></div>
+        {{/if}}
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>埋设日期: <span>{{buildTime}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>管线管材: <span>{{material}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>管线管径: <span>{{unitType}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>所属道路: <span>{{location}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>埋设类型: <span>{{buriedType}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-12 aui-text-left"><span class='dot'></span>所属单位: <span>{{buildUnit}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-12 aui-text-left"><span class='dot'></span>材料厂商: <span>{{firm}}</span></div>
+    </div>
+</script>
+<script type="text/javascript">
+    var isCloseWin = true;
+    var PageIndex = 1;
+    var currystatus = 1;
+    apiready = function() {
+            // 页面初始化，沉浸式等
+            initWindow();
+            // initTime();
+            initHummer();
+            // 初始化tab
+            initTab();
+            // 获取列表数据
+            loadDelayTHMS(function() {
+                GetAllSubmit();
+            });
+            // 时间初始化
+            initTime('#FromTime');
+            initTime('#ToTime');
+
+            // 未通过数据修改成功更新页面数据
+            api.addEventListener({
+                name: 'updateGetAllSubmit'
+            }, function(ret, err) {
+                if (ret) {
+                    GetAllSubmit();
+                }
+            });
+
+
+        }
+        // 初始化tab切换
+    function initTab() {
+        var tab = new auiTab({
+            element: document.getElementById("tab"),
+        }, function(ret) {
+            if (ret) {
+                if (ret.index == 1) {
+                    // 1 全部
+                    currystatus = 1;
+                } else if (ret.index == 2) {
+                    // 2 待审核
+                    currystatus = 2;
+                } else if (ret.index == 3) {
+                    // 未通过
+                    currystatus = 3;
+                } else if (ret.index == 4) {
+                    // 已通过
+                    currystatus = 4;
+                }
+                PageIndex = 1;
+                GetAllSubmit();
+            }
+        });
+
+    }
+
+
+    // 编辑
+    function editPointOrPipeLine(that, type, id) {
+        fnGet(`services/SNTGIS/EditPipeManage/GetValueByNumber?input=${id}`, null, false, function(ret, err) {
+            api.hideProgress();
+            if (ret && ret.success) {
+                var data = null;
+                if (type == "Point") {
+                    data = ret.result.point;
+                } else {
+                    data = ret.result.line;
+                }
+                data.id = id;
+                if(data!=null){
+                  api.openWin({
+                      name: 'manageEditPointOrLine',
+                      url: './manageEditPointOrLine.html',
+                      pageParam: {
+                          type: type,
+                          data: data,
+                      }
+                  });
+                } else {
+                  api.toast({
+                      msg: '暂无查询到数据!',
+                      duration: 2000,
+                      location: 'top'
+                  });
+
+                }
+
+            }
+        })
+
+
+    }
+
+    // 输入框模糊查询
+    function GetAllSubmit(isSearch = null) {
+        if (isSearch != null) {
+            PageIndex = 1;
+            isOpenScreen = false;
+            goUPorDown();
+        }
+        var filter = {
+            PageIndex: PageIndex,
+            MaxResultCount: 10,
+            type: currystatus,
+            OperationType: $('#OperationType div[class="btns_active"]').attr('OperationType'),
+            PipeType: $('#PipeType div[class="btns_active"]').attr('PipeType'),
+            FromTime: $('#FromTime').val(),
+            ToTime: $('#ToTime').val()
+        }
+        fnGet(
+            `services/SNTGIS/EditPipeManage/GetAllSubmit?PageIndex=${filter.PageIndex}&MaxResultCount=${filter.MaxResultCount}&type=${filter.type}&OperationType=${filter.OperationType}&PipeType=${filter.PipeType}&FromTime=${filter.FromTime}&ToTime=${filter.ToTime}`,
+            null, false,
+            function(ret, err) {
+                api.hideProgress();
+                if (ret && ret.success) {
+                    var result = ret.result;
+                    //  初始化页码 common.js
+                    if (result.editOutput.length > 0) {
+                        $('.page_box').show();
+                    } else {
+                        $('.page_box').hide();
+                    }
+                    $('#currentPage').text(PageIndex);
+                    if (result.resuiltCount > 10) {
+                        $('#allPages').text(result.pageCount);
+                        if (result.pageCount == PageIndex) {
+                            $('.page_box .aui-icon-right').addClass('not_next')
+                        } else {
+                            $('.page_box .aui-icon-right').removeClass('not_next');
+                        }
+                    } else {
+                        $('#allPages').text(1);
+                        $('.page_box .aui-icon-right').addClass('not_next');
+                        $('.page_box .aui-icon-left').addClass('not_next');
+                    }
+                    for (var i = 0; i < result.editOutput.length; i++) {
+                        result.editOutput[i].submitTime = moment(result.editOutput[i].submitTime).format('YYYY-MM-DD');
+                    }
+                    $('.content_body').html('');
+                    var str = template('listDemo', result);
+                    $('.content_body').append(str);
+                    initHummer();
+                } else {
+                    //  api.toast({
+                    //      msg: '',
+                    //      duration: 2000,
+                    //      location: 'top'
+                    //  });
+                }
+            });
+    }
+
+
+    //  页码
+    function Pages(type) {
+        changePages(type, PageIndex, function(index) {
+            PageIndex = index;
+            GetAllSubmit();
+        }); //type 前一页或者后一页，PageIndex当前页数，initListDatas 请求数据方法名
+    }
+
+    // 筛选添加选中样式
+    function addBtnsActive(that) {
+        $(that).siblings().removeClass('btns_active');
+        if (!($(that).hasClass('btns_active'))) {
+            $(that).addClass('btns_active');
+        }
+    }
+
+
+    //  打开地图
+    function openMap(type, from = null) {
+        if (type) {
+            $('.map_box').show();
+            initEditMap();
+            editManageMap.getView().setZoom(18);
+            $('.map_close').show();
+            $('.aui-tab').hide();
+            $('.page_box').hide();
+            $('.screen_other').hide();
+            $('.tab_content').hide();
+            if (from == null) {
+                var filter = {
+                    type: currystatus,
+                    OperationType: $('#OperationType div[class="btns_active"]').attr('OperationType'),
+                    PipeType: $('#PipeType div[class="btns_active"]').attr('PipeType'),
+                    FromTime: $('#FromTime').val(),
+                    ToTime: $('#ToTime').val()
+                }
+                fnGet(`services/SNTGIS/EditPipeManage/GetAllSubmitToMap?type=${filter.type}&OperationType=${filter.OperationType}&PipeType=${filter.PipeType}&FromTime=${filter.FromTime}&ToTime=${filter.ToTime}`, null, false, function(ret, err) {
+                    api.hideProgress();
+                    if (ret && ret.success) {
+                        var result = ret.result;
+                        renderAllDataToMap(result);
+                    }
+                })
+            }
+        } else {
+            $('.map_box').hide();
+            $('.map_close').hide();
+            $('.aui-tab').show();
+            $('.page_box').show();
+            $('.screen_other').show();
+            $('.tab_content').show();
+            $('.point_pipe_box').hide();
+            editManageLayer.getSource().clear();
+            editManageMap.removeInteraction(editeSingleSelect);
+            setTimeout(() => {
+                editManageMap.addInteraction(editeSingleSelect);
+            }, 1000)
+        }
+
+    }
+
+
+    var editManageSource = new ol.source.Vector({});
+    var editManageLayer = new ol.layer.Vector({
+        source: editManageSource,
+    })
+    var editeSingleSelect = new ol.interaction.Select({
+        layers: [editManageLayer],
+        hitTolerance: 3
+    });
+    // 渲染审核所有数据到地图上
+    function renderAllDataToMap(data) {
+        var data = data;
+        var Features = [];
+        for (let i = 0; i < data.length; i++) {
+            var geometry = new ol.format.WKT().readFeature(data[i].wkt);
+            var coordinates = geometry.getGeometry().flatCoordinates;
+            //管点
+            if (coordinates.length > 0 && coordinates.length <= 2) {
+                geometry.setStyle(new ol.style.Style({
+                    image: new ol.style.Circle({
+                        radius: 5,
+                        fill: new ol.style.Fill({
+                            color: '#6F7EF6'
+                        }),
+
+                    })
+                }));
+                geometry.setProperties({
+                    wkt: data[i].wkt,
+                    number: data[i].number,
+                    type: 'Point',
+                    coordinates: coordinates,
+                    id:data[i].id,
+                    notPass:data[i].checkState == '未通过'?true:false
+                })
+                Features.push(geometry);
+                continue;
+
+            }
+            // 管线
+            if (coordinates.length > 2) {
+                geometry.setStyle(new ol.style.Style({
+                    fill: new ol.style.Fill({
+                        color: '#6F7EF6'
+                    }),
+                    stroke: new ol.style.Stroke({
+                        color: '#6F7EF6',
+                        width: 2,
+                    }),
+                }));
+                geometry.setProperties({
+                    wkt: data[i].wkt,
+                    number: data[i].number,
+                    type: 'Line',
+                    coordinates: coordinates,
+                    id:data[i].id,
+                    notPass:data[i].checkState == '未通过'?true:false
+                })
+                Features.push(geometry);
+                continue;
+            }
+        }
+
+        editManageLayer.getSource().addFeatures(Features);
+        editManageLayer.set('name', 'editManageLayer');
+        editManageMap.addLayer(editManageLayer);
+        editManageMap.getView().setZoom(18);
+        editManageMap.addInteraction(editeSingleSelect);
+        editeSingleSelect.on('select', editeSingleSelectValue);
+    }
+
+    //  map select查询信息
+    var editeSingleSelectValue = function(event) {
+        var features = event.target.getFeatures().getArray();
+        if (features.length > 0) {
+            var feature = features[0];
+            var property = feature.getProperties();
+            var result = {
+                    number: property.number,
+                    type: property.type,
+                    wkt: property.wkt,
+                    coordinates: property.coordinates,
+                    id:property.id,
+                    notPass:property.notPass
+                }
+            editAddselectedFeature(result);
+            getValueByNumber(result,result.notPass);
+
+        } else {
+          removeAddLayer('FeatureSourceLayer', editManageMap.getView().getZoom(), editManageMap);
+            $('.point_pipe_box').hide();
+        }
+    }
+
+    function editAddselectedFeature(data) {
+            removeAddLayer('FeatureSourceLayer', editManageMap.getView().getZoom(), editManageMap);
+            var geometry = new ol.format.WKT().readFeature(data.wkt);
+            var coordinates = geometry.getGeometry().flatCoordinates;
+
+            if (data.type == 'Point') {
+                geometry.setStyle(new ol.style.Style({
+                    image: new ol.style.Circle({
+                        radius: 7,
+                        fill: new ol.style.Fill({
+                            color: '#FF647C'
+                        }),
+
+                    })
+                }));
+            } else {
+                geometry.setStyle(new ol.style.Style({
+                    fill: new ol.style.Fill({
+                        color: '#FF647C'
+                    }),
+                    stroke: new ol.style.Stroke({
+                        color: '#FF647C',
+                        width: 3,
+                    }),
+                }));
+            }
+            var FeatureSource = new ol.source.Vector({
+                features: [geometry]
+            });
+            var FeatureSourceLayer = new ol.layer.Vector({
+                source: FeatureSource,
+
+            })
+            FeatureSourceLayer.set('name', 'FeatureSourceLayer');
+            editManageMap.addLayer(FeatureSourceLayer);
+    }
+
+    // 查询详情
+    function getValueByNumber(data,type) {
+        var params = data;
+        fnGet(`services/SNTGIS/EditPipeManage/GetValueByNumber?input=${params.id}`, null, false, function(ret, err) {
+            api.hideProgress();
+            if (ret && ret.success) {
+                if (params.type == 'Point' && ret.result.point != null) {
+                    $('.point_pipe_box').show();
+                    var datas = ret.result.point;
+                    var geometry = new ol.format.WKT().readFeature(datas.wkt);
+                    var coordinates = geometry.getGeometry().flatCoordinates;
+                    datas.lon = coordinates[0].toFixed(5);
+                    datas.lat = coordinates[1].toFixed(5);
+                    datas.buildTime = moment(datas.buildTime).format('YYYY-MM-DD');
+                    datas.id = params.id;
+                    if( type == true){
+                      datas.notPass = true;
+                    } else {
+                      datas.notPass = false;
+                    }
+                    $('.point_pipe_box').html('');
+                    var str = template('pointInfoDemo', datas);
+                    $('.point_pipe_box').append(str);
+                } else if (params.type == 'Line' && ret.result.line != null) {
+                    $('.point_pipe_box').show();
+                    var datas = ret.result.line;
+                    datas.buildTime = moment(datas.buildTime).format('YYYY-MM-DD');
+                    if(type == true){
+                      datas.notPass = true;
+                    } else {
+                      datas.notPass = false;
+                    }
+                    datas.id = params.id;
+                    $('.point_pipe_box').html('');
+                    var str = template('pipeInfoDemo', datas);
+                    $('.point_pipe_box').append(str);
+                } else {
+                  $('.point_pipe_box').hide();
+                }
+            }
+        })
+    }
+
+    // 根据编号查询数据的wkt，查询详情
+    function queryDetail(that,type = null) {
+        var params = JSON.parse($(that).attr('params'));
+        fnGet(`services/SNTGIS/EditPipeManage/GetValueByNumber?input=${params.id}`, null, false, function(ret, err) {
+            api.hideProgress();
+            if (ret && ret.success) {
+                openMap(true, 'single');
+                if (params.pipeType == 'Point') {
+                    var datas = ret.result.point;
+                    var data = {
+                        wkt: datas.wkt,
+                        type: 'Point',
+                        number: datas.number,
+                        id:params.id
+                    }
+                    renderSingleDataToMap(data,type);
+                } else {
+                    var datas = ret.result.line;
+                    var data = {
+                        wkt: datas.wkt,
+                        type: 'Line',
+                        number: datas.number,
+                        id:params.id
+                    }
+                    renderSingleDataToMap(data,type);
+                }
+            }
+        })
+    }
+
+    // 渲染审核所有数据到地图上
+    function renderSingleDataToMap(data,type) {
+        var Features = [];
+        var geometry = new ol.format.WKT().readFeature(data.wkt);
+        var coordinates = geometry.getGeometry().flatCoordinates;
+        if (data.type == 'Point') {
+            geometry.setStyle(new ol.style.Style({
+                image: new ol.style.Circle({
+                    radius: 5,
+                    fill: new ol.style.Fill({
+                        color: '#FF647C'
+                    }),
+
+                })
+            }));
+            geometry.setProperties({
+                wkt: data.wkt,
+                number: data.number,
+                type: 'Point',
+                coordinates: coordinates
+            })
+            data.coordinates = coordinates;
+            Features.push(geometry);
+        } else {
+            geometry.setStyle(new ol.style.Style({
+                fill: new ol.style.Fill({
+                    color: '#FF647C'
+                }),
+                stroke: new ol.style.Stroke({
+                    color: '#FF647C',
+                    width: 2,
+                }),
+            }));
+            geometry.setProperties({
+                wkt: data.wkt,
+                number: data.number,
+                type: 'Line',
+                coordinates: coordinates
+            })
+            Features.push(geometry);
+        }
+        editManageLayer.getSource().addFeatures(Features);
+        editManageLayer.set('name', 'editManageLayer');
+        editManageMap.addLayer(editManageLayer);
+        editManageMap.getView().setZoom(18);
+        editManageMap.getView().setCenter(coordinates);
+        getValueByNumber(data,type);
+    }
+
+
+    // 删除记录
+    function deleteItem(that, id) {
+        dialogAlert({
+            title: '提示',
+            content: '确认撤销吗?',
+            buttons: ['确定', '取消'],
+        }, function(ret) {
+            if (ret.buttonIndex == 1) {
+                fnPost(`services/SNTGIS/EditPipeManage/BackoutSubmit?number=${id}`, null, 'application/json', true, false, function(ret, err) {
+                    api.hideProgress();
+                    if (ret && ret.success) {
+                        api.toast({
+                            msg: '撤销成功',
+                            duration: 2000,
+                            location: 'top'
+                        });
+                        GetAllSubmit();
+                        if($('.point_pipe_box').length > 0){
+                          removeAddLayer('FeatureSourceLayer', editManageMap.getView().getZoom(), editManageMap);
+                          $('.point_pipe_box').hide();
+                        }
+
+                    } else {
+                        api.toast({
+                            msg: '撤销失败',
+                            duration: 2000,
+                            location: 'top'
+                        });
+
+                    }
+                })
+
+            }
+        });
+    }
+
+
+    //  开启或关闭未通过提示
+    function openOrcloseTips(that, type) {
+        if (type == 'open') {
+            $('.aui-tips').show();
+            $('.tips-title-content').text($(that).attr('params'));
+        } else {
+            $('.aui-tips').hide();
+        }
+    }
+
+
+    // 筛选条件
+    var isOpenScreen = true;
+
+    function goUPorDown() {
+        if (isOpenScreen) {
+            $('.screen_condition_mask').show();
+            $('.screen_condition_content').show();
+            $(".screen_condition_content").removeClass('screen_condition_content_up').addClass('screen_condition_content_down');
+            isOpenScreen = false;
+        } else {
+            $('.screen_condition_mask').hide();
+            $('.screen_condition_content').hide();
+            $(".screen_condition_content").removeClass('screen_condition_content_down').addClass('screen_condition_content_up');
+            isOpenScreen = true;
+        }
+    }
+
+    // 确定删选与删除
+    function screenSureOrCancel(type) {
+        $('.screen_condition_mask').hide();
+        $('.screen_condition_content').hide();
+        $(".screen_condition_content").removeClass('screen_condition_content_down').addClass('screen_condition_content_up');
+        $('#FromTime').val('');
+        $('#ToTime').val('');
+        $('#PipeType').find('.btns_active').removeClass('btns_active');
+        $('#PipeType div').first().addClass('btns_active');
+        $('#OperationType').find('.btns_active').removeClass('btns_active');
+        $('#OperationType div').first().addClass('btns_active');
+        isOpenScreen = true;
+        GetAllSubmit();
+    }
+
+    // 又滑动初始化
+    function initHummer() {
+        var lists = $('.itemHasHammer');
+        for (let i = 0; i < lists.length; i++) {
+            (function(i) {
+                var hammer = new Hammer(lists[i], {
+                    touchAction: 'pan-y', //解决阻止滚动问题
+                });
+                var that = lists[i];
+                hammer.get('swipe').set({
+                    direction: Hammer.DIRECTION_ALL
+                });
+                hammer.on('swipeleft', function(ev) {
+                    $(that).find('.item_content').removeClass('item_content_right').addClass('item_content_left');
+                    $(that).find('.item_btns').show();
+                    $(that).siblings().find('.item_content').removeClass('item_content_left').addClass('item_content_right');
+                    $(that).siblings().find('.item_btns').hide();
+                }).on('tap', function(ev) {
+                    setTimeout(() => {
+                        $(that).find('.item_content').removeClass('item_content_left').addClass('item_content_right');
+                        $(that).find('.item_btns').hide();
+                        $(that).siblings().find('.item_content').removeClass('item_content_left').addClass('item_content_right');
+                        $(that).siblings().find('.item_btns').hide();
+                        $('.showNumber').hide();
+                    }, 300);
+                }).on('swiperight', function(ev) {
+                    $(that).find('.item_content').removeClass('item_content_left').addClass('item_content_right');
+                    $(that).find('.item_btns').hide();
+                    $(that).siblings().find('.item_content').removeClass('item_content_left').addClass('item_content_right');
+                    $(that).siblings().find('.item_btns').hide();
+                });
+            })(i);
+        }
+
+        var numbers = $('.longPressNumber');
+        for (let j = 0; j < numbers.length; j++) {
+            (function(j) {
+                var hammer = new Hammer(numbers[j], {
+                    touchAction: 'pan-y', //解决阻止滚动问题
+                });
+                var that = lists[j];
+                hammer.on('press', function(ev) {
+                    $(ev.target).parents('.item').siblings().find('.showNumber').hide();
+                    $(ev.target).siblings('.showNumber').show();
+                    setTimeout(() => {
+                        $(ev.target).siblings('.showNumber').hide();
+                    }, 5000)
+                }).on('tap',function(ev){
+                    $(ev.target).siblings('.showNumber').hide();
+                });
+            })(j);
+        }
+    }
+
+    // 时间初始化
+    function initTime(element) {
+        new rolldate.Date({
+            el: element,
+            format: "YYYY-MM-DD hh:mm:ss",
+            beginYear: 2000,
+            endYear: 2100,
+            theme: "blue",
+            tapBefore: function(el) {
+                // 插件开始触发
+            },
+            moveEnd: function(el, iscroll) {
+                // 滚动结束
+            },
+            confirmBefore: function(el, date) {
+                // 确定按钮触发
+
+            },
+            confirmEnd: function(el, date) {
+                // 插件运行结束
+            }
+        });
+    }
+</script>
+
+</html>

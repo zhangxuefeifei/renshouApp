@@ -1,0 +1,460 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>组织机构详情页面</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/aui1.css" />
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #FFF;
+        }
+
+        #wrap {
+            height: 100%
+        }
+
+        .aui-bar-nav {
+            top: 0;
+            z-index: 3;
+            background-color: #fff;
+            color: #333333;
+            font-size: var(--fontsize9);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+        }
+
+        .aui-bar-nav .aui-btn .aui-iconfont {
+            color: #333333;
+            font-weight: 900;
+        }
+
+        .flex-con {
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-bottom: 2.4rem;
+        }
+
+        .aui-list {
+            background-image: none;
+        }
+
+        .aui-list .aui-list-item-title {
+            font-size: var(--fontsize85);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #333333;
+        }
+
+        .aui-list .aui-list-item-text:first-child,
+        .aui-list .aui-list-item-text:last-child {
+            margin-bottom: 0;
+        }
+
+        .aui-list .aui-list-item-text {
+            font-size: var(--fontsize7);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+            margin-bottom: 0.65rem;
+        }
+
+        .aui-media-list .aui-list-item-inner {
+            padding: 0.75rem 0.75rem 0.75rem 0;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .Title {
+            width: var(--width42);
+            display: inline-flex;
+            justify-content: flex-end;
+            font-size: var(--fontsize75);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #333333;
+        }
+
+        .Text {
+            width: calc(100% - var(--width42) - 0.2rem);
+            display: inline-flex;
+            font-size: var(--fontsize75);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+        }
+
+        .contactLi {
+            padding-bottom: 0.75rem !important;
+            padding-left: 0.6rem !important;
+        }
+
+        .contactLi .aui-media-list .aui-list-item-inner {
+            padding-right: 0.6rem !important;
+        }
+
+        .contactCard {
+            width: calc(100% - 0.6rem);
+            height: auto;
+            background-color: #ffffff;
+            box-shadow: 0rem 0.2rem 0.68rem 0rem rgba(0, 0, 0, 0.2);
+            border: 1px solid #fff;
+            border-radius: 0.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .contactCard:last-child {
+            margin-bottom: 0
+        }
+
+        .aui-card-list {
+            height: 100%;
+            margin-bottom: 0;
+        }
+
+        .aui-card-list-content {
+            height: 100%;
+            padding: 1.2rem 0.8rem;
+        }
+
+        .cardRow {
+            height: auto;
+            display: -webkit-box;
+            margin-bottom: 1.2rem;
+            font-size: var(--fontsize65);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+        }
+
+        .cardRow:last-child {
+            margin-bottom: 0;
+        }
+
+        .aui-col-xs-6,
+        .aui-col-xs-12 {
+            display: flex;
+        }
+
+        .rowTitle {
+            width: var(--width2);
+            display: inline-flex;
+            justify-content: flex-end;
+            color: #333333;
+        }
+
+        .rowText {
+            width: calc(100% - var(--width2) -0.7rem);
+        }
+
+        .rowTitle-12 {
+            width: var(--width34);
+            display: inline-flex;
+            justify-content: flex-end;
+            color: #333333;
+        }
+
+        .rowText-12 {
+            width: calc(100% - var(--width34) - 0.2rem);
+            display: inline-flex;
+        }
+
+        .line {
+            width: 0.1rem;
+            height: 0.85rem;
+            background-color: #4f79e7;
+            margin-right: 0.33rem;
+        }
+
+        .aui-list .aui-list-item:active {
+            background-color: transparent;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrap" class="flex-wrap flex-vertical">
+        <header class="aui-bar aui-bar-nav aui-border-b" id="header">
+            <div class="aui-pull-left aui-btn" tapmode data-action="back">
+                <span class="aui-iconfont aui-icon-left"></span>
+            </div>
+            <div class="aui-title">组织机构详情</div>
+        </header>
+
+        <div class="flex-con">
+
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/diy/public.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/diy/template.js"></script>
+<script type="text/template" id="orgDetailsTpl">
+    <div class="aui-content">
+        <ul class="aui-list aui-media-list">
+            <li class="aui-list-item aui-list-item-middle">
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-inner">
+                        <div class="line"></div>
+                        <div class="aui-list-item-title">{{item.orgName}}</div>
+                    </div>
+                </div>
+            </li>
+
+            <li class="aui-list-item aui-list-item-middle">
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-inner">
+                        <span class="Title">机构性质：</span>
+                        <span class="Text">{{item.natureString}}</span>
+                    </div>
+                </div>
+            </li>
+
+            <li class="aui-list-item aui-list-item-middle">
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-inner">
+                        <span class="Title">上级：</span>
+                        <span class="Text">{{item.parentName}}</span>
+                    </div>
+                </div>
+            </li>
+
+            <li class="aui-list-item aui-list-item-middle">
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-inner">
+                        <span class="Title">编号：</span>
+                        <span class="Text">{{item.orgCode}}</span>
+                    </div>
+                </div>
+            </li>
+
+            <li class="aui-list-item aui-list-item-middle">
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-inner">
+                        <span class="Title">简称：</span>
+                        <span class="Text">{{item.simpleName}}</span>
+                    </div>
+                </div>
+            </li>
+            {{if item.natureString != '部门'}}
+            <li class="aui-list-item aui-list-item-middle">
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-inner">
+                        <span class="Title">邮编：</span>
+                        <span class="Text">{{item.zipCode}}</span>
+                    </div>
+                </div>
+            </li>
+
+            <li class="aui-list-item aui-list-item-middle">
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-inner">
+                        <span class="Title">地址：</span>
+                        <span class="Text">{{item.area}}{{if item.address != ""}}{{item.address}}{{/if}}</span>
+                    </div>
+                </div>
+            </li>
+
+            {{/if}}
+
+            <li class="aui-list-item aui-list-item-middle">
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-inner">
+                        <span class="Title">备注：</span>
+                        <span class="Text">{{item.remark}}</span>
+                    </div>
+                </div>
+            </li>
+
+            <li class="aui-list-item aui-list-item-middle">
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-inner">
+                        <span class="Title">排序：</span>
+                        <span class="Text">{{item.sort}}</span>
+                    </div>
+                </div>
+            </li>
+
+            <li class="aui-list-item aui-list-item-middle contactLi">
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-inner">
+                        <span class="Title">联系人：</span>
+                    </div>
+                </div>
+                {{each contacts value i}}
+                <div class="contactCard">
+                    <div class="aui-card-list">
+                        <div class="aui-card-list-content">
+                            <div class="cardRow">
+                                <div class="aui-col-xs-6">
+                                    <span class="rowTitle">姓名：</span>
+                                    <span class="rowText">{{value.contactName}}</span>
+                                </div>
+                                <div class="aui-col-xs-6">
+                                    <span class="rowTitle">电话：</span>
+                                    <span class="rowText">{{value.tel}}</span>
+                                </div>
+                            </div>
+                            <div class="cardRow">
+                                <div class="aui-col-xs-6">
+                                    <span class="rowTitle">手机：</span>
+                                    <span class="rowText">{{value.mobile}}</span>
+                                </div>
+                                <div class="aui-col-xs-6">
+                                    <span class="rowTitle">邮箱：</span>
+                                    <span class="rowText">{{value.email}}</span>
+                                </div>
+                            </div>
+                            <div class="cardRow">
+                                <div class="aui-col-xs-6">
+                                    <span class="rowTitle">微信：</span>
+                                    <span class="rowText">{{value.wexin}}</span>
+                                </div>
+                                <div class="aui-col-xs-6">
+                                    <span class="rowTitle">钉钉：</span>
+                                    <span class="rowText">{{value.dingding}}</span>
+                                </div>
+                            </div>
+                            <div class="cardRow">
+                                <div class="aui-col-xs-6">
+                                    <span class="rowTitle">QQ：</span>
+                                    <span class="rowText">{{value.qq}}</span>
+                                </div>
+                                <div class="aui-col-xs-6">
+                                    <span class="rowTitle">排序：</span>
+                                    <span class="rowText">{{value.sort}}</span>
+                                </div>
+                            </div>
+                            <div class="cardRow">
+                                <div class="aui-col-xs-12">
+                                    <span class="rowTitle-12">所在区域：</span>
+                                    <span class="rowText-12">{{value.area}}</span>
+                                </div>
+                            </div>
+                            <div class="cardRow">
+                                <div class="aui-col-xs-12">
+                                    <span class="rowTitle-12">详细地址：</span>
+                                    <span class="rowText-12">{{value.address}}</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                {{/each}}
+            </li>
+        </ul>
+    </div>
+
+</script>
+<script type="text/javascript">
+    apiready = function() {
+        api.addEventListener({
+            name: 'changedFontSize'
+        }, function(ret, err) {
+            if (ret) {
+                changeFontSize();
+            }
+        });
+        api.parseTapmode();
+        var header = $api.byId('header');
+        // 实现沉浸式状态栏效果
+        $api.fixStatusBar(header);
+        orgId = api.pageParam.id;
+        citys = $api.getStorage('citys');
+        getOrgDetails();
+        fnReady();
+    };
+
+    var actionList = {
+        'back': function() {
+            api.closeWin();
+        },
+    }
+
+    //根据code返回对应的省、市、区的名字
+    function findArea(code) {
+        for (var i = 0; i < citys.length; i++) {
+            if (citys[i].code == code) {
+                return citys[i].n;
+            } else {
+                var cityData = citys[i].c;
+                for (var j = 0; j < cityData.length; j++) {
+                    if (cityData[j].code == code) {
+                        return cityData[j].n;
+                    } else {
+                        var areaData = cityData[j].a;
+                        for (var k = 0; k < areaData.length; k++) {
+                            if (areaData[k].code == code) {
+                                return areaData[k].n;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    //根据ID获取组织机构详情
+    function getOrgDetails() {
+        fnGet('services/app/Orgagency/GetOrgagencyDetail?Id=' + orgId + '', {}, false, function(ret, err) {
+            if (ret) {
+                if (ret.success) {
+                    var data = ret.result;
+                    if (data.zipCode == 0) {
+                        data.zipCode = ''
+                    }
+                    data['area'] = "";
+                    if (data.provinceCode != 0) {
+                        data.area = findArea(data.provinceCode);
+                    }
+                    if (data.cityCode != 0) {
+                        data.area = data.area + '/' + findArea(data.cityCode);
+                    }
+                    if (data.districtCode != 0) {
+                        data.area = data.area + '/' + findArea(data.districtCode);
+                    }
+                    var contactData = data.orgagencyContacts;
+                    for (var i = 0; i < contactData.length; i++) {
+                        contactData[i]['area'] = '';
+                        var cData = contactData[i];
+                        if (cData.provinceCode != 0) {
+                            cData.area = findArea(cData.provinceCode);
+                        }
+                        if (cData.cityCode != 0) {
+                            cData.area = cData.area + '/' + findArea(cData.cityCode);
+                        }
+                        if (cData.districtCode != 0) {
+                            cData.area = cData.area + '/' + findArea(cData.districtCode);
+                        }
+                        contactData[i] = cData;
+                    }
+                    var list = {
+                        item: data,
+                        contacts: contactData
+                    }
+                    var str = template('orgDetailsTpl', list);
+                    $('.flex-con').html(str);
+                }
+            }
+        })
+    }
+</script>
+
+</html>

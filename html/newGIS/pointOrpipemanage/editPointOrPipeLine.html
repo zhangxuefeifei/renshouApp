@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>首页管点管线编辑页面</title>
+    <link rel="stylesheet" href="../../../css/api.css">
+    <link rel="stylesheet" href="../../../css/aui.css">
+    <link rel="stylesheet" href="../../../css/rolldate.css">
+    <link rel="stylesheet" href="../css/dialogAlert.css">
+    <link rel="stylesheet" href="../css/pointPipelinesearch.css">
+    <style rel="stylesheet">
+        .dot_red {
+            background: red;
+            width: 0.3rem;
+            height: 0.3rem;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 0.4rem;
+            margin-top: -0.2rem;
+        }
+
+        .condition_box {
+            margin-bottom: 3.5rem;
+        }
+
+        .btns_box {
+            width: 100%;
+            display: flex;
+            flex-direction: row;
+            margin-top: 2.05rem;
+            justify-content: center;
+            position: absolute;
+            bottom: 1rem;
+        }
+
+        .btns_box .btn:last-child {
+            width: 16.2rem;
+        }
+
+        .aui-list .aui-list-item-label,
+        .aui-list .aui-list-item-label-icon {
+            width: 38%;
+        }
+        .rolldate-container header{
+          background:#6F7EF6!important;
+          color: #fff!important;
+        }
+        .rolldate-container .rolldate-confirm {
+            float: left;
+            background:#6F7EF6!important;
+            color: #fff!important;
+        }
+
+    </style>
+
+</head>
+
+<body class="flex-box" id='flex-box'>
+    <header class="aui-bar aui-bar-nav" id='header'>
+        <div class="aui-pull-left aui-btn aui-margin-l-10" onclick="closeWin()" tapmode>
+            <span class="aui-iconfont aui-icon-left"></span>
+        </div>
+        <div class="aui-title">编辑管点</div>
+    </header>
+    <!--编辑内容区域 -->
+    <div class="condition_box">
+
+    </div>
+    <div class="btns_box">
+        <div class="btn btn-active  aui-margin-l-5" tapmode onclick="submitData()">提交</div>
+    </div>
+
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/rolldateMin.js"></script>
+<script type="text/javascript" src="../../../script/moment.js"></script>
+<script type="text/javascript" src="../../../script/template.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+
+<!-- 管点 -->
+<script type="text/template" id='pointDemo'>
+    <ul class="aui-list aui-form-list aui-padded-l-10">
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    <span class="dot_red"></span>管点编号:
+                </div>
+                <div class="aui-list-item-input">
+                    <input type="text" placeholder="请输入管点编号" id='pointnumbe' value='{{pointnumbe}}' readonly>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    <span class="dot_red"></span>经度:
+                </div>
+                <div class="aui-list-item-input">
+                    <input type="text" placeholder="请输入经度" id='lon' value='{{coordinates[0]}}' readonly>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    <span class="dot_red"></span>纬度:
+                </div>
+                <div class="aui-list-item-input">
+                    <input type="text" placeholder="请输入纬度" id='lat' value='{{coordinates[1]}}' readonly>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    <span class="dot_red"></span>设备类型:
+                </div>
+                <div class="aui-list-item-input">
+                    <select id='pointtype' value='{{pointtype}}' required>
+               </select>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    <span class="dot_red"></span>高程:
+                </div>
+                <div class="aui-list-item-input">
+                    <input type="text" placeholder="请输入高程" value='{{elevation}}' id='elevation'>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    <span class="dot_red"></span>埋深:
+                </div>
+                <div class="aui-list-item-input">
+                    <input type="text" placeholder="请输入埋深" id='deep' value="{{deep}}">
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    <span class="dot"></span>状态类别:
+                </div>
+                <div class="aui-list-item-input">
+                    <select id='stateClass' value = '{{stateClass}}' required>
+                    <option value="">请选择状态类别</option>
+               </select>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    <span class="dot"></span>所属道路:
+                </div>
+                <div class="aui-list-item-input">
+                    <input type="text" placeholder="请输入所属道路" id='location' value="{{location}}">
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    <span class="dot"></span>埋设日期:
+                </div>
+                <div class="aui-list-item-input">
+                    <input type="text" placeholder="请输入埋设日期" id='buildtime' value="{{buildtime}}">
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    <span class="dot"></span>材料厂商:
+                </div>
+                <div class="aui-list-item-input">
+                    <input type="text" placeholder="请输入材料厂商" id='firm' value="{{firm}}">
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    <span class="dot"></span>型号:
+                </div>
+                <div class="aui-list-item-input">
+                    <input type="text" placeholder="请输入型号" id='unittype' value="{{unittype}}">
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    <span class="dot"></span>所属单位:
+                </div>
+                <div class="aui-list-item-input">
+                    <input type="text" placeholder="请输入所属单位" id='buildunit' value="{{buildunit}}">
+                </div>
+            </div>
+        </li>
+
+    </ul>
+
+</script>
+<!-- 管线 -->
+<script type="text/template" id='pipeDemo'>
+    <ul class="aui-list aui-form-list aui-padded-l-10">
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    <span class="dot_red"></span>管线编号:
+                </div>
+                <div class="aui-list-item-input">
+                    <input type="text" placeholder="请输入管点编号" id='linenumber' value='{{linenumber}}' readonly>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    <span class="dot_red"></span>管线管长:
+                </div>
+                <div class="aui-list-item-input">
+                    <input type="text" placeholder="请输入管线管长" id='length' value='{{length}}' readonly>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    <span class="dot_red"></span>起始编号:
+                </div>
+                <div class="aui-list-item-input">
+                    <input type="text" placeholder="请输入起始编号" id='fromnumber' value='{{fromnumber}}' readonly>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    <span class="dot_red"></span>终端编号:
+                </div>
+                <div class="aui-list-item-input">
+                    <input type="text" placeholder="请输入终端编号" id='tonumber' value='{{tonumber}}' readonly>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    <span class="dot_red"></span>起始高程:
+                </div>
+                <div class="aui-list-item-input">
+                    <input type="text" placeholder="请输入起始高程" id='fromelevat' value='{{fromelevat}}' readonly>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    <span class="dot_red"></span>终端高程:
+                </div>
+                <div class="aui-list-item-input">
+                    <input type="text" placeholder="请输入终端高程" id='toelevat' value='{{toelevat}}' readonly>
+                </div>
+            </div>
+        </li>
+
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    <span class="dot_red"></span>起始埋深:
+                </div>
+                <div class="aui-list-item-input">
+                    <input type="text" placeholder="请输入起始埋深" id='fromdeep' value='{{fromdeep}}' readonly>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    <span class="dot_red"></span>终端埋深:
+                </div>
+                <div class="aui-list-item-input">
+                    <input type="text" placeholder="请输入终端埋深" id='todeep' value='{{todeep}}' readonly>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    <span class="dot_red"></span>状态类别:
+                </div>
+                <div class="aui-list-item-input">
+                    <select id='stateClass' required>
+
+               </select>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    <span class="dot_red"></span>埋设日期:
+                </div>
+                <div class="aui-list-item-input">
+                    <input type="text" placeholder="请选择埋设日期" id='buildtime' value='{{buildtime}}' readonly>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    <span class="dot"></span>管线管径:
+                </div>
+                <div class="aui-list-item-input">
+                    <input type="text" placeholder="请输入管线管径" id='unittype' value='{{unittype}}'>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    <span class="dot"></span>管线管材:
+                </div>
+                <div class="aui-list-item-input">
+                  <select id='materename' required>
+
+             </select>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    <span class="dot"></span>埋设类型
+                </div>
+                <div class="aui-list-item-input">
+                    <select id='buriedType' required>
+                  </select>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    <span class="dot"></span>所属道路:
+                </div>
+                <div class="aui-list-item-input">
+                    <input type="text" placeholder="请输入所属道路" id='location' value='{{location}}'>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    <span class="dot"></span>所属单位:
+                </div>
+                <div class="aui-list-item-input">
+                    <input type="text" placeholder="请输入所属单位" id='buildunit' value='{{buildunit}}'>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-list-item-label">
+                    <span class="dot"></span>材料厂商:
+                </div>
+                <div class="aui-list-item-input">
+                    <input type="text" placeholder="请输入材料厂商" id='firm' value='{{firm}}'>
+                </div>
+            </div>
+        </li>
+
+
+    </ul>
+
+</script>
+<script type="text/javascript">
+    var isCloseWin = true;
+    apiready = function() {
+            // 页面初始化，沉浸式等
+            initWindow();
+            initData();
+            initTime();
+        }
+        // 关闭窗口
+    function closeWin() {
+        dialogAlert({
+            title: '提示',
+            content: '确认退出编辑吗?',
+            buttons: ['确定', '取消'],
+        }, function(ret) {
+            if (ret.buttonIndex == 1) {
+                api.closeWin();
+
+            }
+        });
+    }
+
+    // 初始化页面
+    function initData() {
+        var params = api.pageParam;
+        if (params.type == 'Point') {
+            if (params.from == 'home') {
+                var data = $api.getStorage('selectPointOrLine');
+            } else {
+                var data = params.data;
+            }
+            $('.aui-title').text('编辑管点');
+            var str = template('pointDemo', data);
+            $('.condition_box').append(str);
+            // 设备类型
+            var pointtype = data.pointtype;
+            searchAllClass('PointName','#pointtype',pointtype);
+            //状态类型
+            var stateClass = data.stateClass;
+            searchStateClass('#stateClass',stateClass);
+        } else {
+            if (params.from == 'home') {
+                var data = $api.getStorage('selectPointOrLine');
+            } else {
+                var data = params.data;
+            }
+
+            $('.aui-title').text('编辑管线');
+            var str = template('pipeDemo', data);
+            $('.condition_box').append(str);
+            // 管材类型
+            var guancai = data.materename;
+            searchAllClass('Material','#materename',guancai);
+            //状态类型
+            var stateClass = data.stateClass;
+            searchStateClass('#stateClass',stateClass);
+            // 埋设类型
+            var buriedType = data.BuriedType;
+            searchAllClass('BuriedType','#buriedType',buriedType);
+        }
+
+    }
+
+    // 提交
+    function submitData() {
+      if (api.pageParam.from == 'home') {
+          var data = $api.getStorage('selectPointOrLine');
+      } else {
+          var data = api.pageParam;
+      }
+        if (api.pageParam.type == 'Point') {
+          if( $('#pointtype').val() == ''){
+            api.toast({
+                msg: '设备类型不能为空',
+                duration: 2000,
+                location: 'top'
+            });
+            return false;
+          }
+          if( $('#elevation').val() == ''){
+            api.toast({
+                msg: '高程不能为空',
+                duration: 2000,
+                location: 'top'
+            });
+            return false;
+          }
+          if( $('#deep').val() == ''){
+            api.toast({
+                msg: '埋深不能为空',
+                duration: 2000,
+                location: 'top'
+            });
+            return false;
+          }
+          if (api.pageParam.from == 'home') {
+            var body = {
+                pointnumbe: $('#pointnumbe').val(), //管点编号
+                lon: $('#lon').val(), //经度
+                lat: $('#lat').val(), //纬度
+                pointtype:$('#pointtype').val(), //设备类型
+                elevation:removeBblankSpace($('#elevation').val()), //高程
+                deep:removeBblankSpace($('#deep').val()), //埋深
+                buildtime: $('#buildtime').val(), //埋设日期
+                location: $('#location').val(), //所属道路
+                firm: $('#firm').val(), //材料厂商
+                unittype:removeBblankSpace($('#unittype').val()), //型号
+                coordinates: data.coordinates,
+                bookmork: data.bookmork,
+                stateClass: $('#stateClass').val(),
+                buildunit: $('#buildunit').val(), //所属单位BuildUnit
+                wkt: data.wkt
+            }
+          }
+            var reqBody = {
+                body: JSON.stringify({
+                    number: $('#pointnumbe').val(),
+                    wkt: data.wkt,
+                    pointName: $('#pointtype').val(),
+                    pointElevation:removeBblankSpace($('#elevation').val()),
+                    pointDeep: removeBblankSpace($('#deep').val()),
+                    location: $('#location').val(),
+                    buildTime: $('#buildtime').val(),
+                    firm: $('#firm').val(),
+                    buildUnit:$('#buildunit').val(), //所属单位
+                    unitType: removeBblankSpace($('#unittype').val()),
+                    stateClass: $('#stateClass').val() //状态类别
+                })
+            }
+
+            fnPost('services/SNTGIS/EditPipeManage/UpdatePoint', reqBody, 'application/json', true, true, function(ret, err) {
+              api.hideProgress();
+                if ( ret && ret.success) {
+                if(api.pageParam.from == 'home'){ //首页管点编辑
+                    $api.setStorage('selectPointOrLine', body);
+                }
+                api.sendEvent({
+                    name: 'updatePointOrLineSuccess',
+                    extra: {
+                        data: body,
+                        type:'Point'
+                    }
+                });
+                  api.closeWin();
+                } else {
+                    api.toast({
+                        msg: '修改失败',
+                        duration: 2000,
+                        location: 'top'
+                    });
+                }
+            });
+        } else {
+          if( $('#stateClass').val() == ''){
+            api.toast({
+                msg: '状态类别不能为空',
+                duration: 2000,
+                location: 'top'
+            });
+            return false;
+          }
+          if( $('#buildtime').val() == ''){
+            api.toast({
+                msg: '埋设日期不能为空',
+                duration: 2000,
+                location: 'top'
+            });
+            return false;
+          }
+          if(api.pageParam.from == 'home'){
+            var body = {
+                linenumber: $('#linenumber').val(), //管线编号
+                fromnumber: $('#fromnumber').val(), //起始编号
+                tonumber: $('#tonumber').val(), //终点编号
+                fromelevat: $('#fromelevat').val(), //起始高程
+                toelevat: $('#toelevat').val(), //终点高程
+                fromdeep: $('#fromdeep').val(), //起始埋深
+                todeep: $('#todeep').val(), //终点埋深
+                buriedtype:$('#buriedType').val() ==''?data.BuriedType:$('#buriedType').val(), //埋设类别
+                firm: $('#firm').val(),//材料厂商
+                buildunit: $('#buildunit').val(), //所属单位BuildUnit
+                materename: $('#materename').val(), //管线管材名称
+                unittype: $('#unittype').val(), //管线管径型号
+                location: $('#location').val(), //所属道路
+                buildtime: $('#buildtime').val(), //埋设日期
+                length: $('#length').val(),
+                coordinates:data.coordinates,
+                bookmork: data.bookmork,
+                stateClass: $('#stateClass').val(),
+                wkt: data.wkt
+            }
+          }
+
+            var reqBody = {
+                body: JSON.stringify({
+                    number: $('#linenumber').val(),
+                    fromNumber: $('#fromnumber').val(),
+                    toNumber: $('#tonumber').val(),
+                    fromElevate:$('#fromelevat').val(),
+                    toElevate:$('#toelevat').val(),
+                    fromDeep: $('#fromdeep').val(),
+                    toDeep: $('#todeep').val(),
+                    stateClass: $('#stateClass').val(),
+                    buildTime: $('#buildtime').val(),
+                    unitType: $('#unittype').val(),
+                    location:$('#location').val(),
+                    firm: $('#firm').val(),
+                    buildUnit: $('#buildunit').val(),
+                    material:$('#materename').val(),
+                    buriedType: $('#buriedType').val() ==''?data.BuriedType:$('#buriedType').val(),
+                    wkt: data.wkt
+                })
+            };
+            fnPost('services/SNTGIS/EditPipeManage/UpdateLine', reqBody, 'application/json', true, true, function(ret, err) {
+              api.hideProgress();
+                if ( ret && ret.success) {
+
+                if(api.pageParam.from == 'home'){ //首页管点编辑
+                    $api.setStorage('selectPointOrLine', body);
+                }
+                api.sendEvent({
+                    name: 'updatePointOrLineSuccess',
+                    extra: {
+                        data: body,
+                        type:'Line'
+                    }
+                });
+                api.closeWin();
+                } else {
+                    api.toast({
+                        msg: '修改失败',
+                        duration: 2000,
+                        location: 'top'
+                    });
+                }
+            });
+        }
+
+    }
+    // 时间初始化
+    function initTime() {
+        new rolldate.Date({
+            el: "#buildtime",
+            format: "YYYY-MM-DD",
+            beginYear: 2000,
+            endYear: 2100,
+            theme: "blue",
+            tapBefore: function(el) {
+                // 插件开始触发
+            },
+            moveEnd: function(el, iscroll) {
+                // 滚动结束
+            },
+            confirmBefore: function(el, date) {
+                // 确定按钮触发
+
+            },
+            confirmEnd: function(el, date) {
+                // 插件运行结束
+            }
+        });
+    }
+</script>
+
+</html>

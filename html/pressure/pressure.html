@@ -1,0 +1,142 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>页面</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" />
+    <!-- <link rel="stylesheet" type="text/css" href="../../css/aui.css" /> -->
+    <link rel="stylesheet" type="text/css" href="../../css/vant.css" />
+    <style>
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+        }
+
+        .flex-con {
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrap" class="flex-wrap flex-vertical">
+        <div id="main" class="flex-con">
+
+        </div>
+
+        <van-tabbar v-model="active" active-color="#4f79e8" inactive-color="#666" safe-area-inset-bottom>
+            <van-tabbar-item>
+                <span>我的收藏</span>
+                <img slot="icon" slot-scope="props" :src="props.active ? icon.collect.active : icon.collect.normal">
+            </van-tabbar-item>
+            <van-tabbar-item>
+                <span>设备列表</span>
+                <img slot="icon" slot-scope="props" :src="props.active ? icon.list.active : icon.list.normal">
+            </van-tabbar-item>
+            <van-tabbar-item>
+                <span>地图展示</span>
+                <img slot="icon" slot-scope="props" :src="props.active ? icon.map.active : icon.map.normal">
+            </van-tabbar-item>
+        </van-tabbar>
+
+    </div>
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/vue/fastclick.min.js"></script>
+<script type="text/javascript" src="../../script/vue/vue.min.js"></script>
+<script type="text/javascript" src="../../script/vue/vant.min.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        fnIntVue(); //初始化vue实例
+        Origami.fastclick(document.body) //消除vue的ios端点击延迟
+        funIniGroup();
+        if (api.systemType == 'ios') {
+            api.setStatusBarStyle({
+                style: 'dark',
+                color: 'black'
+            });
+        }
+    };
+
+    function fnIntVue() {
+        window.MainVue = new Vue({
+            el: "#wrap",
+            data: {
+                active: 0,
+                icon: {
+                    collect: {
+                        normal: '../../image/gis/collectionList.png',
+                        active: '../../image/gis/collectionList_active.png'
+                    },
+                    list: {
+                        normal: '../../image/gis/list.png',
+                        active: '../../image/gis/list_active.png'
+                    },
+                    map: {
+                        normal: '../../image/gis/map.png',
+                        active: '../../image/gis/map_active.png'
+                    },
+                },
+            },
+            watch: {
+                active(index) {
+                    api.setFrameGroupIndex({
+                        name: 'pressureGroup',
+                        index: index,
+                        scroll:true
+                    });
+                }
+            },
+            methods: {
+                onConfirm(value) {
+                    this.value = value;
+                    this.showPicker = false;
+                },
+            },
+        })
+    }
+
+    //设置底部页面的framegroup，包括设备列表和设备分布
+    function funIniGroup() {
+        var eHeaderLis = $api.domAll('header li');
+        api.openFrameGroup({
+            name: 'pressureGroup',
+            scrollEnabled: false,
+            rect: {
+                x: 0,
+                y: 0,
+                w: api.winWidth,
+                h: 'auto',
+                marginLeft: 0,
+                marginTop: 0,
+                marginBottom: $api.dom('.van-tabbar').offsetHeight,
+                marginRight: 0
+            },
+            bounces: false,
+            index: 0,
+            preload: 0,
+            reload: true,
+
+            frames: [{
+                name: 'MyCollection',
+                url: '../../html/pressure/MyCollection.html'
+            }, {
+                name: 'RealTimePressure',
+                url: '../../html/pressure/RealTimePressure.html',
+            }, {
+                name: 'GIS',
+                url: '../../html/pressure/GIS.html'
+            }]
+        }, function(ret, err) {});
+    }
+</script>
+
+</html>

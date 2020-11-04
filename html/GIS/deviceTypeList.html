@@ -1,0 +1,265 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>设备类型列表页面</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #FFF;
+        }
+
+        .aui-bar-nav {
+            top: 0;
+            z-index: 1;
+            background-color: #fff;
+            color: #333333;
+            font-size: var(--fontsize9);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+        }
+
+        .aui-bar-nav .aui-btn .aui-iconfont {
+            color: #333333;
+            font-weight: 900;
+        }
+
+        .border-t:before,
+        .border-b:after {
+            border-color: #F1F1F1;
+        }
+
+        .aui-searchbar {
+            background-color: #fff !important;
+            padding: 0.55rem 0.78rem;
+            width: auto;
+            height: auto;
+            color: #212121;
+            z-index: 3;
+        }
+
+        .aui-searchbar span {
+            font-size: var(--fontsize75);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #333333;
+        }
+
+        .aui-searchbar .arrow {
+            width: 0.8rem;
+            height: 0.8rem;
+            background: url(../../../image/main_frame/orgDownArrow.png);
+            background-size: 0.7rem 0.38rem;
+            background-position: center center;
+            background-repeat: no-repeat;
+            -webkit-transition: 200ms;
+            transition: 200ms;
+        }
+
+        .aui-searchbar-input input {
+            height: 1rem;
+            line-height: 1rem;
+        }
+
+        .aui-searchbar-input {
+            height: 1.6rem;
+            background-color: #f0f0f0;
+            border-radius: 0.8rem;
+            line-height: 1.6rem;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+            display: flex;
+            align-items: center;
+            margin: 0;
+        }
+
+        .aui-searchbar-clear-btn {
+            background-color: #999999;
+            position: initial;
+            width: 0.8rem;
+            height: 0.8rem;
+        }
+
+        .aui-searchbar-clear-btn .aui-iconfont {
+            color: #FFF !important;
+            top: -5px;
+            font-size: var(--fontsize5);
+        }
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav aui-border-b" id="header">
+        <div class="aui-pull-left aui-btn" tapmode data-action="back">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </div>
+        <div class="aui-title">设备类型列表</div>
+    </header>
+
+    <div class="aui-searchbar aui-border-b" id="search">
+        <div class="aui-searchbar-input aui-border-radius">
+
+            <i class="aui-iconfont aui-icon-search"></i>
+            <input type="search" placeholder="请输入关键词搜索" id="searchInput">
+            <div class="aui-searchbar-clear-btn">
+                <i class="aui-iconfont aui-icon-close"></i>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/diy/public.js"></script>
+<script type="text/javascript" src="../../script/remote.js"></script>
+<script type="text/javascript" src="../../script/zepto.js"></script>
+<script type="text/javascript" src="../../script/moment.js"></script>
+<script type="text/javascript" src="../../script/diy/template.js"></script>
+<script type="text/template" id="signTimeTpl">
+</script>
+<script type="text/javascript">
+    var url;
+    apiready = function() {
+        api.parseTapmode();
+        var header = $api.byId('header');
+        var search = $api.byId('search');
+        // 实现沉浸式状态栏效果
+        $api.fixStatusBar(header);
+        headerH = $api.offset(header).h;
+        searchH = $api.offset(search).h;
+        nameArr = api.pageParam.nameArr;
+        fnReady();
+        UIListCard = api.require('UIListCard');
+        UIListCard.open({
+            rect: {
+                x: 0,
+                y: headerH + searchH,
+                w: api.winWidth,
+                h: api.winHeight - headerH - searchH
+            },
+            styles: {
+                item: {
+                    activeBgColor: '#f5f5f5'
+                }
+            },
+            contacts: nameArr,
+            fixedOn: api.frameName
+        }, function(ret) {
+            if (ret) {
+                // alert(JSON.stringify(ret));
+                if (ret.eventType == 'click') {
+                    // console.log(JSON.stringify(ret.contact));
+                    api.sendEvent({
+                        name: 'chooseDeviceType',
+                        extra: {
+                            deviceType: ret.contact,
+                        }
+                    });
+                    setTimeout(function() {
+                        api.closeWin({});
+                    }, 200);
+                }
+            }
+        });
+    };
+
+    var actionList = {
+        'back': function() {
+            api.closeWin();
+        },
+    }
+
+    //搜索条设置
+    var searchBar = document.querySelector("#search");
+    var searchBarInput = document.querySelector("#search input");
+    var searchBarClearBtn = document.querySelector("#search .aui-searchbar-clear-btn");
+    if (searchBar) {
+        searchBarInput.oninput = function() {
+            if (this.value.length) {
+                searchBarClearBtn.style.display = 'block';
+            } else {
+                searchBarClearBtn.style.display = 'none';
+            }
+        }
+    }
+    searchBarClearBtn.onclick = function() {
+        this.style.display = 'none';
+        searchBarInput.value = '';
+        Filter = "";
+        api.closeFrame({
+            name: 'deviceSearchResult_frm'
+        });
+    }
+
+    var Filter = "";
+    var flag = false;
+    //根据名称搜索组织机构，下面写法主要是为了避免ios端默认输入法输中文时在搜索框处的英文拼写触发搜索而确定输入好文字后不搜索的情况
+    $('#searchInput').on({
+        'compositionstart': function() {
+            flag = true;
+        },
+        'compositionend': function() {
+            flag = false;
+            if (!flag) {
+                Filter = $(this).val();
+                if (Filter != "") {
+                    searchDeiceType();
+                } else {
+                    api.closeFrame({
+                        name: 'deviceSearchResult_frm'
+                    });
+                }
+            }
+        },
+        'input propertychange': function() {
+            if (!flag) {
+                Filter = $(this).val();
+                if (Filter != "") {
+                    searchDeiceType();
+                } else {
+                    api.closeFrame({
+                        name: 'deviceSearchResult_frm'
+                    });
+                }
+            }
+        }
+    });
+
+    function searchDeiceType() {
+        var listData = [];
+        for (var i = 0; i < nameArr.length; i++) {
+            if (nameArr[i].name.indexOf(Filter) != -1) {
+                listData.push(nameArr[i]);
+            }
+        }
+        api.openFrame({
+            name: 'deviceSearchResult_frm',
+            url: './deviceSearchResult_frm.html',
+            rect: {
+                x: 0,
+                y: headerH + searchH,
+                w: 'auto',
+                h: 'auto'
+            },
+            pageParam: {
+                listData: listData
+            },
+            bounces: false,
+            reload:true
+        });
+
+    }
+</script>
+
+</html>

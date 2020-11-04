@@ -1,0 +1,1366 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>联系人列表页面</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/aui1.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/dialog.css" />
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #FFF;
+        }
+
+        .aui-bar-nav {
+            top: 0;
+            z-index: 3;
+            background-color: #fff;
+            color: #333333;
+            font-size: var(--fontsize9);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            border: none;
+            background-size: 100% 1px;
+            background-repeat: no-repeat;
+            background-position: bottom;
+            background-image: linear-gradient(0, #dddddd, #dddddd 50%, transparent 50%);
+            background-image: -webkit-linear-gradient(90deg, #dddddd, #dddddd 50%, transparent 50%);
+        }
+
+        .aui-bar-nav .aui-btn .aui-iconfont {
+            color: #333333;
+            font-weight: 900;
+        }
+
+        .flex-con {
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #header {
+            position: fixed;
+            z-index: 98;
+        }
+
+        #searchMyMessage {
+            margin-top: 3.5rem;
+        }
+
+        #footer {
+            background-color: rgba(255, 255, 255, 0.9);
+            /*position: absolute;*/
+            position: fixed;
+            height: 2.43rem;
+            bottom: 2rem;
+            width: 85.72%;
+            left: 7.14%;
+            box-shadow: 0rem 0rem 0.23rem 0rem rgba(0, 0, 0, 0.28);
+            border-radius: 5rem;
+        }
+
+        #footer ul li {
+            padding-top: 1.25rem;
+            margin-top: 0.25rem;
+            font-size: var(--fontsize6);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+            background: url() no-repeat center 0;
+            background-size: auto 1rem;
+            text-align: center;
+        }
+
+        #footer ul li:nth-child(1) {
+            background-image: url(../../../image/systemManage/add.png);
+        }
+
+        #footer ul li:nth-child(2) {
+            background-image: url(../../../image/systemManage/update.png);
+        }
+
+        #footer ul li:nth-child(3) {
+            background-image: url(../../../image/message_frame/delete.png);
+        }
+
+        #footer ul li:nth-child(4) {
+            background-image: url(../../../image/message_frame/selectAll.png);
+        }
+
+        #footer ul li:nth-child(5) {
+            background-image: url(../../../image/systemManage/more.png);
+        }
+
+        .delete_active {
+            background-image: url(../../../image/message_frame/delete_active.png) !important;
+        }
+
+        .selectAll_active {
+            background-image: url(../../../image/message_frame/selectAll_active.png) !important;
+        }
+
+        .update_active {
+            background-image: url(../../../image/systemManage/update_active.png) !important;
+        }
+
+        #footer ul {
+            padding: 0 1rem;
+        }
+
+        .border-t:before,
+        .border-b:after {
+            border-color: #F1F1F1;
+        }
+
+        .aui-searchbar {
+            background-color: #fff !important;
+            padding: 0.55rem 0.78rem;
+            width: auto;
+            height: auto;
+            color: #212121;
+            z-index: 3;
+        }
+
+        .aui-searchbar span {
+            font-size: var(--fontsize75);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #333333;
+        }
+
+        .aui-searchbar .arrow {
+            width: 0.8rem;
+            height: 0.8rem;
+            background: url(../../../image/main_frame/orgDownArrow.png);
+            background-size: 0.7rem 0.38rem;
+            background-position: center center;
+            background-repeat: no-repeat;
+            -webkit-transition: 200ms;
+            transition: 200ms;
+        }
+
+        .aui-searchbar-input input {
+            height: 1rem;
+            line-height: 1rem;
+        }
+
+        .aui-searchbar-input {
+            height: 1.6rem;
+            background-color: #f0f0f0;
+            border-radius: 0.8rem;
+            line-height: 1.6rem;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+            display: flex;
+            align-items: center;
+        }
+
+        .aui-searchbar-clear-btn {
+            background-color: #999999;
+            position: initial;
+            width: 0.8rem;
+            height: 0.8rem;
+        }
+
+        .aui-searchbar-clear-btn .aui-iconfont {
+            color: #FFF !important;
+            top: -5px;
+            font-size: var(--fontsize5);
+        }
+
+        .aui-list {
+            background-image: none !important;
+        }
+
+        .aui-media-list .aui-list-item {
+            display: flex;
+            padding-left: 0.78rem;
+        }
+
+        .aui-media-list-item-inner {
+            width: 100vw;
+        }
+
+        .aui-list .aui-list-item-inner {
+            padding-right: 0.78rem;
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+        }
+
+        .aui-list .aui-list-item-title {
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #333333;
+            width: 40vw;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+        }
+
+        .aui-list .aui-list-item-text {
+            font-size: var(--fontsize7);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+        }
+
+        .aui-list .aui-list-item-right {
+            font-size: var(--fontsize65);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+            margin-left: 0;
+        }
+
+        .aui-dot {
+            width: 0.5rem !important;
+            height: 0.5rem !important;
+            border-radius: 50% !important;
+            position: initial;
+            z-index: 1;
+        }
+
+        .aui-tab button {
+            background-color: #FFF;
+            outline: none;
+            box-sizing: content-box;
+            border-radius: 0;
+        }
+
+        .filterDiv {
+            position: absolute;
+            width: 100%;
+            top: -2000px;
+            -webkit-transition: all 0.25s;
+            transition: all 0.25s;
+            z-index: 2;
+        }
+
+        .filterDiv input {
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+            height: auto !important;
+            line-height: inherit !important;
+            text-align: right;
+        }
+
+        .filterDiv .aui-list .aui-list-item:active {
+            background-color: #fff !important;
+        }
+
+        .arrow.active {
+            -webkit-transform: rotate(180deg);
+            transform: rotate(180deg);
+        }
+
+        .filterDiv .aui-content {
+            width: 100%
+        }
+
+        .filterDiv .aui-list-item-inner {
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #262626;
+        }
+
+        .aui-list .aui-list-item-text {
+            width: 100%;
+        }
+
+        .filterDiv .aui-list .aui-list-item-inner {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .filterDiv .aui-list .aui-list-item {
+            background-image: none;
+        }
+
+        .selectTime {
+            /*display: flex;
+            align-items: center;
+            justify-content: center;*/
+        }
+
+        .selectTime span {
+            float: right;
+            color: #333333;
+            font-weight: 900;
+        }
+
+        .close {
+            float: right;
+            width: 16px;
+            height: 16px;
+            background: url(../../image/message_frame/close2.png);
+            background-size: 16px 16px;
+            background-position: center center;
+            background-repeat: no-repeat;
+            -webkit-transition: 200ms;
+            transition: 200ms;
+        }
+
+        .filterDiv .aui-list .aui-list-item-right,
+        .aui-list-item-title-row em {
+            margin-right: 15% !important;
+            max-width: 100% !important;
+        }
+
+        .aui-list-item-arrow:before {
+            border-color: #A2A2A2 !important;
+        }
+
+        .aui-list-item-arrow.change:before {
+            border-color: #A2A2A2 !important;
+            right: 0.6rem !important;
+            margin-top: -0.3rem !important;
+        }
+
+        .aui-list:after {
+            border: none !important;
+        }
+
+        .shade {
+            background: rgba(0, 0, 0, 0.4);
+            position: absolute;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .aui-list-buttons {
+            padding-left: 0 !important;
+            padding: 0.55rem 1.85rem !important;
+            display: flex !important;
+        }
+
+        .filterDiv button {
+            border-radius: 4.4vw;
+            justify-content: center;
+            height: 1.65rem;
+            line-height: 1.65rem;
+            width: 37.33vw;
+            display: flex;
+            font-size: var(--fontsize75);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0.08rem;
+            outline: none;
+        }
+
+        .sureBtn {
+            background: #4f79e8 !important;
+            color: #fff;
+        }
+
+        .cancelBtn {
+            background: #fff;
+            color: #4f79e8;
+        }
+
+        .cancelBtn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            border: 1px solid #4f79e8;
+            border-radius: 2.5rem !important;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            width: 200%;
+            height: 200%;
+            -webkit-transform: scale(0.5);
+            transform: scale(0.5);
+            -webkit-transform-origin: left top;
+            transform-origin: left top;
+            pointer-events: none;
+        }
+
+        .aui-list {
+            background-image: none !important;
+        }
+
+        .aui-media-list .aui-list-item {
+            display: flex;
+            padding-left: 0.78rem;
+        }
+
+        .aui-media-list-item-inner {
+            width: 100vw;
+        }
+
+        .aui-list .aui-list-item-inner {
+            padding-right: 0.78rem;
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+        }
+
+        .aui-list .aui-list-item-title {
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #333333;
+            width: 40vw;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+        }
+
+        .aui-list .aui-list-item-text {
+            font-size: var(--fontsize7);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+        }
+
+        .aui-list .aui-list-item-right {
+            font-size: var(--fontsize65);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+            margin-left: 0;
+        }
+
+        .aui-radio {
+            display: inline-table;
+            margin: auto;
+            width: 1rem;
+            height: 1rem;
+            margin-right: 0.78rem;
+            box-sizing: border-box;
+        }
+
+        .aui-radio:checked,
+        .aui-radio.aui-checked,
+        .aui-checkbox:checked,
+        .aui-checkbox.aui-checked {
+            background-color: #4F79E8;
+            border: solid 1px #4f79e8;
+        }
+
+        .aui-radio:checked:before,
+        .aui-radio.aui-checked:before,
+        .aui-checkbox:checked:before,
+        .aui-checkbox.aui-checked:before,
+        .aui-radio:checked:after,
+        .aui-radio.aui-checked:after,
+        .aui-checkbox:checked:after,
+        .aui-checkbox.aui-checked:after {
+            width: 0.4rem;
+            height: 0.24rem;
+            margin-left: -0.2125rem;
+            margin-top: -0.2125rem;
+        }
+
+        .close {
+            float: left;
+            width: 16px;
+            height: 16px;
+            background: url(../../../image/message_frame/close2.png);
+            background-size: 16px 16px;
+            background-position: center center;
+            background-repeat: no-repeat;
+            -webkit-transition: 200ms;
+            transition: 200ms;
+            /*margin-top: -1rem;*/
+        }
+        .item_active{
+          	background-color: #eee;
+             opacity: 0.7;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav" id="header">
+        <div class="aui-pull-left aui-btn" tapmode data-action="back">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </div>
+        <div class="aui-title">联系人</div>
+        <div class="aui-pull-right aui-btn" tapmode data-action="closeSelectAll">
+            <span class="aui-iconfont aui-icon-close aui-hide" id='closeIcon'></span>
+        </div>
+    </header>
+    <div id="wrap" class="flex-wrap flex-vertical">
+        <div class="aui-searchbar aui-border-b" id="searchMyMessage">
+            <span tapmode onclick="showFilter()">筛选</span>
+            <div class="arrow" id="myArrow" tapmode onclick="showFilter()"></div>
+            <div class="aui-searchbar-input aui-border-radius">
+
+                <i class="aui-iconfont aui-icon-search"></i>
+                <input type="search" placeholder="请输入关键词搜索" id="mySearchInput">
+                <div class="aui-searchbar-clear-btn">
+                    <i class="aui-iconfont aui-icon-close"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="filterDiv" id="myMessageFilter">
+            <div class="aui-content">
+                <ul class="aui-list aui-media-list">
+                    <li class="aui-list-item aui-list-item-middle">
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-inner">
+                                <div class="aui-col-xs-4">组织机构：</div>
+                                <div class="aui-col-xs-7" tapmode data-action='selectParent'>
+                                    <input tapmode placeholder="请选择" type="text" name="input_date" readonly="readonly" id='OrgId' OrgId='0' />
+                                </div>
+                                <div class="aui-col-xs-1">
+                                    <div class="selectTime" id="myBeginClose" tapmode data-action='selectParent'>
+                                        <span class="aui-iconfont aui-icon-right"></span>
+                                    </div>
+                                    <div class="aui-list-item-right close" style="display:none" tapmode data-action="clearOrg">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- 搜索时的遮罩层 -->
+        <div class="shade" id="myShade" style="display:none">
+
+        </div>
+
+        <div class="flex-con" id="contactDemo">
+            <div class="aui-content" style="display:none">
+                <ul class="aui-list aui-media-list">
+
+                    <li class="aui-list-item aui-list-item-middle auiMessageList" param='{{value}}'>
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-inner">
+                                <div class="aui-list-item-text">
+                                    <div class="aui-list-item-title">{{value.trueName}}</div>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>登陆账号：{{value.loginAccount}}</span>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>所属组织：{{value.orgName}}</span>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>创建时间：{{value.creationTime}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="aui-radio aui-hide" data-action='selectRadio'></div>
+                    </li>
+                    <li class="aui-list-item aui-list-item-middle auiMessageList" param='{{value}}'>
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-inner">
+                                <div class="aui-list-item-text">
+                                    <div class="aui-list-item-title">{{value.trueName}}</div>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>登陆账号：{{value.loginAccount}}</span>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>所属组织：{{value.orgName}}</span>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>创建时间：{{value.creationTime}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="aui-radio aui-hide" data-action='selectRadio'></div>
+                    </li>
+                    <li class="aui-list-item aui-list-item-middle auiMessageList" param='{{value}}'>
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-inner">
+                                <div class="aui-list-item-text">
+                                    <div class="aui-list-item-title">{{value.trueName}}</div>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>登陆账号：{{value.loginAccount}}</span>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>所属组织：{{value.orgName}}</span>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>创建时间：{{value.creationTime}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="aui-radio aui-hide" data-action='selectRadio'></div>
+                    </li>
+                    <li class="aui-list-item aui-list-item-middle auiMessageList" param='{{value}}'>
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-inner">
+                                <div class="aui-list-item-text">
+                                    <div class="aui-list-item-title">{{value.trueName}}</div>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>登陆账号：{{value.loginAccount}}</span>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>所属组织：{{value.orgName}}</span>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>创建时间：{{value.creationTime}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="aui-radio aui-hide" data-action='selectRadio'></div>
+                    </li>
+
+                    <li class="aui-list-item aui-list-item-middle auiMessageList" param='{{value}}'>
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-inner">
+                                <div class="aui-list-item-text">
+                                    <div class="aui-list-item-title">{{value.trueName}}</div>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>登陆账号：{{value.loginAccount}}</span>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>所属组织：{{value.orgName}}</span>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>创建时间：{{value.creationTime}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="aui-radio aui-hide" data-action='selectRadio'></div>
+                    </li>
+                    <li class="aui-list-item aui-list-item-middle auiMessageList" param='{{value}}'>
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-inner">
+                                <div class="aui-list-item-text">
+                                    <div class="aui-list-item-title">{{value.trueName}}</div>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>登陆账号：{{value.loginAccount}}</span>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>所属组织：{{value.orgName}}</span>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>创建时间：{{value.creationTime}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="aui-radio aui-hide" data-action='selectRadio'></div>
+                    </li>
+
+                    <li class="aui-list-item aui-list-item-middle auiMessageList" param='{{value}}'>
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-inner">
+                                <div class="aui-list-item-text">
+                                    <div class="aui-list-item-title">{{value.trueName}}</div>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>登陆账号：{{value.loginAccount}}</span>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>所属组织：{{value.orgName}}</span>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>创建时间：{{value.creationTime}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="aui-radio aui-hide" data-action='selectRadio'></div>
+                    </li>
+                    <li class="aui-list-item aui-list-item-middle auiMessageList" param='{{value}}'>
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-inner">
+                                <div class="aui-list-item-text">
+                                    <div class="aui-list-item-title">{{value.trueName}}</div>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>登陆账号：{{value.loginAccount}}</span>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>所属组织：{{value.orgName}}</span>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>创建时间：{{value.creationTime}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="aui-radio aui-hide" data-action='selectRadio'></div>
+                    </li>
+
+                    <li class="aui-list-item aui-list-item-middle auiMessageList" param='{{value}}'>
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-inner">
+                                <div class="aui-list-item-text">
+                                    <div class="aui-list-item-title">{{value.trueName}}</div>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>登陆账号：{{value.loginAccount}}</span>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>所属组织：{{value.orgName}}</span>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>创建时间：{{value.creationTime}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="aui-radio aui-hide" data-action='selectRadio'></div>
+                    </li>
+                    <li class="aui-list-item aui-list-item-middle auiMessageList" param='{{value}}'>
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-inner">
+                                <div class="aui-list-item-text">
+                                    <div class="aui-list-item-title">{{value.trueName}}</div>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>登陆账号：{{value.loginAccount}}</span>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>所属组织：{{value.orgName}}</span>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>创建时间：{{value.creationTime}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="aui-radio aui-hide" data-action='selectRadio'></div>
+                    </li>
+
+                    <li class="aui-list-item aui-list-item-middle auiMessageList" param='{{value}}'>
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-inner">
+                                <div class="aui-list-item-text">
+                                    <div class="aui-list-item-title">{{value.trueName}}</div>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>登陆账号：{{value.loginAccount}}</span>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>所属组织：{{value.orgName}}</span>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>创建时间：{{value.creationTime}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="aui-radio aui-hide" data-action='selectRadio'></div>
+                    </li>
+                    <li class="aui-list-item aui-list-item-middle auiMessageList" param='{{value}}'>
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-inner">
+                                <div class="aui-list-item-text">
+                                    <div class="aui-list-item-title">{{value.trueName}}</div>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>登陆账号：{{value.loginAccount}}</span>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>所属组织：{{value.orgName}}</span>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>创建时间：{{value.creationTime}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="aui-radio aui-hide" data-action='selectRadio'></div>
+                    </li>
+
+
+
+                </ul>
+            </div>
+        </div>
+
+        <div id="footer">
+            <ul class="flex-wrap">
+                <!-- <li tapmode="hover" class="flex-con open-win" win='../contact/ChoiceContact' tapmode>新增</li> -->
+                <li tapmode="hover" class="flex-con" data-action="addContact" tapmode>新增</li>
+                <li tapmode="hover" class="flex-con" data-action="updateContact" tapmode>修改</li>
+                <li tapmode="hover" class="flex-con" data-action="deleteContact" tapmode>删除</li>
+                <li tapmode="hover" class="flex-con" data-action="selectAllContact" tapmode>全选</li>
+            </ul>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/diy/public.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/hammer.min.js"></script>
+<script type="text/javascript" src="../../../script/aui-dialog.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/diy/template.js"></script>
+<script type="text/template" id='contactList'>
+    <div class="aui-content">
+        <ul class="aui-list aui-media-list">
+            {{each list value i}}
+            <li class="aui-list-item aui-list-item-middle auiMessageList" param='{{value}}'>
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-text">
+                            <div class="aui-list-item-title">{{value.contactName}}</div>
+                        </div>
+                        <div class="aui-list-item-text">
+                            <span>手机：{{value.tel}}</span>
+                        </div>
+                        <div class="aui-list-item-text">
+                            <span>所属组织：{{value.orgName}}</span>
+                        </div>
+                    </div>
+                </div>
+                {{if seletedAll == 1}}
+                <div class="aui-radio aui-checked"></div>
+                {{else if seletedAll == 0}}
+                <div class="aui-radio"></div>
+                {{else}}
+                <div class="aui-radio aui-hide"></div>
+                {{/if}}
+
+            </li>
+            {{/each}}
+        </ul>
+    </div>
+</script>
+<script type="text/javascript">
+    var PageIndex = 1;
+    var seletedAll=-1,isSelect = 0;
+
+    // 权限
+    var menu;
+    apiready = function() {
+        api.addEventListener({
+            name: 'changedFontSize'
+        }, function(ret, err) {
+            if (ret) {
+                changeFontSize();
+            }
+        });
+        api.setWinAttr({
+        bounces: false
+         });
+        api.parseTapmode();
+        var header = $api.byId('header');
+        // 实现沉浸式状态栏效果
+        $api.fixStatusBar(header);
+        var footer = $api.byId('footer');
+        var mySearch = $api.byId('searchMyMessage');
+        var myFilter = $api.byId('myMessageFilter');
+        // 实现沉浸式状态栏效果
+        $api.fixStatusBar(header);
+        $api.fixTabBar(footer);
+        // 计算header和tab元素的高度
+        headerH = $api.offset(header).h;
+        mySearchH = $api.offset(mySearch).h;
+        myFilterH = $api.offset(myFilter).h;
+        topH = headerH + mySearchH;
+        topHide = topH - myFilterH + 'px';
+        topActive = topH + 'px';
+        $('.filterDiv').css('top', '' + topHide + '');
+        $('.shade').css('height', 'calc( 100% - ' + topActive + ' )');
+        $('.shade').css('top', '' + topActive + '');
+        fnReady();
+
+        // 权限
+        menu = api.pageParam;
+
+        // 联系人列表
+        GetContactList();
+
+        // 组织机构选择
+        api.addEventListener({
+            name: 'contactOrg'
+        }, function(ret, err) {
+            if (ret) {
+                var value = ret.value.selectedOrg;
+                $('#OrgId').attr('OrgId', value.id);
+                $('#OrgId').val(value.orgName);
+                $('#myShade').hide();
+                $('#myMessageFilter').css('top', '' + topHide + ' !important');
+                $('#myArrow').removeClass('active');
+                $('.close').show();
+                $('#myBeginClose').hide();
+                PageIndex = 1;
+                GetContactList();
+
+            }
+        });
+
+        //  刷新列表
+        api.addEventListener({
+            name: 'updateList'
+        }, function(ret, err) {
+            if (ret) {
+                $('#closeIcon').removeClass('aui-show').addClass('aui-hide');
+                PageIndex = 1;
+                GetContactList();
+            }
+        });
+        api.addEventListener({
+            name: 'saveContact'
+        }, function(ret, err) {
+            if (ret) {
+                $('#closeIcon').removeClass('aui-show').addClass('aui-hide');
+                PageIndex = 1;
+                GetContactList();
+            }
+        });
+        api.addEventListener({　　
+            name: 'scrolltobottom',
+            extra: {
+                threshold: 0
+            }
+        }, function(ret, err) {
+            PageIndex++;
+            GetContactList();
+            longPress();
+            tapClick();
+        });
+
+
+    };
+    var dialog = new auiDialog();
+    operationDom();
+    var actionList = {
+        'back': function() {
+            api.closeWin();
+        },
+        'addContact': function() {
+            // var OrgId = $('#OrgId').attr('OrgId') ? $('#OrgId').attr('OrgId') : 0;
+            var hasNum = 0;
+            for (var i = 0; i < menu.length; i++) {
+                if (menu[i].coding == 'Platform.Product.Contact.Create' && menu[i].isEffective) {
+                    hasNum = 1;
+                }
+            }
+            if (hasNum == 1) {
+              api.openWin({
+                  name: 'addContact',
+                  url: '../contact/addContact.html',
+              });
+            } else {
+                api.toast({
+                    msg: '您暂无新增权限，请联系管理员！',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+
+            }
+
+        },
+        'selectParent': function() {
+            var OrgId = $('#OrgId').attr('OrgId') ? $('#OrgId').attr('OrgId') : 0;
+            api.openWin({
+                name: 'orgSelect',
+                url: '../org/orgSelect.html',
+                pageParam: {
+                    orgId: OrgId,
+                    from: 'contact'
+                }
+            });
+        },
+        'clearOrg': function() {
+          $('#myBeginClose').show();
+            $('#OrgId').attr('OrgId', '0');
+            $('#OrgId').val('');
+            $('#myShade').hide();
+            $('#myMessageFilter').css('top', '' + topHide + ' !important');
+            $('#myArrow').removeClass('active');
+            $('.close').hide();
+            PageIndex = 1;
+            GetContactList();
+
+
+        },
+        'updateContact': function() {
+
+            var seleced = $('.aui-checked');
+            if (seleced.length != 0) {
+                $("li[data-action='updateContact']").addClass('update_active');
+                $("li[data-action='deleteContact']").addClass('delete_active');
+            }
+            if (seleced.length > 1) {
+                api.toast({
+                    msg: '一次只能操作一条数据',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+            } else if (seleced.length == 0) {
+                api.toast({
+                    msg: '请先选择要操作的数据',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+            } else if (seleced.length == 1) {
+                var param = $(seleced).parent('li').attr('param');
+                // param= JSON.parse(JSON.stringify(param));
+                var hasNum = 0;
+                for (var i = 0; i < menu.length; i++) {
+                    if (menu[i].coding == 'Platform.Product.Contact.Edit' && menu[i].isEffective) {
+                        hasNum = 1;
+                    }
+                }
+                if (hasNum == 1) {
+                  $('#closeIcon').addClass('aui-hide').removeClass('aui-show');
+                  $('.aui-radio').removeClass('aui-checked').removeClass('aui-show').addClass('aui-hide');
+                  seletedAll = 2;
+                  isSelect = 0;
+                  api.openWin({
+                      name: 'addContact',
+                      url: '../contact/addContact.html',
+                      pageParam: {
+                          datas: param,
+                          type: 'update'
+                      }
+                  });
+                } else {
+                    api.toast({
+                        msg: '您暂无修改权限，请联系管理员！',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+
+                }
+
+            }
+        },
+        'deleteContact': function() {
+            var seleced = $('.aui-checked');
+            if (seleced.length == 0) {
+                api.toast({
+                    msg: '请先选择要操作的数据',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+            } else {
+                $("li[data-action='updateContact']").addClass('update_active');
+                $("li[data-action='deleteContact']").addClass('delete_active');
+                var hasNum = 0;
+                for (var i = 0; i < menu.length; i++) {
+                    if (menu[i].coding == 'Platform.Product.Contact.Delete' && menu[i].isEffective) {
+                        hasNum = 1;
+                    }
+                }
+                if (hasNum == 1) {
+                  dialog.alert({
+                      title: '确定删除吗?',
+                      buttons: ['确定', '取消']
+                  }, function(ret) {
+                      if (ret.buttonIndex == 1) {
+                          var paramsData = [];
+                          for (var i = 0; i < seleced.length; i++) {
+                              var params = $(seleced[i]).parent('li').attr('param');
+                              params = JSON.parse(params);
+                              paramsData.push(params.id);
+                          }
+                          DeleteContact(paramsData);
+                      }
+                  });
+                } else {
+                    api.toast({
+                        msg: '您暂无删除权限，请联系管理员！',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+
+                }
+
+            }
+        },
+        'selectAllContact': function() {
+            $('#closeIcon').removeClass('aui-hide').addClass('aui-show');
+            if(isSelect == 0){
+              $('.aui-radio').removeClass('aui-hide').addClass('aui-show').addClass('aui-checked');
+              $('.aui-radio').css({
+                  'height': '1rem',
+                  'width': '1.2rem!important'
+              });
+
+              $("li[data-action='selectAllContact']").addClass('selectAll_active');
+              $("li[data-action='updateContact']").addClass('update_active');
+              $("li[data-action='deleteContact']").addClass('delete_active');
+              seletedAll =1;
+              isSelect = 1;
+            } else {
+              $('.aui-radio').removeClass('aui-hide').addClass('aui-show').removeClass('aui-checked');
+              $('.aui-radio').css({
+                  'height': '1rem',
+                  'width': '1.2rem!important'
+              });
+              $("li[data-action='selectAllContact']").removeClass('selectAll_active');
+              $("li[data-action='updateContact']").removeClass('update_active');
+              $("li[data-action='deleteContact']").removeClass('delete_active');
+              seletedAll =0;
+              isSelect = 0;
+            }
+            tapClick();
+            longPress();
+        },
+        'selectRadio': function() {
+
+        },
+        'closeSelectAll': function() {
+            $('#closeIcon').addClass('aui-hide').removeClass('aui-show');
+            $('.aui-radio').removeClass('aui-checked').removeClass('aui-show').addClass('aui-hide');
+            $("li[data-action='selectAllContact']").removeClass('selectAll_active');
+            $("li[data-action='updateContact']").removeClass('update_active');
+            $("li[data-action='deleteContact']").removeClass('delete_active');
+            seletedAll =0;
+            isSelect = 0;
+            tapClick();
+            longPress();
+        },
+    }
+
+    //搜索条设置
+    var mysearchBar = document.querySelector("#searchMyMessage");
+    var mysearchBarInput = document.querySelector("#searchMyMessage input");
+    var mysearchBarClearBtn = document.querySelector("#searchMyMessage .aui-searchbar-clear-btn");
+    if (mysearchBar) {
+        mysearchBarInput.oninput = function() {
+            if (this.value.length) {
+                mysearchBarClearBtn.style.display = 'block';
+                $('#closeIcon').removeClass('aui-show').addClass('aui-hide');
+                $('.auiMessageList .aui-radio').addClass('aui-hide');
+                isSelect = 0;
+                seletedAll = 2;
+                PageIndex = 1;
+                GetContactList();
+            } else {
+                mysearchBarClearBtn.style.display = 'none';
+            }
+        }
+    }
+    mysearchBarClearBtn.onclick = function() {
+        this.style.display = 'none';
+        $('#closeIcon').removeClass('aui-show').addClass('aui-hide');
+        $('.auiMessageList .aui-radio').addClass('aui-hide');
+        mysearchBarInput.value = '';
+        myKeyWord = "";
+        isSelect = 0;
+        seletedAll =2;
+        PageIndex = 1;
+        GetContactList();
+    }
+
+    var myKeyWord = "";
+    // 适配苹果手机的输入法
+    var flag = false;
+    $('#mySearchInput').on({
+        'compositionstart': function() {
+            flag = true;
+        },
+        'compositionend': function() {
+            flag = false;
+            if (!flag) {
+                myKeyWord = $(this).val();
+            }
+        },
+        'input propertychange': function() {
+            if (!flag) {
+                myKeyWord = $(this).val();
+            }
+        }
+    });
+
+    //向下滑动显示筛选
+    function showFilter() {
+        $('#myArrow').toggleClass('active');
+        if ($('#myArrow').hasClass('active')) {
+            $('#myMessageFilter').css('top', '' + topActive + ' !important');
+            $('#myShade').show();
+        } else {
+            $('#myShade').hide();
+            $('#myMessageFilter').css('top', '' + topHide + ' !important');
+        }
+    }
+
+    //点击遮罩层隐藏筛选
+    $('.shade').on('touchstart', function() {
+        if ($('#myArrow').hasClass('active')) {
+            $('#myShade').hide();
+            $('#myMessageFilter').css('top', '' + topHide + ' !important');
+            $('#myArrow').removeClass('active');
+        }
+    });
+
+   function tapClick(){
+     var pressLis = $('.auiMessageList');
+     for (var i = 0; i < pressLis.length; i++) {
+         var hammerLi = new Hammer(pressLis[i]);
+         hammerLi.get('tap').set({
+             time: 300
+         });
+           hammerLi.on('tap', function(ev) {
+            $(ev.target).parents('.aui-list-item').siblings().removeClass('item_active');
+             if($(ev.target).parents('.aui-list-item').hasClass('item_active')){
+               $(ev.target).parents('.aui-list-item').removeClass('item_active');
+             } else {
+               var target = $(ev.target).parents('.aui-list-item');
+                $(ev.target).parents('.aui-list-item').addClass('item_active');
+                setTimeout(function(){
+                  target.removeClass('item_active');
+                },200);
+             }
+               $(ev.target).parents('.aui-list-item').find('.aui-radio').toggleClass('aui-checked');
+           });
+         };
+   }
+    // 长按
+    function longPress() {
+        var pressLis = $('.auiMessageList');
+        $('.aui-radio').css({
+            'height': '1rem',
+            'width': '1rem'
+        });
+        // 长按进入全选模式
+        var timeOutEvent;
+        // 判断是否是单击
+        var longClick;
+        //滚动的长度
+        var touchY = 0;
+        for (var i = 0; i < pressLis.length; i++) {
+
+            $(pressLis[i]).on({
+                touchstart: function(e) {
+                    longClick = 0;
+                    // 点击延迟500毫秒用于制作长按的效果
+                    timeOutEvent = setTimeout(function() {
+                         seletedAll =0;
+                        $('#closeIcon').removeClass('aui-hide').addClass('aui-show');
+                        $('.auiMessageList .aui-radio').removeClass('aui-hide');
+                        $(e.target).parents('.aui-list-item').find('.aui-radio').addClass('aui-checked');
+                        $('.auiMessageList').removeClass('aui-active');
+                        $("li[data-action='updateContact']").addClass('update_active');
+                        $("li[data-action='deleteContact']").addClass('delete_active');
+                        longClick = 1; //假如长按，则设置为1
+                    }, 500);
+                    var touch = e.touches[0];
+                    touchY = touch.clientY;
+
+                },
+                touchmove: function(e) {
+                    var e = e || window.event;
+                    clearTimeout(timeOutEvent);
+                    timeOutEvent = 0;
+                    var touch = e.touches[0]
+                    if (Math.abs(touch.clientY - touchY) < 10) {
+                        e.preventDefault();
+                    }
+                },
+                touchend: function(e) {
+                    clearTimeout(timeOutEvent);
+                    // e.preventDefault();
+                    if (timeOutEvent != 0 && longClick == 0) { //点击
+                        //此处为点击事件----在此处添加跳转详情页
+                        // 此处判断全选图标是否存在，如果存在，单击就不生效，不跳入详情页面
+                        if(!($('#closeIcon').hasClass('aui-show'))){
+                          var param = $(e.target).parents('.aui-list-item').attr('param');
+                          api.openWin({
+                              name: 'addContact',
+                              url: '../contact/addContact.html',
+                              pageParam: {
+                                  datas: param,
+                                  type: 'detail'
+                              }
+                          });
+                        }
+                        // else {
+                        //   $(e.target).parents('.aui-list-item').find('.aui-radio').toggleClass('aui-checked');
+                        // }
+
+                    }
+
+                    return false;
+                }
+            });
+
+
+
+        }
+    }
+    //  联系人列表
+    function GetContactList() {
+        if (PageIndex == 1) {
+            $('#contactDemo').html('');
+        }
+        // 按照搜索条件的，搜索的时候，要把分页的分页数改为第一页
+        var OrgId = $('#OrgId').attr('OrgId') ? $('#OrgId').attr('OrgId') : 0;
+        var ContactName = $('#mySearchInput').val() ? $('#mySearchInput').val() : '';
+        fnGet('services/app/Contact/GetContactList?OrgId=' + OrgId + '&Type=2&ContactName=' + ContactName + '&PageIndex=' + PageIndex + '&SkipCount=1&MaxResultCount=10', {}, false, function(ret, err) {
+            if (ret) {
+                if (ret.success && ret.result.items.length != 0) {
+                    var datas = {
+                      seletedAll:seletedAll,
+                        list: ret.result.items,
+                    };
+                    var str = template('contactList', datas);
+                    $('#contactDemo').append(str);
+                    longPress();
+                    tapClick();
+                    operationDom();
+                    fnReadyOpenWin();
+                } else {
+                    api.toast({
+                        msg: '没有更多的数据了',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    longPress();
+                    tapClick();
+                }
+            }
+            api.hideProgress();
+        });
+    }
+
+    //  删除联系人
+    function DeleteContact(params) {
+        var IdList = '?IdList=' + params[0];
+        for (var i = 1; i < params.length; i++) {
+            IdList += '&IdList=' + params[i];
+        }
+        fnGet('services/app/Contact/DeleteContact' + IdList, {}, true, function(ret, err) {
+            if (ret) {
+                if (ret.success) {
+                    api.toast({
+                        msg: ret.result,
+                        duration: 2000,
+                        location: 'top'
+                    });
+                    GetContactList();
+                } else {
+                    api.toast({
+                        msg: ret.result,
+                        duration: 2000,
+                        location: 'top'
+                    });
+                }
+            }
+            api.hideProgress();
+        });
+
+
+
+    }
+</script>
+
+</html>

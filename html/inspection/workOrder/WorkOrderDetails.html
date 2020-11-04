@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>工单详情页面</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/aui1.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/dialog.css" />
+    <style type='text/css'>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #f5f5f5;
+        }
+
+        .aui-bar-nav {
+            top: 0;
+            z-index: 3;
+            background-color: #fff;
+            color: #333333;
+            font-size: var(--fontsize9);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            border: none;
+            background-size: 100% 1px;
+            background-repeat: no-repeat;
+            background-position: bottom;
+            background-image: linear-gradient(0, #dddddd, #dddddd 50%, transparent 50%);
+            background-image: -webkit-linear-gradient(90deg, #dddddd, #dddddd 50%, transparent 50%);
+        }
+
+        .aui-bar-nav .aui-btn .aui-iconfont {
+            color: #333333;
+            font-weight: 900;
+        }
+
+        .flex-con {
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #header {
+            position: fixed;
+            z-index: 98;
+        }
+        /*tab定位不动*/
+
+        #tab {
+            position: fixed;
+            width: 100%;
+            z-index: 999;
+        }
+
+        #tab .aui-tab-item.aui-active {
+            color: #4f79e7;
+            border-bottom: 2px solid #4f79e7;
+        }
+        /*#tab-content {
+          position: relative;
+        }*/
+        /*tab内容里面的样式*/
+
+        #tab-content .aui-list {
+            background: #f5f5f5;
+        }
+
+        .borderL {
+            width: 0.18rem;
+            height: 0.8rem;
+            background-color: #4f79e7;
+            border-radius: 0.05rem;
+        }
+
+        .list-Title {
+            width: 14.82rem;
+            font-size: 0.85rem;
+            margin-top: 0.2rem;
+        }
+
+        #tab-content .aui-list {
+            width: 17rem;
+            margin: 0.5rem auto;
+            background: #fff;
+            border: solid 1px #e6e6e6;
+            border-radius: 0.3rem;
+            margin-bottom: 2rem;
+        }
+
+        #tab-content .aui-list:first-child {
+            margin-bottom: 0;
+        }
+
+        #tab-content .aui-list .aui-list-header {
+            height: 2rem;
+            font-size: 0.9rem;
+            background: #fff;
+            border-bottom: 1px solid #eee;
+            border-radius: 0.3rem 0.3rem 0 0;
+        }
+
+        #tab-content .aui-list {
+            /*background-position: top; */
+            background-image: none;
+        }
+        #tab-content .aui-row .aui-col-xs-4{
+          width: auto;
+        }
+        #tab-content .aui-row .aui-col-xs-8{
+          padding-left: 0.5rem;
+        }
+
+        #tab-content .aui-list .aui-list-item {
+            background-image: none;
+            border-bottom: 1px dotted #eee;
+            padding-left: 1rem;
+        }
+
+        #tab-content .aui-list .aui-list-item:last-child {
+            border-bottom: none;
+        }
+
+        #tab-content .aui-list .aui-list-item .aui-list-item-inner {
+          padding-right: 0;
+            margin: 0.3rem;
+        }
+
+        #tab1 .aui-row {
+            width: 100%;
+        }
+
+        #tab1 .aui-row .aui-col-xs-4 {
+            text-align: left;
+        }
+
+        .spanTime {
+            color: #999;
+        }
+        /*附件*/
+
+        #tab2 .aui-card-list .aui-col-xs-3 img {
+            width: 3.23rem;
+            height: 3.23rem;
+            border-radius: 0.08rem;
+        }
+        #tab2 .aui-card-list .aui-col-xs-3 .video {
+            width: 3.23rem;
+            height: 3.23rem;
+            border-radius: 0.08rem;
+            background: url('../../../image/inspection/video.jpg');
+            background-size: 3.23rem 3.23rem;
+        }
+
+
+        #tab2 .aui-padded-l-10 {
+            padding-left: 0.6rem !important;
+        }
+        /*底部按钮*/
+
+        .footer {
+            padding-left: 0.8rem;
+        }
+
+        .footer .close {
+            float: left;
+            width: 7rem;
+            height: 1.8rem;
+            line-height: 1.8rem;
+            margin: 0.75rem;
+            background-color: #4f79e8;
+            border-radius: 0.9rem;
+            color: #fff;
+        }
+
+        .footer .finish {
+            float: left;
+            width: 7rem;
+            height: 1.8rem;
+            line-height: 1.8rem;
+            margin: 0.75rem;
+            background-color: #fff;
+            border-radius: 0.9rem;
+            border: 1px solid #4f79e8;
+            color: #4f79e8;
+        }
+
+        .footer .receive {
+            width: 15rem;
+            height: 1.8rem;
+            line-height: 1.8rem;
+            margin: 0.75rem auto;
+            background-color: #4f79e8;
+            border-radius: 0.9rem;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav" id="header">
+        <div class="aui-pull-left aui-btn" data-action='back'>
+            <span class="aui-iconfont aui-icon-left"></span>
+        </div>
+        <div class="aui-title">工单详情</div>
+    </header>
+    <div class="aui-tab" id="tab">
+        <div class="aui-tab-item aui-font-size-16 tapmode aui-active">详情</div>
+        <div class="aui-tab-item aui-font-size-16 tapmode">附件</div>
+    </div>
+    <section id="tab-content" style="height:auto;">
+        <!-- <div class="tab1 aui-hide" id="tab1">
+            <ul class="aui-list aui-list-in">
+                <li class="aui-list-header">
+                    <span class="borderL">
+                </span>
+                    <span class="list-Title">工单信息</span>
+
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-row">
+                            <div class="aui-col-xs-4 aui-font-size-14">工单类型:</div>
+                            <div class="aui-col-xs-8 aui-font-size-14">
+                                <p>检查情况</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-row">
+                            <div class="aui-col-xs-4 aui-font-size-14">负责人:</div>
+                            <div class="aui-col-xs-8 aui-font-size-14">
+                                <p>张三</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-row">
+                            <div class="aui-col-xs-4 aui-font-size-14">工单状态:</div>
+                            <div class="aui-col-xs-8 aui-font-size-14">
+                                <p>进行中</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-row">
+                            <div class="aui-col-xs-4 aui-font-size-14">提交时间:</div>
+                            <div class="aui-col-xs-8 aui-font-size-14">
+                                <p>2019-01-01 9:00</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-row">
+                            <div class="aui-col-xs-4 aui-font-size-14">完成时间:</div>
+                            <div class="aui-col-xs-8 aui-font-size-14">
+                                <p>2019-01-01 9:00</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-row">
+                            <div class="aui-col-xs-4 aui-font-size-14">工单内容:</div>
+                            <div class="aui-col-xs-8 aui-font-size-14">
+                                <p>检查情况检查情况检查情况检查情况检查情况检查情况检查情况检查情况检查情况检查情况检查情况检查情况检查情况检查情况检查情况检查情况检查情况检查情况检查情况检查情况检查情况检查情况检查情况</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+            </ul>
+            <ul class="aui-list aui-list-in">
+                <li class="aui-list-header">
+                    <span class="borderL">
+                </span>
+                    <span class="list-Title">事件资料</span>
+
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-row">
+                            <div class="aui-col-xs-4 aui-font-size-14">设备名称:</div>
+                            <div class="aui-col-xs-8 aui-font-size-14">
+                                <p>阀门</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-row">
+                            <div class="aui-col-xs-4 aui-font-size-14">设备编号:</div>
+                            <div class="aui-col-xs-8 aui-font-size-14">
+                                <p>2018010120180101</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-row">
+                            <div class="aui-col-xs-4 aui-font-size-14">设备点做坐标:</div>
+                            <div class="aui-col-xs-8 aui-font-size-14">
+                                <p>116.557771,39.972465</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-row">
+                            <div class="aui-col-xs-4 aui-font-size-14">设备点状态:</div>
+                            <div class="aui-col-xs-8 aui-font-size-14">
+                                <p>异常</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-row">
+                            <div class="aui-col-xs-4 aui-font-size-14">事件提交时间:</div>
+                            <div class="aui-col-xs-8 aui-font-size-14">
+                                <p>2019-01-01 9:00</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-row">
+                            <div class="aui-col-xs-4 aui-font-size-14">地址:</div>
+                            <div class="aui-col-xs-8 aui-font-size-14">
+                                <p>重庆市渝中区上清寺正街111号1单元101</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-row">
+                            <div class="aui-col-xs-4 aui-font-size-14">巡检内容:</div>
+                            <div class="aui-col-xs-8 aui-font-size-14">
+                                <p>检查情况检查情况检查情况检查情况检查情况检查情况检查情况检查情况检查情况检查情况检查情况检查情况检查情况检查情况检查情况检查情况检查情况检查情况检查情况检查情况检查情况检查情况检查情况</p>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+        <div class="tab2 aui-hide" id="tab2">
+            <div class="aui-card-list">
+                <div class="aui-card-list-content-padded aui-border-b aui-border-t">
+                    <div class="aui-row aui-row-padded aui-padded-l-10">
+                        <div class="aui-col-xs-3 imgBrowers" data-action='imgBrowers'>
+                            <img src="../../../image/inspection/e.jpg" />
+                        </div>
+                        <div class="aui-col-xs-3 imgBrowers" data-action='imgBrowers'>
+                            <img src="../../../image/inspection/e.jpg" />
+                        </div>
+                        <div class="aui-col-xs-3 imgBrowers" data-action='imgBrowers'>
+                            <img src="../../../image/inspection/e.jpg" />
+                        </div>
+                        <div class="aui-col-xs-3 imgBrowers" data-action='imgBrowers'>
+                            <img src="../../../image/inspection/e.jpg" />
+                        </div>
+                        <div class="aui-col-xs-3 imgBrowers" data-action='imgBrowers'>
+                            <img src="../../../image/inspection/e.jpg" />
+                        </div>
+                        <div class="aui-col-xs-3 imgBrowers" data-action='imgBrowers'>
+                            <img src="../../../image/inspection/e.jpg" />
+                        </div>
+                        <div class="aui-col-xs-3 imgBrowers" data-action='imgBrowers'>
+                            <img src="../../../image/inspection/e.jpg" />
+                        </div>
+                        <div class="aui-col-xs-3 imgBrowers" data-action='imgBrowers'>
+                            <img src="../../../image/inspection/e.jpg" />
+                        </div>
+                        <div class="aui-col-xs-3 imgBrowers" data-action='imgBrowers'>
+                            <img src="../../../image/inspection/e.jpg" />
+                        </div>
+                        <div class="aui-col-xs-3 imgBrowers" data-action='imgBrowers'>
+                            <img src="../../../image/inspection/e.jpg" />
+                        </div>
+                        <div class="aui-col-xs-3 imgBrowers" data-action='imgBrowers'>
+                            <img src="../../../image/inspection/e.jpg" />
+                        </div>
+                        <div class="aui-col-xs-3 imgBrowers" data-action='imgBrowers'>
+                            <img src="../../../image/inspection/e.jpg" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+
+    </section>
+    <footer class="aui-bar aui-bar-tab footer" id="footer">
+        <div class="Going aui-hide">
+            <div class='close' tapmode data-action='close'>关闭</div>
+            <div class='finish' tapmode data-action='finish'>完成</div>
+        </div>
+        <div class="Wait">
+            <div class='receive' tapmode data-action='receive'>接收</div>
+        </div>
+
+    </footer>
+
+
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/diy/public.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/aui-tab.js"></script>
+<script type="text/javascript" src="../../../script/moment.js"></script>
+<script type="text/javascript" src="../../../script/template.js"></script>
+<script type="text/javascript" src="../../../script/aui-dialog.js"></script>
+<script type="text/template" id='GoList'>
+    <div class="tab1 aui-show" id="tab1">
+        <ul class="aui-list aui-list-in orderId" orderId="{{result.id}}">
+            <li class="aui-list-header">
+                <span class="borderL">
+            </span>
+                <span class="list-Title">工单信息</span>
+
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-row">
+                        <div class="aui-col-xs-4 aui-font-size-14">工单类型:</div>
+                        <div class="aui-col-xs-8 aui-font-size-14">
+                            <p>{{result.workOrderTypeName}}</p>
+                        </div>
+                    </div>
+
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-row">
+                        <div class="aui-col-xs-4 aui-font-size-14">负责人:</div>
+                        <div class="aui-col-xs-8 aui-font-size-14">
+                            <p>{{result.personInChargeName}}</p>
+                        </div>
+                    </div>
+                </div>
+            </li>
+
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-row">
+                        <div class="aui-col-xs-4 aui-font-size-14">工单状态:</div>
+                        <div class="aui-col-xs-8 aui-font-size-14">
+                            <p>{{result.workOrderStatusString}}</p>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-row">
+                        <div class="aui-col-xs-4 aui-font-size-14">提交时间:</div>
+                        <div class="aui-col-xs-8 aui-font-size-14">
+                            <p>{{result.submitWorkOrderTime}}</p>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-row">
+                        <div class="aui-col-xs-4 aui-font-size-14">完成时间:</div>
+                        <div class="aui-col-xs-8 aui-font-size-14">
+                            <p>{{result.endTime}}</p>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-row">
+                        <div class="aui-col-xs-4 aui-font-size-14">工单内容:</div>
+                        <div class="aui-col-xs-8 aui-font-size-14">
+                            <p>{{result.workOrderRemark}}</p>
+                        </div>
+                    </div>
+                </div>
+            </li>
+
+        </ul>
+        {{if result.eventInfo!=null}}
+        <ul class="aui-list aui-list-in">
+            <li class="aui-list-header">
+                <span class="borderL">
+            </span>
+                <span class="list-Title">事件资料</span>
+
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-row">
+                        <div class="aui-col-xs-4 aui-font-size-14">设备名称:</div>
+                        <div class="aui-col-xs-8 aui-font-size-14">
+                            <p>{{result.eventInfo.deviceName}}</p>
+                        </div>
+                    </div>
+
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-row">
+                        <div class="aui-col-xs-4 aui-font-size-14">设备编号:</div>
+                        <div class="aui-col-xs-8 aui-font-size-14">
+                            <p>{{ result.eventInfo.deviceCode }}</p>
+                        </div>
+                    </div>
+                </div>
+            </li>
+
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-row">
+                        <div class="aui-col-xs-4 aui-font-size-14">设备点坐标:</div>
+                        <div class="aui-col-xs-8 aui-font-size-14">
+                          {{if result.eventInfo.devicePoint != null}}
+                          <p>{{result.eventInfo.devicePoint}}</p>
+                          {{else}}
+                          <p>{{result.eventInfo.deviceLongitude}},{{result.eventInfo.deviceLatitude}}</p>
+                          {{/if}}
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-row">
+                        <div class="aui-col-xs-4 aui-font-size-14">设备点状态:</div>
+                        <div class="aui-col-xs-8 aui-font-size-14">
+                            <p>{{ result.eventInfo.deviceStatusString}}</p>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-row">
+                        <div class="aui-col-xs-4 aui-font-size-14">异常类型:</div>
+                        <div class="aui-col-xs-8 aui-font-size-14">
+                            <p>{{result.eventInfo.errorTypeName}}</p>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-row">
+                        <div class="aui-col-xs-4 aui-font-size-14">事件类型:</div>
+                        <div class="aui-col-xs-8 aui-font-size-14">
+                            <p>{{result.eventInfo.eventTypeName}}</p>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-row">
+                        <div class="aui-col-xs-4 aui-font-size-14">预估损失水量:</div>
+                        <div class="aui-col-xs-8 aui-font-size-14">
+                            <p>{{result.eventInfo.predictWaterLoss}}m³</p>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-row">
+                        <div class="aui-col-xs-4 aui-font-size-14">事件提交时间:</div>
+                        <div class="aui-col-xs-8 aui-font-size-14">
+                            <p>{{result.eventInfo.eventSubmitTime}}</p>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-row">
+                        <div class="aui-col-xs-4 aui-font-size-14">地址:</div>
+                        <div class="aui-col-xs-8 aui-font-size-14">
+                            {{if result.eventInfo.address != null}}
+                            <p>{{result.eventInfo.address}}</p>
+                            {{else}}
+                            <p>{{result.eventInfo.deviceAddress}}</p>
+                            {{/if}}
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-row">
+                        <div class="aui-col-xs-4 aui-font-size-14">巡检内容:</div>
+                        <div class="aui-col-xs-8 aui-font-size-14">
+                            <p>{{result.eventInfo.eventRemark}}</p>
+                        </div>
+                    </div>
+                </div>
+            </li>
+
+        </ul>
+        {{else}}
+        <ul class="aui-list aui-list-in">
+            <li class="aui-list-header">
+                <span class="borderL">
+            </span>
+                <span class="list-Title">事件资料</span>
+
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-row">
+                      <div class="aui-col-xs-12 aui-text-center">
+                          <p>暂无事件信息</p>
+                      </div>
+                    </div>
+
+                </div>
+            </li>
+
+
+        </ul>
+        {{/if}}
+
+    </div>
+    <div class="tab2 aui-hide" id="tab2">
+        <div class="aui-card-list">
+            <div class="aui-card-list-content-padded aui-border-b aui-border-t">
+                <div class="aui-row aui-row-padded aui-padded-l-10">
+                  {{ each result.fileInfoDtos value i}} {{if value.type =='1001' || value.type =='1002'|| value.type =='1003'|| value.type =='1004'|| value.type =='1005'}}
+                  <div class="aui-col-xs-3">
+                      <img src="{{value.url}}" class="imgBrowers" onclick="fnPhotoOpen(this)" />
+                  </div>
+                  {{else if value.type =='5001' || value.type =='5002'|| value.type =='5003'|| value.type =='5004'|| value.type =='5005' || value.type =='5006'|| value.type =='5007'}}
+                  <div class="aui-col-xs-3">
+                      <!-- <video src='{{value.url}}' class="video" onclick="fnOpenVideo(this)"></video> -->
+                        <img src1="{{value.url}}" class="video" tapmode onclick="fnOpenVideo(this)" />
+                  </div>
+                  {{/if}}
+                 {{/each}}
+
+                   {{if result.eventInfo!=null}}
+                   {{ each result.eventInfo.fileList v j}} {{if v.type =='1001' || v.type =='1002'|| v.type =='1003'|| v.type =='1004'|| v.type =='1005'}}
+                   <div class="aui-col-xs-3">
+                       <img src="{{v.url}}" class="imgBrowers" onclick="fnPhotoOpen(this)" />
+                   </div>
+                   {{else if v.type =='5001' || v.type =='5002'|| v.type =='5003'|| v.type =='5004'|| v.type =='5005' || v.type =='5006'|| v.type =='5007'}}
+                   <div class="aui-col-xs-3">
+                       <!-- <video src='{{v.url}}' class="video" onclick="fnOpenVideo(this)"></video> -->
+                      <img src1="{{v.url}}" class="video" tapmode onclick="fnOpenVideo(this)" />
+                   </div>
+                   {{/if}}
+                  {{/each}}
+                   {{/if}}
+                   {{if result.eventInfo!=null }}
+                   {{if result.fileInfoDtos.length == 0 && result.eventInfo.fileList.length == 0}}
+                   <div class="aui-col-xs-12 aui-text-center">
+                       <p>暂无附件</p>
+                   </div>
+                   {{/if}}
+                    {{else}}
+                    {{if result.fileInfoDtos.length == 0 && result.eventInfo == null}}
+                    <div class="aui-col-xs-12 aui-text-center">
+                        <p>暂无附件</p>
+                    </div>
+                    {{/if}}
+                   {{/if}}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</script>
+
+<script type="text/javascript">
+    var paramDatas;
+    var photoBrowser;
+    apiready = function() {
+        api.addEventListener({
+            name: 'changedFontSize'
+        }, function(ret, err) {
+            if (ret) {
+                changeFontSize();
+            }
+        });
+        api.parseTapmode();
+        var header = $api.byId('header');
+        // 实现沉浸式状态栏效果
+        $api.fixStatusBar(header);
+        var headerH = $api.offset(header).h;
+        $api.css($api.byId('tab'), 'top:' + headerH + 'px;');
+        fnReady();
+        paramDatas = api.pageParam;
+        init();
+        IsIosSystem();
+        setting();
+        // 图片预览和下载
+        photoBrowser = api.require('photoBrowser');
+
+
+    };
+    var dialog = new auiDialog();
+    function setting() {
+        var header = $api.byId('header');
+        var headerH = $api.offset(header).h;
+        var tabItemH = $api.offset($api.byId('tab')).h;
+        var footerH = $api.offset($api.byId('footer')).h;
+        $api.css($api.byId('tab-content'), 'margin-top:' + (headerH + tabItemH + 15) + 'px;');
+        $api.css($api.byId('tab-content'), 'margin-bottom:' + (footerH + 15) + 'px;');
+    }
+
+    function IsIosSystem() {
+        if (api.systemType == 'ios') {
+            $('.list-Title').css({
+                'margin-top': '0'
+            });
+            $api.css($api.byId('tab-content'), 'padding-bottom:2rem;');
+        }
+    }
+
+    function init() {
+        if (paramDatas != undefined || paramDatas != null) {
+            if (paramDatas.type == '1') {
+              // 进行中
+                $('.Going').removeClass('aui-hide').addClass('aui-show');
+                $('.Wait').removeClass('aui-show').addClass('aui-hide');
+                // 根据工单id获取工单详情
+                GetWorkOrderById();
+                setting();
+                tabInit();
+            } else if (paramDatas.type == '0') {
+              // 待接收
+                $('.footer').css({
+                    'padding-left': '0'
+                });
+                $('.Wait').removeClass('aui-hide').addClass('aui-show');
+                $('.Going').removeClass('aui-show').addClass('aui-hide');
+                // 根据工单id获取工单详情
+                GetWorkOrderById();
+                setting();
+                tabInit();
+            } else if (paramDatas.type == '2') {
+              // 已完成，已关闭
+                $('.footer').addClass('aui-hide');
+                // 根据工单id获取工单详情
+                GetWorkOrderById();
+                setting();
+                tabInit();
+            }
+        }
+    }
+
+    function tabInit() {
+        var tab = new auiTab({
+            element: document.getElementById("tab"),
+            index: 1,
+            repeatClick: false
+        }, function(ret) {
+            if (ret) {
+                if ($('#tab' + ret.index).hasClass('aui-show')) {
+                    $('#tab' + ret.index).siblings().removeClass('aui-show').addClass('aui-hide');
+                } else {
+                    $('#tab' + ret.index).removeClass('aui-hide').addClass('aui-show');
+                    $('#tab' + ret.index).siblings().removeClass('aui-show').addClass('aui-hide');
+                }
+            }
+
+        });
+    }
+    tabInit();
+
+
+    var actionList = {
+        'back': function() {
+            api.closeWin();
+        },
+        // 'imgBrowers': function() {
+        //     // var ImgSrc = $(this).children().attr('src');
+        //     // fnPhotoOpen(ImgSrc);
+        //     api.openVideo({
+        //         url: 'https://www.apicloud.com/video_play/1_1'
+        //     });
+        // },
+        'receive':function(){
+          var id = $('.orderId').attr('orderId');
+          dialog.alert({
+              title:"确定接收工单吗?",
+              buttons:['确定','取消']
+          },function(ret){
+              if(ret && ret.buttonIndex ==1){
+                var body = {
+                  body:JSON.stringify({
+
+                  })
+                };
+                fnPost('services/GISInspection/WorkOrder/AcceptWorkOrder?id='+id, body, 'application/json', true, false, function(ret, err) {
+                    if (ret) {
+                        if (ret.success) {
+                            api.toast({
+                                msg: '接收成功',
+                                duration: 2000,
+                                location: 'top'
+                            });
+                            api.sendEvent({
+                                name: 'receiveOrder',
+                            });
+                              api.closeWin();
+
+                        } else {
+                            api.toast({
+                                msg: '接收失败',
+                                duration: 2000,
+                                location: 'top'
+                            });
+                        }
+                    }
+                    api.hideProgress();
+                });
+              }
+          })
+
+
+
+
+        },
+        'finish':function(){
+          var id = $('.orderId').attr('orderId');
+          var body = {
+            body:JSON.stringify({
+
+            })
+          };
+          fnPost('services/GISInspection/WorkOrder/CompleteWorkOrder?id='+id, body, 'application/json', true, false, function(ret, err) {
+              if (ret) {
+                  if (ret.success) {
+                      api.toast({
+                          msg: '操作成功',
+                          duration: 2000,
+                          location: 'top'
+                      });
+                      api.sendEvent({
+                          name: 'FinishAndClose',
+                      });
+                        api.closeWin();
+                  } else {
+                      api.toast({
+                          msg: '操作失败',
+                          duration: 2000,
+                          location: 'top'
+                      });
+                  }
+              }
+              api.hideProgress();
+          });
+        },
+        'close':function(){
+          var id = $('.orderId').attr('orderId');
+          dialog.alert({
+              title:"确定关闭吗?",
+              buttons:['确定','取消']
+          },function(ret){
+            if(ret && ret.buttonIndex == 1){
+              var body = {
+                body:JSON.stringify({
+                })
+              };
+              fnPost('services/GISInspection/WorkOrder/CloseWorkOrder?id='+id, body, 'application/json', true, false, function(ret, err) {
+                  if (ret) {
+                      if (ret.success) {
+                          api.toast({
+                              msg: '操作成功',
+                              duration: 2000,
+                              location: 'top'
+                          });
+                          api.sendEvent({
+                              name: 'FinishAndClose',
+                          });
+                          api.closeWin();
+
+                      } else {
+                          api.toast({
+                              msg: '操作失败',
+                              duration: 2000,
+                              location: 'top'
+                          });
+                      }
+                  }
+                  api.hideProgress();
+              });
+            }
+          });
+        }
+    }
+
+
+
+   function GetWorkOrderById(){
+    var url = 'services/GISInspection/WorkOrder/GetWorkOrderById?id=' + paramDatas.id;
+    fnGet(url, {}, false, function(ret, err) {
+        if (ret) {
+            if (ret.success && ret.result!= null) {
+                var result = ret.result;
+                result.submitWorkOrderTime =result.submitWorkOrderTime!=null? moment(result.submitWorkOrderTime).format('YYYY-MM-DD HH:mm'):'';
+                if(result.endTime!=null){
+                    result.endTime = moment(result.endTime).format('YYYY-MM-DD HH:mm');
+                }
+                if(result.eventInfo!=null){
+                  result.eventInfo.eventSubmitTime =result.eventInfo.eventSubmitTime!=null? moment(result.eventInfo.eventSubmitTime).format('YYYY-MM-DD HH:mm'):'';
+                }
+                var apiUrl = 'http://' + $api.getStorage('apiUrl');
+                var fileInfoDtos = result.fileInfoDtos;
+                for(i in fileInfoDtos){
+                  fileInfoDtos[i].url = apiUrl+fileInfoDtos[i].url;
+                }
+                if(result.eventInfo !=null){
+                  var fileList = result.eventInfo.fileList;
+                  for(j in fileList){
+                    fileList[j].url = apiUrl+fileList[j].url;
+                  }
+                }
+
+                var datas = {
+                  result:result
+                };
+                var str = template('GoList', datas);
+                $('#tab-content').append(str);
+                operationDom();
+                fnReadyOpenWin();
+
+            } else {
+                api.toast({
+                    msg: '数据获取失败',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+            }
+        }
+        api.hideProgress();
+    });
+
+   }
+
+
+   // 图片预览与图片保存到本地
+   function fnPhotoOpen(obj) {
+       var imgArrays = $('.imgBrowers');
+       var ImgSrc = [];
+       for (var i = 0; i < imgArrays.length; i++) {
+           imgArrays[i].index = i;
+           var srcUrl = $(imgArrays[i]).attr('src');
+           ImgSrc.push(srcUrl);
+       }
+       //  获取当前图片的位置
+       var index = obj.index;
+       photoBrowser.open({
+           images: ImgSrc,
+           activeIndex: index,
+           bgColor: '#000'
+       }, function(ret1) {
+           if (ret1.eventType == 'click') {
+               photoBrowser.close();
+           }
+           if (ret1.eventType == 'longPress') {
+               api.actionSheet({
+                   buttons: ['保存到本地']
+               }, function(ret, err) {
+                   if (ret.buttonIndex == 1) {
+                       // 下载图片到本地（保存到相册中）
+                       // photoBrowser.getImage({
+                       //     index:ret1.index
+                       //   }, function(ret2, err) {
+                       //     if (ret2) {
+                       //         var url =ret2.path;
+                       //         console.log(url);
+                       //         api.saveMediaToAlbum({
+                       //                    path: ''+url+'',
+                       //                    groupName:'云平台相册'
+                       //                }, function(ret, err) {
+                       //                  console.log(JSON.stringify(ret));
+                       //                  console.log(JSON.stringify(err));
+                       //                    if (ret && ret.status) {
+                       //                        api.toast({
+                       //                            msg: '保存成功',
+                       //                            duration: 2000,
+                       //                            location: 'bottom'
+                       //                        });
+                       //
+                       //                    } else {
+                       //                        api.toast({
+                       //                            msg: '保存失败',
+                       //                            duration: 2000,
+                       //                            location: 'bottom'
+                       //                        });
+                       //                    }
+                       //                });
+                       //
+                       //
+                       //     }
+                       // });
+                       var url = ImgSrc[ret1.index];
+                       api.download({
+                           url: url,
+                           report: false,
+                           cache: false,
+                           allowResume: false
+                           }, function(ret, err) {
+                           if (ret.state == 1) {
+                               // 下载成功
+                                api.saveMediaToAlbum({
+                                    path: ''+ret.savePath+'',
+                                    groupName:'云平台相册'
+                                }, function(ret, err) {
+                                    if (ret && ret.status) {
+                                        api.toast({
+                                            msg: '保存成功',
+                                            duration: 2000,
+                                            location: 'bottom'
+                                        });
+
+                                    } else {
+                                        api.toast({
+                                            msg: '保存失败',
+                                            duration: 2000,
+                                            location: 'bottom'
+                                        });
+                                    }
+                                });
+                             } else {
+
+                            }
+                       });
+
+
+                   }
+               });
+           }
+
+       });
+   }
+
+
+
+
+   // 保存视频
+   function fnOpenVideo(obj) {
+     // console.log(1);
+       // var videArrays = $(obj).attr('src');
+       var saveUrl = $(obj).attr('src1');
+       api.openVideo({
+           url: saveUrl
+       });
+
+   }
+
+</script>
+
+</html>

@@ -1,0 +1,543 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>客户中心页面</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/aui1.css" />
+    <link rel=stylesheet type=text/css href=../../../css/rolldate.css />
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #FFF;
+            -webkit-box-orient: vertical;
+            -webkit-flex-flow: column;
+            flex-flow: column;
+            display: flex;
+            overflow-x: hidden;
+        }
+
+        .aui-bar-nav {
+            top: 0;
+            z-index: 1;
+            background-color: #0c9ff4;
+            color: #FFF;
+            font-size: var(--fontsize9);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+        }
+
+        .aui-bar-nav .aui-btn .aui-iconfont {
+            color: #FFF;
+            font-weight: 900;
+        }
+
+        .aui-tab {
+            width: 100%;
+            border-bottom: solid 0.03rem #e6e6e6;
+        }
+
+        .aui-tab-item {
+            font-size: var(--fontsize7);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0vw;
+            color: #333333;
+        }
+
+        .aui-tab-item.aui-active {
+            border-bottom: 0.05rem solid #0c9ff4;
+        }
+
+        .aui-tab-item.aui-active,
+        .aui-tab-item.aui-active .aui-iconfont {
+            color: #0c9ff4;
+        }
+
+        .aui-tab-item .aui-iconfont {
+            color: #999999;
+            font-weight: 900;
+            margin-left: 0.15rem;
+        }
+
+        .aui-card-list-header {
+            padding: 4.13vw 3.2vw;
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0vw;
+            color: #262626;
+        }
+
+        .timeIcon {
+            width: 4.27vw;
+            height: 4.27vw;
+            background-image: url('../../../image/decision/time.png');
+            background-size: 100% 100%;
+        }
+
+        .aui-card-list-header input {
+            width: 74.67vw;
+            height: 7.73vw;
+            border-radius: 0.4vw;
+            border: solid 1px #dcdcdc;
+            font-size: var(--fontsize7);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0.4vw;
+            color: #262626;
+            padding: 2vw 3.33vw;
+        }
+
+        .downArrow {
+            width: 2.93vw;
+            height: 1.6vw;
+            position: absolute;
+            top: 7.2vw;
+            right: 6.27vw;
+            background-image: url('../../../image/decision/downArrow.png');
+            background-size: 100% 100%;
+        }
+
+        .close {
+            width: 3.0vw;
+            height: 3.0vw;
+            position: absolute;
+            top: 6.5vw;
+            right: 8.27vw;
+            background-image: url('../../../image/message_frame/close2.png');
+            background-size: 100% 100%;
+        }
+
+        section {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tab_display {
+            display: none;
+        }
+        /*时间外边框*/
+
+        .aui-card-list {
+            margin-bottom: 0;
+        }
+        /*echart*/
+        /*图标外面边框*/
+
+        .Tab_content {
+            background: #F0F0F0;
+        }
+
+        .echartMarigin {
+            width: 93.6vw;
+            height: 100%;
+            background-color: #ffffff;
+            border-radius: 1.33vw;
+            border: solid 1px #ffffff;
+            margin: 3vw auto;
+        }
+
+        .echartMarigin .aui-col-xs-6 {
+            height: 10vw;
+            line-height: 10vw;
+        }
+
+        .span_border_l {
+            border-left: 3px solid #0c9ff4;
+            margin-left: 0.75rem;
+            margin-right: 0.3rem;
+        }
+
+        .echarts_title {
+            font-family: PingFang-SC-Medium;
+            font-size: var(--fontsize7);
+            color: #0c9ff4;
+        }
+
+        .more {
+            font-family: PingFang-SC-Medium;
+            font-size: 3.99vw;
+            color: #999999;
+            margin-right: 0.5rem;
+        }
+
+        .noData {
+            width: 100%;
+            height: 60vw;
+            line-height: 53vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--fontsize7);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0vw;
+            color: #0c9ff4;
+            text-align: cnt;
+            text-align: center;
+        }
+        /*tab2*/
+
+        .Table_Title {
+            height: 10vw;
+            line-height: 10vw;
+            border-bottom: 1 solid #FDFAFA;
+        }
+
+        .Table_Title span {
+            font-family: MicrosoftYaHei;
+            font-size: var(--fontsize7);
+            color: #333333;
+            font-weight: 800;
+        }
+
+        .Table_Content {
+            height: 8vw;
+            line-height: 8vw;
+        }
+
+        .Table_Content span {
+            font-family: MicrosoftYaHei;
+            font-size: var(--fontsize7);
+            color: #333333;
+        }
+
+        .Content_table .aui-col-xs-4,
+        .Table_Content .aui-col-xs-4 {
+            text-align: center;
+        }
+
+        .Table_Title .aui-col-xs-4 {
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav" id="header">
+        <div class="aui-pull-left aui-btn" tapmode data-action='back'>
+            <span class="aui-iconfont aui-icon-left"></span>
+        </div>
+        <div class="aui-title">客服中心日常统计</div>
+    </header>
+    <div class="aui-tab" id="tab">
+        <div class="aui-tab-item aui-active" tapmode="" data-item-order="1">报装工单</div>
+        <div class="aui-tab-item" tapmode="" data-item-order="2">客服工单</div>
+        <div class="aui-tab-item" tapmode="" data-item-order="3">话务量</div>
+        <div class="aui-tab-item" tapmode="" data-item-order="4"> 当日收费</div>
+    </div>
+
+    <div class="aui-card-list">
+        <div class="aui-card-list-header">
+            <div class="timeIcon"></div>时间：
+            <input tapmode placeholder="请选择时间" type="text" name="input_date" id="Time" readonly="readonly" />
+            <div class="downArrow"></div>
+        </div>
+    </div>
+
+    <section class='Tab_content'>
+        <!--报装工单开始 -->
+        <div class="tab1">
+            <div class="echartMarigin">
+                <div class="aui-row">
+                    <div class="aui-col-xs-6"><span class="span_border_l"></span><span class="echarts_title">当日报装工单量</span></div>
+                    <div class="aui-col-xs-6 aui-text-right" id="tab1mMore" data-action='openWins'><span class="more">更多></span></div>
+                </div>
+                <div id="tab1Echart" style="width:100%;">
+                </div>
+                <div class="noData aui-show">
+                    暂无数据！
+                </div>
+            </div>
+        </div>
+        <div class="tab_display tab2">
+            <div class="echartMarigin">
+                <div class="aui-row">
+                    <div class="aui-col-xs-6"><span class="span_border_l"></span><span class="echarts_title">当日客服工单量</span></div>
+                    <div class="aui-col-xs-6 aui-text-right" id="tab2mMore" data-action='openWins'><span class="more">更多></span></div>
+                </div>
+                <div id="tab2Echart" style="width:100%;">
+                </div>
+                <div class="noData aui-show">
+                    暂无数据！
+                </div>
+            </div>
+            <div class="echartMarigin" id="tab2TableDemo">
+                <div class="Content_table">
+                    <div class="aui-row Table_Title">
+                        <div class="aui-col-xs-4"><span>工单种类</span></div>
+                        <div class="aui-col-xs-4"><span>数量</span></div>
+                        <div class="aui-col-xs-4"><span>占比</span></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="tab_display tab3">
+            <div class="echartMarigin">
+                <div class="aui-row">
+                    <div class="aui-col-xs-6"><span class="span_border_l"></span><span class="echarts_title">话务量</span></div>
+                    <div class="aui-col-xs-6 aui-text-right" id="tab3mMore" data-action='openWins'><span class="more">更多></span></div>
+                </div>
+                <div id="tab3Echart" style="width:100%;">
+                </div>
+                <div class="noData aui-show">
+                    暂无数据！
+                </div>
+            </div>
+            <div class="echartMarigin">
+                <div class="aui-row">
+                    <div class="aui-col-xs-6"><span class="span_border_l"></span><span class="echarts_title">来电登记类型占比</span></div>
+
+                </div>
+                <div id="tab3EchartC" style="width:100%;">
+                </div>
+                <div class="noData aui-show">
+                    暂无数据！
+                </div>
+            </div>
+        </div>
+        <div class="tab_display tab4">
+            <div class="echartMarigin">
+                <div class="aui-row">
+                    <div class="aui-col-xs-6"><span class="span_border_l"></span><span class="echarts_title">
+                        当日收费情况</span></div>
+
+                </div>
+                <div id="tab4Echart" style="width:100%;">
+                </div>
+                <div class="noData aui-show">
+                    暂无数据！
+                </div>
+            </div>
+            <div class="echartMarigin" id="tab4TableDemo">
+                <div class="Content_table">
+                    <div class="aui-row Table_Title">
+                        <div class="aui-col-xs-4"><span>姓名</span></div>
+                        <div class="aui-col-xs-4"><span>收费金额</span></div>
+                        <div class="aui-col-xs-4"><span>占比</span></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 报装工单结束 -->
+
+    </section>
+
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/diy/public.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/aui-tab.js"></script>
+<script type="text/javascript" src="../../../script/rolldate.js"></script>
+<script type="text/javascript" src="../../../script/echarts.min.js"></script>
+<script type="text/javascript" src="../../../script/diy/template.js"></script>
+<script type="text/javascript" src="../../../script/CustomerService.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/moment.js"></script>
+<script type="text/template" id='tab2TableList'>
+    <div class="Content_table">
+        <div class="aui-row Table_Title">
+            <div class="aui-col-xs-4"><span>工单种类</span></div>
+            <div class="aui-col-xs-4"><span>数量</span></div>
+            <div class="aui-col-xs-4"><span>占比</span></div>
+        </div>
+        {{each list value i}}
+        <div class="aui-row Table_Content">
+            <div class="aui-col-xs-4">{{value.name}}</div>
+            <div class="aui-col-xs-4">{{value.value}}</div>
+            <div class="aui-col-xs-4">{{value.ratio}}</div>
+        </div>
+        {{/each}}
+    </div>
+
+
+</script>
+<script type="text/template" id='tab4TableList'>
+    <div class="Content_table">
+        <div class="aui-row Table_Title">
+            <div class="aui-col-xs-4"><span>姓名</span></div>
+            <div class="aui-col-xs-4"><span>收费金额</span></div>
+            <div class="aui-col-xs-4"><span>占比</span></div>
+        </div>
+        {{each list value i}}
+        <div class="aui-row Table_Content">
+            <div class="aui-col-xs-4">{{value.name}}</div>
+            <div class="aui-col-xs-4">{{value.value}}</div>
+            <div class="aui-col-xs-4">{{value.ratio}}</div>
+        </div>
+        {{/each}}
+    </div>
+
+
+</script>
+<script type="text/javascript">
+    var Time = "";
+    document.body.addEventListener('touchstart', function() {});
+    apiready = function() {
+        api.addEventListener({
+            name: 'changedFontSize'
+        }, function(ret, err) {
+            if (ret) {
+                changeFontSize();
+            }
+        });
+        api.parseTapmode();
+        var header = $api.byId('header');
+        // 实现沉浸式状态栏效果
+        $api.fixStatusBar(header);
+        headerH = $api.offset(header).h;
+        fnReady();
+        Init();
+    };
+
+    function Init() {
+        tab1(Time);
+
+    }
+    // 单击
+    operationDom();
+    var actionList = {
+        'back': function() {
+            api.closeWin();
+        },
+        'openWins': function() {
+            var Id = $(this).attr('id');
+            var param = $(this).attr('param');
+            if (Id == 'tab1mMore') {
+                if (param) {
+                    api.openWin({
+                        name: 'GetApplyToInstallDetail',
+                        url: '../CustomerService/GetApplyToInstallDetail.html',
+                        pageParam: {
+                            name: param
+                        }
+                    });
+                } else {
+                    api.toast({
+                        msg: '暂无数据！',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+
+                }
+
+            } else if (Id == 'tab2mMore') {
+                if (param) {
+                    api.openWin({
+                        name: 'GetOrderDetail',
+                        url: '../CustomerService/GetOrderDetail.html',
+                        pageParam: {
+                            name: param
+                        }
+                    });
+                } else {
+                    api.toast({
+                        msg: '暂无数据！',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+
+                }
+            } else if (Id == 'tab3mMore') {
+                if (param) {
+                    api.openWin({
+                        name: 'tab3',
+                        url: '../CustomerService/tab3.html',
+                        pageParam: {
+                            name: param
+                        }
+                    });
+                } else {
+                    api.toast({
+                        msg: '暂无数据！',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+
+                }
+            }
+        }
+    }
+
+    // tab切换
+    var tab = new auiTab({
+        element: document.getElementById("tab"),
+    }, function(ret) {
+        $('.tab' + ret.index).show();
+        $('.tab' + ret.index).siblings().hide();
+        var date = $('#Time').val();
+        if (ret.index == 1) {
+            tab1(date);
+        } else if (ret.index == 2) {
+            tab2(date);
+        } else if (ret.index == 3) {
+            tab3(date);
+        } else if (ret.index == 4) {
+            tab4(date);
+        }
+    });
+
+    TimeInit('Time');
+    //时间选择器
+    function TimeInit(inputId) {
+        var el = '#' + inputId;
+        var format = "YYYY-MM-DD";
+        var dateError = false;
+        new rolldate.Date({
+            el: el,
+            format: format,
+            beginYear: 2000,
+            endYear: 2100,
+            tapBefore: function(el) {
+                // console.log('插件开始触发');
+            },
+            moveEnd: function(el, iscroll) {
+                // console.log('滚动结束');
+            },
+            confirmBefore: function(el, date) {
+                Time = date;
+                // Time = Time.replaceAll('-', '');
+                var closeHtml = '<div class="close" tapmode onclick="clearTime(&quot;' + inputId + '&quot;)"></div>';
+                $('#' + inputId + '').parent().append(closeHtml);
+                return date;
+            },
+            confirmEnd: function(el, date) {
+                Time = date;
+                var id = $('.aui-active').attr('data-item-order');
+                if (id == 0) {
+                    tab1(Time);
+                } else if (id == 1) {
+                    tab2(Time);
+                } else if (id == 2) {
+                    tab3(Time);
+                } else if (id == 3) {
+                    tab4(Time);
+                }
+            }
+        })
+    }
+
+    //点击关闭图标删除时间
+    function clearTime(inputId) {
+        $('#' + inputId + '').val("");
+        $('#' + inputId + '').parent().find('.close').remove();
+        Time = "";
+
+    }
+</script>
+
+</html>

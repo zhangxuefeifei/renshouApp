@@ -1,0 +1,622 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>我的任务页面</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/aui1.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/dialog.css" />
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #f5f5f5;
+        }
+
+        .flex-con {
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .aui-bar-nav {
+            top: 0;
+            z-index: 1;
+            background-color: #fff;
+            color: #333333;
+            font-size: var(--fontsize9);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+        }
+
+        .aui-bar-nav .aui-btn .aui-iconfont {
+            color: #999;
+            font-weight: 900;
+        }
+
+        .aui-tab {
+            width: 100%;
+        }
+
+        .aui-tab-item {
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0vw;
+            color: #333333;
+        }
+
+        .aui-tab-item.aui-active {
+            border-bottom: 0.1rem solid #4f79e7;
+        }
+
+        .aui-tab-item.aui-active,
+        .aui-tab-item.aui-active .aui-iconfont {
+            color: #4f79e7;
+        }
+
+        .aui-tab-item .aui-iconfont {
+            color: #999999;
+            font-weight: 900;
+            margin-left: 0.15rem;
+        }
+
+        .aui-list .aui-list-item-media {
+            width: 3rem
+        }
+
+        .aui-list .aui-list-item-title {
+            font-size: 0.8rem;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #333333;
+        }
+
+        section {
+            padding: 0.6rem;
+        }
+
+        .aui-list,
+        .aui-list .aui-list-item {
+            background-image: none;
+        }
+
+        .aui-list .aui-list-item.dashed {
+            border-bottom: dashed 0.05rem #e6e6e6;
+        }
+
+        .taskTitle {
+            width: 50vw;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-break: break-all;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+        }
+
+        .aui-list .aui-list-item-text {
+            font-size: 0.65rem;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #333333;
+        }
+
+        .text {
+            color: #999999;
+        }
+
+        .TaskStatus {
+            width: 2.6rem;
+            height: 0.83rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #ffffff;
+        }
+
+        .overtime,
+        .wait,
+        .paused {
+            background: url(../../../image/inspection/red.png);
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+        }
+
+        .ing {
+            background: url(../../../image/inspection/orange.png);
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+        }
+
+        .complete,
+        .closed {
+            background: url(../../../image/inspection/green.png);
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+        }
+
+        .aui-card-list {
+            border-radius: 0.13rem;
+            border: solid 0.03rem #e6e6e6;
+        }
+
+        .aui-card-list-content,
+        .aui-card-list-content-padded {
+            border-radius: 0.13rem;
+        }
+
+        .aui-card-list-footer.aui-text-center {
+            justify-content: flex-end;
+            padding: 0.6rem 0.65rem;
+        }
+
+        .aui-card-list-footer.aui-text-center .aui-btn {
+            margin-right: 0.25rem;
+            background-color: transparent;
+            border: solid 0.03rem #999999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.7rem;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #333333;
+        }
+
+        .aui-card-list-footer.aui-text-center .aui-btn:active {
+            background-color: #f5f5f5;
+        }
+
+        .aui-card-list-footer.aui-text-center .aui-btn.active {
+            border: solid 0.05rem #4f79e7;
+            color: #4f79e7;
+        }
+
+        .aui-card-list-footer.aui-text-center .aui-btn:last-child {
+            margin-right: 0
+        }
+
+        .noFooter {
+            min-height: 0 !important;
+            padding: 0.05rem 0 !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrap" class="flex-wrap flex-vertical">
+        <header class="aui-bar aui-bar-nav aui-border-b" id="header">
+            <div class="aui-pull-left aui-btn" tapmode data-action="back">
+                <span class="aui-iconfont aui-icon-left"></span>
+            </div>
+            <div class="aui-title">我的任务</div>
+        </header>
+        <div class="aui-tab aui-border-b" id="tab">
+            <div class="aui-tab-item aui-active">进行中</div>
+            <div class="aui-tab-item">待接收</div>
+            <div class="aui-tab-item">已暂停</div>
+            <div class="aui-tab-item">已完成</div>
+        </div>
+        <div class="flex-con">
+            <section id="taskList">
+                <!-- <div class="aui-card-list">
+                    <div class="aui-card-list-content">
+                        <ul class="aui-list aui-media-list">
+                            <li class="aui-list-item aui-list-item-middle" win='./EquipmentPointDetails'>
+                                <div class="aui-media-list-item-inner">
+                                    <div class="aui-list-item-media">
+                                        <img src="../../../image/inspection/myTask.png" class="aui-img-round">
+                                    </div>
+                                    <div class="aui-list-item-inner">
+                                        <div class="aui-list-item-text">
+                                            <div class="aui-list-item-title taskTitle">某某城区管网例行巡检</div>
+                                            <div class="aui-list-item-right">
+                                                <div class="TaskStatus overtime">
+                                                    已超期
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="aui-list-item-text">
+                                            <span>任务类型：<span class="text">计划任务</span></span>
+                                        </div>
+                                        <div class="aui-list-item-text">
+                                            <span>预计开始时间：<span class="text">2019-01-01 18:00</span></span>
+                                        </div>
+                                        <div class="aui-list-item-text">
+                                            <span>预计结束时间：<span class="text">2019-01-01 18:00</span></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="aui-card-list-footer aui-text-center noFooter">
+                    </div>
+                </div> -->
+            </section>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/diy/public.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/moment.js"></script>
+<script type="text/javascript" src="../../../script/aui-tab.js"></script>
+<script type="text/javascript" src="../../../script/aui-dialog.js"></script>
+<script type="text/javascript" src="../../../script/diy/template.js"></script>
+<script type="text/template" id="taskTpl">
+    {{each items value i}}
+    <div class="aui-card-list" id="taskId{{value.id}}">
+        <div class="aui-card-list-content" data-param='{{value}}' tapmode data-action="openDetails">
+            <ul class="aui-list aui-media-list">
+                {{ if value.taskStatus != 4 && value.taskStatus != 5}}
+                <li class="aui-list-item dashed aui-list-item-middle">{{else}}
+                    <li class="aui-list-item aui-list-item-middle">{{/if}}
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-media">
+                                <img src="../../../image/inspection/myTask.png" class="aui-img-round">
+                            </div>
+                            <div class="aui-list-item-inner">
+                                <div class="aui-list-item-text">
+                                    <div class="aui-list-item-title taskTitle">{{value.taskName}}</div>
+                                    {{if value.taskStatus == 0}}
+                                    <div class="aui-list-item-right">
+                                        <div class="TaskStatus wait">
+                                            待接收
+                                        </div>
+                                    </div>
+                                    {{/if}} {{if value.taskStatus == 1}}
+                                    <div class="aui-list-item-right">
+                                        <div class="TaskStatus overtime">
+                                            进行中
+                                        </div>
+                                    </div>
+                                    {{/if}} {{if value.taskStatus == 2}}
+                                    <div class="aui-list-item-right">
+                                        <div class="TaskStatus wait">
+                                            已暂停
+                                        </div>
+                                    </div>
+                                    {{/if}} {{if value.taskStatus == 3}}
+                                    <div class="aui-list-item-right">
+                                        <div class="TaskStatus wait">
+                                            已超期
+                                        </div>
+                                    </div>
+                                    {{/if}} {{if value.taskStatus == 4}}
+                                    <div class="aui-list-item-right">
+                                        <div class="TaskStatus wait">
+                                            已完成
+                                        </div>
+                                    </div>
+                                    {{/if}} {{if value.taskStatus == 5}}
+                                    <div class="aui-list-item-right">
+                                        <div class="TaskStatus wait">
+                                            已关闭
+                                        </div>
+                                    </div>
+                                    {{/if}}
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>任务类型：<span class="text">{{if value.taskType == 0}}临时任务{{else}}计划任务{{/if}}</span></span>
+                                </div>
+                                {{if value.taskStatus != 4 && value.taskStatus != 5}}
+                                <div class="aui-list-item-text">
+                                    <span>预计开始时间：<span class="text">{{value.planBeginTime}}</span></span>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>预计结束时间：<span class="text">{{value.planEndTime}}</span></span>
+                                </div>
+                                {{/if}} {{if value.taskStatus == 4}}
+                                <div class="aui-list-item-text">
+                                    <span>开始时间：<span class="text">{{value.beginTime}}</span></span>
+                                </div>
+                                <div class="aui-list-item-text">
+                                    <span>完成时间：<span class="text">{{value.endTime}}</span></span>
+                                </div>
+                                {{/if}} {{if value.taskStatus == 5}}
+                                <div class="aui-list-item-text">
+                                    <span>关闭时间：<span class="text">{{value.closeTime}}</span></span>
+                                </div>
+                                {{/if}}
+                            </div>
+                        </div>
+                    </li>
+            </ul>
+        </div>
+        {{if value.taskStatus != 4 && value.taskStatus != 5}}
+        <div class="aui-card-list-footer aui-text-center">
+            {{if value.taskStatus == 1 || value.taskStatus == 3}}
+            <div class="aui-btn" data-param="{{value}}" tapmode data-action="pauseTask">
+                暂停
+            </div>
+            <div class="aui-btn" data-param="{{value}}" tapmode data-action="closeTask">
+                关闭
+            </div>
+            <div class="aui-btn active" data-param="{{value}}" tapmode data-action="completeTask">
+                完成
+            </div>
+            {{/if}} {{if value.taskStatus == 0}}
+            <div class="aui-btn" data-param="{{value}}" tapmode data-action="startTask">
+                启动
+            </div>
+            <div class="aui-btn active" data-param="{{value}}" tapmode data-action="closeTask">
+                关闭
+            </div>
+            {{/if}} {{if value.taskStatus == 2}}
+            <div class="aui-btn" data-param="{{value}}" tapmode data-action="restartTask">
+                重启
+            </div>
+            <div class="aui-btn active" data-param="{{value}}" tapmode data-action="closeTask">
+                关闭
+            </div>
+            {{/if}}
+        </div>
+        {{else}}
+        <div class="aui-card-list-footer aui-text-center noFooter">
+        </div>
+        {{/if}}
+    </div>
+    {{/each}}
+</script>
+<script type="text/javascript">
+    var pageIndex = 1;
+    var noData = false;
+    var finished = true;
+    apiready = function() {
+        api.addEventListener({
+            name: 'changedFontSize'
+        }, function(ret, err) {
+            if (ret) {
+                changeFontSize();
+            }
+        });
+        api.parseTapmode();
+        var header = $api.byId('header');
+        // 实现沉浸式状态栏效果
+        $api.fixStatusBar(header);
+        fnReady();
+        getTaskList(1);
+        isLogin = $api.getStorage('loginInsepection');
+        var nScrollHight = 0; //滚动距离总长(注意不是滚动条的长度)
+        var nScrollTop = 0; //滚动到的当前位置
+        var nmyDivHight = $("#taskList").height();
+
+        $("#taskList").scroll(function() {
+            nScrollHight = $(this)[0].scrollHeight;
+            nScrollTop = $(this)[0].scrollTop;
+            if (finished && nScrollTop + nmyDivHight >= nScrollHight) {
+                finished = false;
+                if (!noData) {
+                    ++pageIndex;
+                    getTaskList(pageIndex);
+                } else {
+                    setTimeout(function() {
+                        finished = true
+                    }, 2100);
+                    pageIndex = 1;
+                }
+            }
+        });
+
+        api.addEventListener({
+            name: 'refreshMyTaskList'
+        }, function(ret, err) {
+            if (ret) {
+                if (ret.value.type == 'restart') {
+                    pageIndex = 1;
+                    getTaskList(1);
+                } else {
+                    $('#taskId' + ret.value.taskId + '').remove();
+                }
+            }
+        });
+
+    };
+
+    var actionList = {
+        'back': function() {
+            api.closeWin();
+        },
+        'openDetails': function() {
+            var data = JSON.parse($(this).attr('data-param'));
+            api.openWin({
+                name: 'taskDetails',
+                url: './taskDetails.html',
+                pageParam: {
+                    id: data.id
+                }
+            });
+        },
+        'startTask': function() {
+            var data = JSON.parse($(this).attr('data-param'));
+            var taskData = {
+                id: data.id,
+                isStartWork: true
+            }
+            var that = this;
+            if (isLogin) {
+                fnPost('services/GISInspection/Task/StartTask', {
+                    body: JSON.stringify(taskData)
+                }, 'application/json', true, false, function(ret, err) {
+                    if (ret && ret.success) {
+                        $(that).parents('.aui-card-list').remove();
+                    }
+                })
+            } else {
+                api.toast({
+                    msg: '请先在巡检首页登陆上线！',
+                    duration: 2000,
+                    location: 'top'
+                });
+            }
+        },
+        'pauseTask': function() {
+            var data = JSON.parse($(this).attr('data-param'));
+            var that = this;
+            // var taskData = {
+            //     ids: [data.id]
+            // }
+            fnPost('services/GISInspection/Task/PauseTask', {
+                body: JSON.stringify([data.id])
+            }, 'application/json', true, false, function(ret, err) {
+                if (ret && ret.success) {
+                    $(that).parents('.aui-card-list').remove();
+                }
+            })
+        },
+        'closeTask': function() {
+            var data = JSON.parse($(this).attr('data-param'));
+            var that = this;
+            var taskData = {
+                closingReason: "",
+                id: data.id
+            }
+            var dialog = new auiDialog();
+            dialog.alert({
+                title: '确定关闭任务吗？',
+                buttons: ['确定', '取消']
+            }, function(ret) {
+                if (ret.buttonIndex == 1) {
+                  fnPost('services/GISInspection/Task/CloseTask', {
+                      body: JSON.stringify(taskData)
+                  }, 'application/json', true, false, function(ret, err) {
+                      if (ret && ret.success) {
+                          $(that).parents('.aui-card-list').remove();
+                      }
+                  })
+                }
+            })
+        },
+        'completeTask': function() {
+            var data = JSON.parse($(this).attr('data-param'));
+            var that = this;
+            fnPost('services/GISInspection/Task/CompleteTask?id=' + data.id + '', {
+                body: JSON.stringify({})
+            }, 'application/json', true, false, function(ret, err) {
+                if (ret && ret.success) {
+                    $(that).parents('.aui-card-list').remove();
+                }
+            })
+        },
+        'restartTask': function() {
+            var data = JSON.parse($(this).attr('data-param'));
+            var taskData = {
+                id: data.id,
+                isStartWork: true
+            }
+            var that = this;
+            if (isLogin) {
+                fnPost('services/GISInspection/Task/RestartTask', {
+                    body: JSON.stringify(taskData)
+                }, 'application/json', true, false, function(ret, err) {
+                    if (ret && ret.success) {
+                        pageIndex = 1;
+                        $('#taskList').html('');
+                        getTaskList(1);
+                    }
+                })
+            } else {
+                api.toast({
+                    msg: '请先在巡检首页登陆上线！',
+                    duration: 2000,
+                    location: 'top'
+                });
+            }
+        }
+    }
+
+    var TaskStatus = 1;
+
+    var tab = new auiTab({
+        element: document.getElementById("tab"),
+    }, function(ret) {
+        if (ret.index == 1) {
+            TaskStatus = 1;
+            pageIndex = 1;
+            $('#taskList').html('');
+            getTaskList(1);
+        } else if (ret.index == 2) {
+            TaskStatus = 0;
+            pageIndex = 1;
+            $('#taskList').html('');
+            getTaskList(1);
+        } else if (ret.index == 3) {
+            TaskStatus = 2;
+            pageIndex = 1;
+            $('#taskList').html('');
+            getTaskList(1);
+        } else if (ret.index == 4) {
+            TaskStatus = 3;
+            pageIndex = 1;
+            $('#taskList').html('');
+            getTaskList(1);
+        }
+    })
+
+    function getTaskList(pageIndex) {
+        var url = 'services/GISInspection/Task/GetAppTaskPagedList?TaskStatus=' + TaskStatus + '&PageIndex=' + pageIndex + '&MaxResultCount=20';
+        fnGet(url, {}, false, function(ret, err) {
+            if (ret && ret.success) {
+                var data = ret.result.items;
+                if (ret.result.totalCount == 0) {
+                    noData = true;
+                    api.toast({
+                        msg: '没有更多数据了！',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                } else {
+                    noData = false;
+                    for (var i = 0; i < ret.result.items.length; i++) {
+                        if (ret.result.items[i].beginTime != null) {
+                            ret.result.items[i].beginTime = ret.result.items[i].beginTime.replace('T', ' ');
+                        }
+                        if (ret.result.items[i].endTime != null) {
+                            ret.result.items[i].endTime = ret.result.items[i].endTime.replace('T', ' ');
+                        }
+                        if (ret.result.items[i].closeTime != null) {
+                            ret.result.items[i].closeTime = ret.result.items[i].closeTime.replace('T', ' ');
+                        }
+                        ret.result.items[i].planEndTime = ret.result.items[i].planEndTime.replace('T', ' ');
+                        ret.result.items[i].planBeginTime = ret.result.items[i].planBeginTime.replace('T', ' ');
+
+                    }
+                    var list = {
+                        items: ret.result.items
+                    };
+                    var str = template('taskTpl', list);
+                    if (pageIndex == 1) {
+                        $('#taskList').html('');
+                        $('#taskList').append(str);
+                        var ele = document.getElementById('taskList');
+                        ele.scrollTop = 0;
+                    } else {
+                        $('#taskList').append(str);
+                    }
+                    $('#taskList').html(str);
+                    api.parseTapmode();
+                    operationDom();
+                }
+                finished = true;
+            }
+        })
+
+    }
+</script>
+
+</html>

@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>事件簿</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/aui1.css" />
+    <style type='text/css'>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #f5f5f5;
+        }
+
+        .aui-bar-nav {
+            top: 0;
+            z-index: 3;
+            background-color: #fff;
+            color: #333333;
+            font-size: var(--fontsize9);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            border: none;
+            background-size: 100% 1px;
+            background-repeat: no-repeat;
+            background-position: bottom;
+            background-image: linear-gradient(0, #dddddd, #dddddd 50%, transparent 50%);
+            background-image: -webkit-linear-gradient(90deg, #dddddd, #dddddd 50%, transparent 50%);
+        }
+
+        .aui-bar-nav .aui-btn .aui-iconfont {
+            color: #333333;
+            font-weight: 900;
+        }
+
+        .flex-con {
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #header {
+            position: fixed;
+            z-index: 98;
+        }
+        /*tab定位不动*/
+
+        #tab {
+            position: fixed;
+            width: 100%;
+            z-index: 999;
+        }
+
+        #tab .aui-tab-item.aui-active {
+            color: #4f79e7;
+            border-bottom: 2px solid #4f79e7;
+        }
+        /*ta内容里面的样式*/
+
+        #tab-content {
+            position: relative;
+            overflow: auto;
+            padding-bottom: 3.5rem;
+        }
+
+        #tab-content .aui-list {
+            background: #f5f5f5;
+            /* background-position: top; */
+            background-image: none;
+        }
+
+        #tab-content .aui-list .aui-list-item {
+            /* background-position: top; */
+            background-image: none;
+        }
+
+        #tab-content .aui-list .aui-list-item-media {
+            width: 4rem;
+        }
+
+        #tab-content .aui-list .aui-list-item {
+            width: 17rem;
+            margin: 0.75rem auto;
+            background-color: #fff;
+            border: solid 1px #e6e6e6;
+            border-radius: 0.3rem;
+        }
+
+        #tab-content .aui-list-item-media img {
+            width: 3rem;
+            height: 3rem;
+            margin: 0 auto;
+        }
+
+        #tab-content #tab2 .aui-list-item-right {
+            position: absolute;
+            right: 0rem;
+            top: 0.1rem;
+            width: 2.58rem;
+            height: 0.83rem;
+            background-image: url('../../../image/inspection/orange.png');
+            background-size: 2.58rem 0.83rem;
+            text-align: center;
+            color: #fff;
+            font-size: 0.6rem
+        }
+
+        #tab-content #tab1 .aui-list-item-right {
+            position: absolute;
+            right: 0rem;
+            top: 0.1rem;
+            width: 2.58rem;
+            height: 0.83rem;
+            background-image: url('../../../image/inspection/red.png');
+            background-size: 2.58rem 0.83rem;
+            text-align: center;
+            color: #fff;
+            font-size: 0.6rem;
+        }
+
+        #tab-content #tab3 .aui-list-item-right {
+            position: absolute;
+            right: 0rem;
+            top: 0.1rem;
+            width: 2.58rem;
+            height: 0.83rem;
+            background-image: url('../../../image/inspection/green.png');
+            background-size: 2.58rem 0.83rem;
+            text-align: center;
+            color: #fff;
+            font-size: 0.6rem
+        }
+
+        #tab-content .aui-list-item .aui-row {
+            margin-left: -0.7rem;
+            height: 2.5rem;
+            line-height: 2.5rem;
+            border-top: 1px dotted #e6e6e6;
+        }
+
+        #tab-content .aui-list-item .aui-row button {
+            margin: 0.4rem 0.6rem;
+            width: 3rem;
+            height: 1.5rem;
+            border-radius: 0.2rem;
+            border: solid 1px #4f79e7;
+            background: #fff;
+            color: #4f79e7;
+        }
+
+        .spanTime {
+            color: #999;
+        }
+
+        .aui-font-size-13 {
+            font-size: 0.65rem !important;
+        }
+
+        .footer {
+            width: 100%;
+            height: 3.53rem;
+            position: fixed;
+            bottom: 0rem;
+            display: flex;
+            justify-content: center;
+            background: #fff;
+        }
+
+        .footer .ReportIncident {
+            width: 15rem;
+            height: 2.2rem;
+            background-color: #4f79e8;
+            color: #fff;
+            border-radius: 1.1rem;
+            font-size: 0.8rem;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0.08rem;
+            padding: 0.5rem 5rem 0.73rem 5.8rem;
+                margin-top: 0.63rem;
+        }
+
+        .ReportIncident.active {
+            background: #fff;
+            color: #4f79e8;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav" id="header">
+        <div class="aui-pull-left aui-btn" data-action='back'>
+            <span class="aui-iconfont aui-icon-left"></span>
+        </div>
+        <div class="aui-title">事件簿</div>
+    </header>
+    <div class="aui-tab" id="tab">
+        <div class="aui-tab-item aui-font-size-16 tapmode aui-active tab1" EventStatus='0' tab='1'>待处理</div>
+        <div class="aui-tab-item aui-font-size-16 tapmode tab2" EventStatus='1' tab='2'>
+            <div></div>转工单</div>
+        <div class="aui-tab-item aui-font-size-16 tapmode tab3" EventStatus='2' tab='3'>已关闭</div>
+    </div>
+    <section id="tab-content">
+        <!-- <ul class="aui-list aui-media-list aui-show" id="tab1">
+            <li class="aui-list-item open-win" win='./EventDetails' param='1'>
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-media">
+                        <img src="../../../image/inspection/myCastle.png">
+                    </div>
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-text">
+                            <div class="aui-list-item-title">事件类型:&nbsp;巡检异常</div>
+                            <div class="aui-list-item-right">待处理</div>
+                        </div>
+                        <div class="aui-list-item-title aui-font-size-14 ">
+                            异常类型:<span class="spanTime">&nbsp;2019-01-01 18:00</span>
+                        </div>
+                        <div class="aui-list-item-title aui-font-size-14 ">
+                            事件提交时间:<span class="spanTime">&nbsp;2019-01-01 18:00</span>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item open-win" win='./EventDetails' param='1'>
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-media">
+                        <img src="../../../image/inspection/myCastle.png">
+                    </div>
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-text">
+                            <div class="aui-list-item-title">事件类型:&nbsp;巡检异常</div>
+                            <div class="aui-list-item-right">待处理</div>
+                        </div>
+                        <div class="aui-list-item-title aui-font-size-14 ">
+                            异常类型:<span class="spanTime">&nbsp;2019-01-01 18:00</span>
+                        </div>
+                        <div class="aui-list-item-title aui-font-size-14 ">
+                            事件提交时间:<span class="spanTime">&nbsp;2019-01-01 18:00</span>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item open-win" win='./EventDetails' param='1'>
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-media">
+                        <img src="../../../image/inspection/myCastle.png">
+                    </div>
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-text">
+                            <div class="aui-list-item-title">事件类型:&nbsp;巡检异常</div>
+                            <div class="aui-list-item-right">待处理</div>
+                        </div>
+                        <div class="aui-list-item-title aui-font-size-14 ">
+                            异常类型:<span class="spanTime">&nbsp;2019-01-01 18:00</span>
+                        </div>
+                        <div class="aui-list-item-title aui-font-size-14 ">
+                            事件提交时间:<span class="spanTime">&nbsp;2019-01-01 18:00</span>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item open-win" win='./EventDetails' param='1'>
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-media">
+                        <img src="../../../image/inspection/myCastle.png">
+                    </div>
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-text">
+                            <div class="aui-list-item-title">事件类型:&nbsp;巡检异常</div>
+                            <div class="aui-list-item-right">待处理</div>
+                        </div>
+                        <div class="aui-list-item-title aui-font-size-14 ">
+                            异常类型:<span class="spanTime">&nbsp;2019-01-01 18:00</span>
+                        </div>
+                        <div class="aui-list-item-title aui-font-size-14 ">
+                            事件提交时间:<span class="spanTime">&nbsp;2019-01-01 18:00</span>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item open-win" win='./EventDetails' param='1'>
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-media">
+                        <img src="../../../image/inspection/myCastle.png">
+                    </div>
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-text">
+                            <div class="aui-list-item-title">事件类型:&nbsp;巡检异常</div>
+                            <div class="aui-list-item-right">待处理</div>
+                        </div>
+                        <div class="aui-list-item-title aui-font-size-14 ">
+                            异常类型:<span class="spanTime">&nbsp;2019-01-01 18:00</span>
+                        </div>
+                        <div class="aui-list-item-title aui-font-size-14 ">
+                            事件提交时间:<span class="spanTime">&nbsp;2019-01-01 18:00</span>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <ul class="aui-list aui-media-list aui-hide" id="tab2">
+            <li class="aui-list-item open-win" win='./EventDetails' param='2'>
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-media">
+                        <img src="../../../image/inspection/myCastle.png">
+                    </div>
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-text">
+                            <div class="aui-list-item-title">事件类型:&nbsp;巡检异常</div>
+                            <div class="aui-list-item-right">转工单</div>
+                        </div>
+                        <div class="aui-list-item-title aui-font-size-14 ">
+                            异常类型:<span class="spanTime">&nbsp;2019-01-01 18:00</span>
+                        </div>
+                        <div class="aui-list-item-title aui-font-size-14 ">
+                            事件提交时间:<span class="spanTime">&nbsp;2019-01-01 18:00</span>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item open-win" win='./EventDetails' param='2'>
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-media">
+                        <img src="../../../image/inspection/myCastle.png">
+                    </div>
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-text">
+                            <div class="aui-list-item-title">事件类型:&nbsp;巡检异常</div>
+                            <div class="aui-list-item-right">转工单</div>
+                        </div>
+                        <div class="aui-list-item-title aui-font-size-14 ">
+                            异常类型:<span class="spanTime">&nbsp;2019-01-01 18:00</span>
+                        </div>
+                        <div class="aui-list-item-title aui-font-size-14 ">
+                            事件提交时间:<span class="spanTime">&nbsp;2019-01-01 18:00</span>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item open-win" win='./EventDetails' param='2'>
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-media">
+                        <img src="../../../image/inspection/myCastle.png">
+                    </div>
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-text">
+                            <div class="aui-list-item-title">事件类型:&nbsp;巡检异常</div>
+                            <div class="aui-list-item-right">转工单</div>
+                        </div>
+                        <div class="aui-list-item-title aui-font-size-14 ">
+                            异常类型:<span class="spanTime">&nbsp;2019-01-01 18:00</span>
+                        </div>
+                        <div class="aui-list-item-title aui-font-size-14 ">
+                            事件提交时间:<span class="spanTime">&nbsp;2019-01-01 18:00</span>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item open-win" win='./EventDetails' param='2'>
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-media">
+                        <img src="../../../image/inspection/myCastle.png">
+                    </div>
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-text">
+                            <div class="aui-list-item-title">事件类型:&nbsp;巡检异常</div>
+                            <div class="aui-list-item-right">转工单</div>
+                        </div>
+                        <div class="aui-list-item-title aui-font-size-14 ">
+                            异常类型:<span class="spanTime">&nbsp;2019-01-01 18:00</span>
+                        </div>
+                        <div class="aui-list-item-title aui-font-size-14 ">
+                            事件提交时间:<span class="spanTime">&nbsp;2019-01-01 18:00</span>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item open-win" win='./EventDetails' param='2'>
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-media">
+                        <img src="../../../image/inspection/myCastle.png">
+                    </div>
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-text">
+                            <div class="aui-list-item-title">事件类型:&nbsp;巡检异常</div>
+                            <div class="aui-list-item-right">转工单</div>
+                        </div>
+                        <div class="aui-list-item-title aui-font-size-14 ">
+                            异常类型:<span class="spanTime">&nbsp;2019-01-01 18:00</span>
+                        </div>
+                        <div class="aui-list-item-title aui-font-size-14 ">
+                            事件提交时间:<span class="spanTime">&nbsp;2019-01-01 18:00</span>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <ul class="aui-list aui-media-list aui-hide" id="tab3">
+            <li class="aui-list-item open-win" win='./EventDetails' param='3'>
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-media">
+                        <img src="../../../image/inspection/myCastle.png">
+                    </div>
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-text">
+                            <div class="aui-list-item-title">事件类型:&nbsp;巡检异常</div>
+                            <div class="aui-list-item-right">已关闭</div>
+                        </div>
+                        <div class="aui-list-item-title aui-font-size-14 ">
+                            异常类型:<span class="spanTime">&nbsp;2019-01-01 18:00</span>
+                        </div>
+                        <div class="aui-list-item-title aui-font-size-14 ">
+                            事件提交时间:<span class="spanTime">&nbsp;2019-01-01 18:00</span>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item open-win" win='./EventDetails' param='3'>
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-media">
+                        <img src="../../../image/inspection/myCastle.png">
+                    </div>
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-text">
+                            <div class="aui-list-item-title">事件类型:&nbsp;巡检异常</div>
+                            <div class="aui-list-item-right">已关闭</div>
+                        </div>
+                        <div class="aui-list-item-title aui-font-size-14 ">
+                            异常类型:<span class="spanTime">&nbsp;2019-01-01 18:00</span>
+                        </div>
+                        <div class="aui-list-item-title aui-font-size-14 ">
+                            事件提交时间:<span class="spanTime">&nbsp;2019-01-01 18:00</span>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item open-win" win='./EventDetails' param='3'>
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-media">
+                        <img src="../../../image/inspection/myCastle.png">
+                    </div>
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-text">
+                            <div class="aui-list-item-title">事件类型:&nbsp;巡检异常</div>
+                            <div class="aui-list-item-right">已关闭</div>
+                        </div>
+                        <div class="aui-list-item-title aui-font-size-14 ">
+                            异常类型:<span class="spanTime">&nbsp;2019-01-01 18:00</span>
+                        </div>
+                        <div class="aui-list-item-title aui-font-size-14 ">
+                            事件提交时间:<span class="spanTime">&nbsp;2019-01-01 18:00</span>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item open-win" win='./EventDetails' param='3'>
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-media">
+                        <img src="../../../image/inspection/myCastle.png">
+                    </div>
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-text">
+                            <div class="aui-list-item-title">事件类型:&nbsp;巡检异常</div>
+                            <div class="aui-list-item-right">已关闭</div>
+                        </div>
+                        <div class="aui-list-item-title aui-font-size-14 ">
+                            异常类型:<span class="spanTime">&nbsp;2019-01-01 18:00</span>
+                        </div>
+                        <div class="aui-list-item-title aui-font-size-14 ">
+                            事件提交时间:<span class="spanTime">&nbsp;2019-01-01 18:00</span>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item open-win" win='./EventDetails' param='3'>
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-media">
+                        <img src="../../../image/inspection/myCastle.png">
+                    </div>
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-text">
+                            <div class="aui-list-item-title">事件类型:&nbsp;巡检异常</div>
+                            <div class="aui-list-item-right">已关闭</div>
+                        </div>
+                        <div class="aui-list-item-title aui-font-size-14 ">
+                            异常类型:<span class="spanTime">&nbsp;2019-01-01 18:00</span>
+                        </div>
+                        <div class="aui-list-item-title aui-font-size-14 ">
+                            事件提交时间:<span class="spanTime">&nbsp;2019-01-01 18:00</span>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul> -->
+    </section>
+
+    <div class="footer">
+        <div class="ReportIncident open-win" win='ReportIncident'>
+            上报事件
+        </div>
+    </div>
+
+
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/diy/public.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/aui-tab.js"></script>
+<script type="text/javascript" src="../../../script/moment.js"></script>
+<script type="text/javascript" src="../../../script/template.js"></script>
+<script type="text/template" id='dataList'>
+    <ul class="aui-list aui-media-list aui-show" id="tab{{tabNumber}}">
+        {{each list value i}}
+        <li class="aui-list-item open-win" win='./EventDetails' param='{{value}}'>
+            <div class="aui-media-list-item-inner">
+                <div class="aui-list-item-media">
+                    <img src="../../../image/inspection/myCastle.png">
+                </div>
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-text">
+                        <div class="aui-list-item-title">事件类型:&nbsp;{{value.eventTypeName}}</div>
+                        <div class="aui-list-item-right">{{value.eventStatusString}}</div>
+                    </div>
+                    <div class="aui-list-item-title aui-font-size-14 ">
+                        异常类型:<span class="spanTime">&nbsp;{{value.errorTypeName}}</span>
+                    </div>
+                    <div class="aui-list-item-title aui-font-size-14 ">
+                        事件提交时间:<span class="spanTime">&nbsp;{{value.eventSubmitTime}}</span>
+                    </div>
+                </div>
+            </div>
+        </li>
+        {{/each}}
+    </ul>
+
+</script>
+
+<script type="text/javascript">
+    var PageIndex = 1;
+    var Istansfar = 1;
+    // 工单类型
+    var EventStatus = 0;
+    apiready = function() {
+        api.addEventListener({
+            name: 'changedFontSize'
+        }, function(ret, err) {
+            if (ret) {
+                changeFontSize();
+            }
+        });
+        api.parseTapmode();
+        var header = $api.byId('header');
+        // 实现沉浸式状态栏效果
+        $api.fixStatusBar(header);
+        var headerH = $api.offset(header).h;
+        var tabItemH = $api.offset($api.byId('tab')).h;
+        $api.css($api.byId('tab'), 'top:' + (headerH) + 'px;');
+        $api.css($api.byId('tab-content'), 'top:' + (headerH + tabItemH) + 'px;');
+        fnReady();
+        //事件簿列表
+        GetAppEventPagedList(EventStatus);
+
+        // 监听滚动到底部加载数据
+        api.addEventListener({
+            name: 'srcollbottom'
+        }, function(ret, err) {
+            if (ret) {
+                PageIndex++;
+                GetAppEventPagedList(EventStatus);
+            }
+        });
+
+        // 监听滚动到底部加载数据
+        api.addEventListener({
+            name: 'refreshTaskDetails'
+        }, function(ret, err) {
+            if (ret) {
+                PageIndex = 1;
+                EventStatus = 0;
+                GetAppEventPagedList(EventStatus);
+            }
+        });
+    };
+
+    var tab = new auiTab({
+        element: document.getElementById("tab"),
+        index: 1,
+        repeatClick: false
+    }, function(ret) {
+        if (ret) {
+            if ($('#tab' + ret.index).hasClass('aui-show')) {
+                $('#tab' + ret.index).siblings().removeClass('aui-show').addClass('aui-hide');
+            } else {
+                $('#tab' + ret.index).removeClass('aui-hide').addClass('aui-show');
+                $('#tab' + ret.index).siblings().removeClass('aui-show').addClass('aui-hide');
+            }
+            PageIndex = 1;
+            Istansfar = 1;
+            EventStatus = $('.tab' + ret.index).attr('EventStatus');
+            GetAppEventPagedList(EventStatus);
+        }
+
+    });
+
+    var actionList = {
+        'back': function() {
+            api.closeWin();
+        }
+    }
+
+    //事件簿列表
+    function GetAppEventPagedList(EventStatus) {
+        if (PageIndex == 1) {
+            $('#tab-content').html('');
+        }
+        if (Istansfar == 1) {
+            var url = 'services/GISInspection/Event/GetAppEventPagedList?EventStatus=' + EventStatus + '&PageIndex=' + PageIndex + '&MaxResultCount=10';
+            fnGet(url, {}, false, function(ret, err) {
+                if (ret) {
+                    if (ret.success && ret.result.items.length != 0) {
+                        Istansfar = 1;
+                        var items = ret.result.items;
+                        var tab = $('.aui-active').attr('tab');
+                        for (i in items) {
+                            items[i].eventSubmitTime = items[i].eventSubmitTime != null ? moment(items[i].eventSubmitTime).format('YYYY-MM-DD HH:mm') : '';
+                            items[i].type = EventStatus;
+                        }
+                        var datas = {
+                            type: EventStatus,
+                            list: items,
+                            tabNumber: tab
+                        };
+                        var str = template('dataList', datas);
+                        $('#tab-content').append(str);
+                        operationDom();
+                        fnReadyOpenWin();
+                        Srcoll();
+                    } else {
+                        api.toast({
+                            msg: '没有更多的数据了',
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        Istansfar = 0;
+                        PageIndex--;
+                    }
+                }
+                api.hideProgress();
+            });
+        } else {
+            api.toast({
+                msg: '没有更多的数据了',
+                duration: 2000,
+                location: 'bottom'
+            });
+        }
+    }
+
+
+    // 页面滚动不触发单击事件
+    var touchY = 0;
+    var longClick = 0;
+    var timeOutEvent;
+
+    function Srcoll() {
+        $('#tab-content').on({
+            touchstart: function(e) {
+                longClick = 0;
+                timeOutEvent = setTimeout(function() {
+                    //此处为长按事件-----在此显示遮罩层及删除按钮
+                    longClick = 1; //假如长按，则设置为1
+                }, 500);
+                var touch = e.touches[0];
+                touchY = touch.clientY;
+            },
+            touchmove: function(e) {
+                var e = e || window.event;
+                clearTimeout(timeOutEvent);
+                timeOutEvent = 0;
+                var touch = e.touches[0]
+                if (Math.abs(touch.clientY - touchY) < 10) {
+                    e.preventDefault();
+                }
+            },
+            touchend: function(e) {
+                clearTimeout(timeOutEvent);
+                if (timeOutEvent != 0 && self.longClick == 0) { //点击
+                    //此处为点击事件----在此处添加跳转详情页
+                }
+                return true;
+            }
+        });
+    }
+</script>
+
+</html>

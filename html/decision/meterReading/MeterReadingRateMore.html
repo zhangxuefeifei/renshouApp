@@ -1,0 +1,626 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>抄表率页面</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/aui1.css" />
+    <link rel=stylesheet type=text/css href=../../../css/rolldate.css />
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #F0F0F0;
+            -webkit-box-orient: vertical;
+            -webkit-flex-flow: column;
+            flex-flow: column;
+            display: flex;
+            overflow-x: hidden;
+        }
+
+        .aui-bar-nav {
+            top: 0;
+            z-index: 1;
+            background-color: #0c9ff4;
+            color: #FFF;
+            font-size: var(--fontsize9);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+        }
+
+        .aui-bar-nav .aui-btn .aui-iconfont {
+            color: #FFF;
+            font-weight: 900;
+        }
+
+        .tabDiv {
+            display: flex;
+            background-color: #fff;
+            border-bottom: solid 0.03rem #e6e6e6;
+        }
+
+        .moreIcon {
+            width: 10.36vw;
+            height: 2.2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .moreIcon img {
+            width: 3.87vw;
+            height: 3.33vw;
+        }
+
+        .aui-tab {
+            width: 100%;
+            border-bottom: none;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            -webkit-align-self: auto;
+            align-self: auto;
+        }
+
+        .aui-tab-item {
+            font-size: var(--fontsize7);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0vw;
+            color: #333333;
+            min-width: 20vw;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+        }
+
+        .aui-tab-item.aui-active {
+            border-bottom: 0.05rem solid #0c9ff4;
+        }
+
+        .aui-tab-item.aui-active,
+        .aui-tab-item.aui-active .aui-iconfont {
+            color: #0c9ff4;
+        }
+
+        .aui-tab-item .aui-iconfont {
+            color: #999999;
+            font-weight: 900;
+            margin-left: 0.15rem;
+        }
+
+        .aui-card-list-header {
+            padding: 4.13vw 3.2vw;
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0vw;
+            color: #262626;
+        }
+
+        .timeIcon {
+            width: 4.27vw;
+            height: 4.27vw;
+            background-image: url('../../../image/decision/time.png');
+            background-size: 100% 100%;
+        }
+
+        .aui-card-list-header input {
+            width: 74.67vw;
+            height: 7.73vw;
+            border-radius: 0.4vw;
+            border: solid 1px #dcdcdc;
+            font-size: var(--fontsize7);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0.4vw;
+            color: #262626;
+            padding: 2vw 3.33vw;
+        }
+
+        .downArrow {
+            width: 2.93vw;
+            height: 1.6vw;
+            position: absolute;
+            top: 7.2vw;
+            right: 6.27vw;
+            background-image: url('../../../image/decision/downArrow.png');
+            background-size: 100% 100%;
+        }
+
+        .close {
+            width: 4.0vw;
+            height: 4.0vw;
+            position: absolute;
+            top: 6vw;
+            right: 12vw;
+            background-image: url('../../../image/message_frame/close2.png');
+            background-size: 100% 100%;
+        }
+
+        section {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            padding: 3.07vw;
+        }
+
+        .aui-card-list {
+            border-radius: 1.33vw;
+        }
+
+        .line {
+            width: 0.8vw;
+            height: 4vw;
+            background-color: #0c9ff4;
+            margin-right: 2vw;
+        }
+
+        section .aui-card-list-header {
+            padding: 2.67vw 3.2vw;
+        }
+
+        .aui-card-list-user-name {
+            justify-content: space-between;
+            font-size: var(--fontsize7);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0vw;
+            color: #0c9ff4;
+        }
+
+        .aui-card-list-user-name .left {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .aui-card-list-user-name a {
+            color: #0c9ff4;
+            float: right;
+        }
+
+        .noData {
+            width: 100%;
+            height: 30vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--fontsize7);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0vw;
+            color: #0c9ff4;
+        }
+
+        .amount {
+            background-color: #f0f0f0;
+            font-size: var(--fontsize7);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0vw;
+            color: #333333;
+        }
+
+        .aui-card-list-header.aui-card-list-user .aui-col-xs-3 {
+            font-size: var(--fontsize7);
+            font-weight: 800;
+            font-stretch: normal;
+            letter-spacing: 0vw;
+            color: #333333;
+            text-align: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+        }
+
+        #table {
+            padding: 2vw 0.75rem;
+        }
+
+        .row {
+            height: 5.2vw;
+            padding: 2vw 0;
+        }
+
+        .row .aui-col-xs-3 {
+            font-size: var(--fontsize7);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0vw;
+            color: #333333;
+            text-align: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav" id="header">
+        <div class="aui-pull-left aui-btn" tapmode data-action='back'>
+            <span class="aui-iconfont aui-icon-left"></span>
+        </div>
+        <div class="aui-title">抄表率</div>
+    </header>
+    <div class="tabDiv">
+        <div class="aui-tab" id="tab">
+        </div>
+        <div class="moreIcon" tapmode data-action="chooseParent">
+            <img src="../../../image/decision/more.png">
+        </div>
+    </div>
+
+
+    <section>
+
+        <div class="aui-card-list">
+            <div class="aui-card-list-header aui-card-list-user aui-border-b">
+                <div class="aui-col-xs-3">
+                    抄表册名称
+                </div>
+                <div class="aui-col-xs-3">
+                    应抄
+                </div>
+                <div class="aui-col-xs-3">
+                    实抄
+                </div>
+                <div class="aui-col-xs-3">
+                    实抄率
+                </div>
+            </div>
+            <div class="aui-card-list-content-padded" id="table">
+            </div>
+        </div>
+
+        <div class="aui-card-list">
+            <div class="aui-card-list-header aui-card-list-user">
+                <div class="aui-card-list-user-name">
+                    <div class="left">
+                        <div class="line">
+                        </div>个人抄表率
+                    </div>
+                </div>
+            </div>
+            <div class="aui-card-list-content-padded">
+                <div id="gaugeEchart" style="width:90vw;height:70vw">
+                </div>
+                <div class="noData">
+                    暂无数据！
+                </div>
+            </div>
+        </div>
+
+        <div class="aui-card-list">
+            <div class="aui-card-list-header aui-card-list-user">
+                <div class="aui-card-list-user-name">
+                    <div class="left">
+                        <div class="line">
+                        </div>个人抄表明细
+                    </div>
+                </div>
+            </div>
+            <div class="aui-card-list-content-padded">
+                <div id="barEchart" style="width:90vw">
+                </div>
+                <div class="noData">
+                    暂无数据！
+                </div>
+            </div>
+        </div>
+    </section>
+
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/diy/public.js"></script>
+<script type="text/javascript" src="../../../script/aui-tab.js"></script>
+<script type="text/javascript" src="../../../script/rolldate.js"></script>
+<script type="text/javascript" src="../../../script/echarts.min.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/moment.js"></script>
+<script type="text/javascript" src="../../../script/diy/template.js"></script>
+<script type="text/template" id="tabTpl">
+    {{each items value i}}
+    <div class="aui-tab-item" tapmode data-action="changeParent" data-param="{{value}}">{{value}}</div>
+    {{/each}}
+</script>
+<script type="text/template" id="tableTpl">
+    {{each items value i}}
+    <div class="row">
+        <div class="aui-col-xs-3">
+            {{value.name}}
+        </div>
+        <div class="aui-col-xs-3">
+            {{value.shouldCopy}}
+        </div>
+        <div class="aui-col-xs-3">
+            {{value.actualCopy}}
+        </div>
+        <div class="aui-col-xs-3">
+            {{ if value.ratio
+            < 1 && value.ratio> 0}}
+                <1% {{else if value.ratio>99 && value
+                    <100}}>99%{{else}} {{value.ratio}}% {{/if}}
+        </div>
+        {{/each}}
+</script>
+<script type="text/javascript">
+    document.body.addEventListener('touchstart', function() {});
+    var Time = "";
+    var nameData = [];
+    var tab;
+    apiready = function() {
+        api.addEventListener({
+            name: 'changedFontSize'
+        }, function(ret, err) {
+            if (ret) {
+                changeFontSize();
+            }
+        });
+        api.parseTapmode();
+        $('#gaugeEchart').hide();
+        $('.noData').show();
+        var header = $api.byId('header');
+        // 实现沉浸式状态栏效果
+        $api.fixStatusBar(header);
+        headerH = $api.offset(header).h;
+        Time = api.pageParam.Time;
+        nameData = api.pageParam.nameData;
+        setTablist();
+        fnReady();
+        getActualCopyRateBookByMonth();
+        api.addEventListener({
+            name: 'changedParent'
+        }, function(ret, err) {
+            userName = ret.value.parent;
+            for (var i = 0; i < nameData.length; i++) {
+                if (nameData[i] == userName) {
+                    var ele = document.getElementById('tab');
+                    if (i > 3) {
+                        ele.scrollLeft = (i + 1) * 0.2 * api.winWidth;
+                    } else {
+                        ele.scrollLeft = -((nameData.length - (i + 1)) * 0.2 * api.winWidth);
+                    }
+                    setTab(i, 1);
+                    break;
+                }
+            }
+        });
+    };
+
+    //设置tab的默认选中以及切换
+    function setTab(index, from) {
+        tab = new auiTab({
+            element: document.getElementById("tab"),
+            index: index + 1
+        }, function(ret) {
+            var i = ret.index - 1;
+            if (from != 1) {
+                userName = nameData[i];
+            }
+            getActualCopyRateBookByMonth();
+        });
+        if (from == 1) {
+            getActualCopyRateBookByMonth();
+        }
+    }
+
+    function setTablist() {
+        var list = {
+            items: nameData
+        };
+        var str = template('tabTpl', list);
+        $('#tab').html(str);
+        operationDom();
+        api.parseTapmode();
+        userName = nameData[0];
+        setTab(0, 2);
+    }
+
+    var actionList = {
+        'back': function() {
+            api.closeWin();
+        },
+        'chooseParent': function() {
+            api.openFrame({
+                name: 'chooseParent_frm',
+                url: '../chooseParent_frm.html',
+                rect: {
+                    x: 0,
+                    y: 0,
+                    w: 'auto',
+                    h: 'auto'
+                },
+                pageParam: {
+                    nameData: nameData,
+                    activeOne: userName
+                },
+                bounces: false,
+                bgColor: 'rgba(0,0,0,0.38)',
+            });
+
+        }
+    }
+
+    var userName = "";
+
+    function getActualCopyRateBookByMonth() {
+        var url = 'services/Report/MeterReadingBook/GetActualCopyRateBookByMonth?userName=' + userName + '';
+        if (Time != "") {
+            url = url + '&date=' + Time + '';
+        } else {
+            var time = moment().format('YYYYMM');
+            url = url + '&date=' + time + '';
+        }
+        fnGet(url, {}, false, function(ret, err) {
+            if (ret) {
+                if (ret.success) {
+                    var nameData = [];
+                    var shouldData = [];
+                    var actualData = [];
+                    var gaugeData = 0;
+                    var autoHeight = 0;
+                    if (ret.result != null) {
+                        $('#gaugeEchart').show();
+                        $('#gaugeEchart').next('.noData').hide();
+                        $('#barEchart').next('.noData').hide();
+                        nameData = ret.result.nameList;
+                        for (var i = 0; i < nameData.length; i++) {
+                            nameData[i] = nameData[i].trim();
+                        }
+                        shouldData = ret.result.shouldCopyList;
+                        actualData = ret.result.actualCopyList;
+                        gaugeData = ret.result.shouldCopyRate.replace('%', '') * 100;
+                        autoHeight = nameData.length * 50 + 100;
+                        for (var i = 0; i < ret.result.dataList.length; i++) {
+                            ret.result.dataList[i].ratio = ret.result.dataList[i].ratio * 100;
+                            if (ret.result.dataList[i].ratio < 1 && ret.result.dataList[i].ratio > 0) {
+
+                            } else if (ret.result.dataList[i].ratio < 100 && ret.result.dataList[i].ratio > 99) {
+
+                            } else {
+                                ret.result.dataList[i].ratio = ret.result.dataList[i].ratio.toFixed(2);
+                            }
+                        }
+                        var list = {
+                            items: ret.result.dataList
+                        };
+                        var str = template('tableTpl', list);
+                        $('#table').html(str);
+                    } else {
+                        $('#gaugeEchart').hide();
+                        $('#gaugeEchart').next('.noData').show();
+                        $('#barEchart').next('.noData').show();
+                        var list = {
+                            items: []
+                        };
+                        var str = template('tableTpl', list);
+                        $('#table').html(str);
+                    }
+                    var barchartName = echarts.init(document.getElementById("barEchart"));
+                    var gaugechartName = echarts.init(document.getElementById("gaugeEchart"));
+                    baroption = {
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'line',
+                                shadowStyle: {
+                                    color: 'rgba(12,159,244,0.3)'
+                                }
+                            }
+                        },
+                        legend: {
+                            orient: 'horizontal',
+                            icon: 'circle',
+                            x: 'right',
+                            data: ['应抄', '实抄']
+                        },
+                        color: ['#0c9ff4', '#02ea8c'],
+                        grid: {
+                            left: '3%',
+                            right: '15%',
+                            bottom: 10,
+                            top: 30,
+                            containLabel: true
+                        },
+                        xAxis: {
+                            type: 'value',
+                            axisLabel: {
+                                rotate: 40
+                            },
+                            name: '(户数)',
+                            nameLocation: 'end'
+                        },
+                        yAxis: {
+                            type: 'category',
+                            data: nameData,
+                            axisLabel: {
+                                interval: 0,
+                                formatter: function(value) {
+                                    if (value.length > 5) {
+                                        return value.substring(0, 5) + "...";
+                                    } else {
+                                        return value;
+                                    }
+                                }
+                            },
+                        },
+                        series: [{
+                            name: '应抄',
+                            type: 'bar',
+                            stack: '总量',
+                            label: {
+                                normal: {
+                                    show: true,
+                                    position: 'insideLeft'
+                                }
+                            },
+                            barWidth: '30',
+                            data: shouldData
+                        }, {
+                            name: '实抄',
+                            type: 'bar',
+                            stack: '总量',
+                            label: {
+                                normal: {
+                                    show: true,
+                                    position: 'insideLeft'
+                                }
+                            },
+                            barWidth: '30',
+                            data: actualData
+                        }]
+                    };
+                    gaugeoption = {
+                        tooltip: {
+                            formatter: "{a} <br/>{b} : {c}%"
+                        },
+                        series: [{
+                            name: '个人抄表率',
+                            type: 'gauge',
+                            radius: '100%',
+                            detail: {
+                                formatter: function(value) {
+                                    if (value < 1 && value > 0) {
+                                        return '<1%';
+                                    } else if (value < 100 && value > 99) {
+                                        return '>99%';
+                                    } else {
+                                        value = value.toFixed(2);
+                                        return value + '%';
+                                    }
+                                },
+                                fontSize: 14
+                            },
+                            data: [{
+                                value: gaugeData,
+                                name: '抄表率'
+                            }]
+                        }]
+                    };
+                    barchartName.setOption(baroption);
+                    barchartName.getDom().style.height = autoHeight + "px";
+                    barchartName.resize();
+                    gaugechartName.setOption(gaugeoption);
+                }
+            }
+        })
+    }
+</script>
+
+</html>

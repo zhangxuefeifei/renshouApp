@@ -1,0 +1,832 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>设备点详情页面</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/aui1.css" />
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .aui-list .aui-list-item-title {
+            font-size: 0.8rem;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #333333;
+        }
+
+        section {
+            padding: 0.6rem;
+        }
+
+        .aui-list,
+        .aui-list .aui-list-item {
+            background-image: none;
+            min-height: 0;
+        }
+
+        .aui-list .aui-list-item {
+            padding-left: 1rem;
+        }
+
+        .aui-list .aui-list-item:active {
+            background-color: transparent
+        }
+
+        .dashed {
+            border-bottom: dashed 0.05rem #e6e6e6;
+        }
+
+        .aui-card-list {
+            border-radius: 0.13rem;
+            border: solid 0.03rem #e6e6e6;
+        }
+
+        .aui-card-list-content,
+        .aui-card-list-content-padded {
+            border-radius: 0.13rem;
+        }
+
+        .aui-list .aui-list-item-inner {
+            min-height: 0;
+            justify-content: flex-start;
+            padding: 0.7rem 0.9rem;
+            padding-left: 0;
+        }
+
+        .aui-card-list-header,
+        .aui-card-list-footer {
+            font-size: 0.85rem;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #333333;
+            justify-content: flex-start;
+            padding: 0.65rem 0.5rem;
+            line-height: 1
+        }
+
+        .line {
+            width: 0.18rem;
+            height: 0.8rem;
+            background-color: #4f79e7;
+            border-radius: 0.05rem;
+            margin-right: 0.3rem;
+        }
+
+        .androidText {
+            margin-top: 0.1rem;
+        }
+
+        .aui-list .aui-list-item-title {
+            font-size: 0.7rem;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #333333;
+            max-width: none;
+        }
+
+        .aui-list .aui-list-item-text {
+            font-size: 0.7rem;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+        }
+
+        .noFooter {
+            min-height: 0 !important;
+            padding: 0.05rem 0 !important;
+        }
+
+        .aui-radio,
+        .aui-checkbox {
+            width: 0.9rem;
+            height: 0.9rem;
+            margin-right: 0.25rem;
+        }
+
+        .aui-radio:checked,
+        .aui-radio.aui-checked,
+        .aui-checkbox:checked,
+        .aui-checkbox.aui-checked {
+            background-color: #4f79e8;
+            border: solid 1px #4f79e8;
+        }
+
+        .aui-radio:checked:before,
+        .aui-radio.aui-checked:before,
+        .aui-checkbox:checked:before,
+        .aui-checkbox.aui-checked:before,
+        .aui-radio:checked:after,
+        .aui-radio.aui-checked:after,
+        .aui-checkbox:checked:after,
+        .aui-checkbox.aui-checked:after {
+            width: 0.45rem;
+            height: 0.25rem;
+        }
+
+        .Title {
+            width: var(--width42);
+            display: inline-flex;
+            justify-content: flex-start;
+        }
+
+        .Text {
+            width: calc(100% - var(--width42) - 0.2rem);
+            display: inline-flex;
+        }
+
+        .aui-list textarea,
+        .aui-list input {
+            background-color: #f5f5f5;
+            margin: 0;
+            margin: 0;
+            padding: 0.45rem 0.4rem;
+            height: auto;
+            color: #666666;
+            font-size: var(--fontsize7);
+            font-weight: normal;
+            letter-spacing: 0rem;
+            line-height: inherit;
+        }
+
+        .aui-list select {
+            padding: 0.3rem 0.4rem;
+            margin: 0;
+            margin: 0;
+            height: auto;
+            color: #666666;
+            font-size: var(--fontsize7);
+            font-weight: normal;
+            letter-spacing: 0rem;
+            line-height: inherit;
+            border: solid 1px #e6e6e6;
+        }
+
+        .aui-list .aui-iconfont.aui-icon-down {
+            position: absolute;
+            right: 0.4rem;
+        }
+
+        input::-webkit-input-placeholder,
+        textarea::-webkit-input-placeholder {
+            color: #999999;
+            font-size: var(--fontsize7);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+        }
+
+        .file {
+            width: 2.78rem;
+            height: 2.78rem;
+            background-color: #ffffff;
+            background: url(../../../image/inspection/file.png);
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+        }
+
+        .ImgOrVideo {
+            width: calc(100% - var(--width42) - 0.2rem);
+            display: block !important;
+        }
+
+        .aui-col-xs-4 {
+            margin-bottom: 0.5rem;
+        }
+
+        .aui-list [class*=aui-col-xs-] img {
+            width: 2.78rem;
+            height: 2.78rem;
+        }
+
+        .close {
+            position: absolute;
+            right: 0.5rem;
+            top: -0.3rem;
+            width: 16px;
+            height: 16px;
+            background: url(../../../image/inspection/close.png);
+            background-size: 16px 16px;
+            background-position: center center;
+            background-repeat: no-repeat;
+            -webkit-transition: 200ms;
+            transition: 200ms;
+        }
+
+        .play {
+            position: absolute;
+            left: 0.79rem;
+            top: calc(50% - 0.6rem);
+            width: 1.2rem;
+            height: 1.2rem;
+            background: url(../../../image/inspection/play.png);
+            background-size: 100%;
+            background-position: center center;
+            background-repeat: no-repeat;
+            pointer-events: none;
+        }
+
+        .closeHide {
+            display: none;
+        }
+
+        .transformed0 {
+            -webkit-transform: rotate(3deg);
+            -moz-transform: rotate(3deg);
+            -ms-transform: rotate(3deg);
+            transform: rotate(3deg);
+        }
+
+        .transformed1 {
+            -webkit-transform: rotate(0deg);
+            -moz-transform: rotate(0deg);
+            -ms-transform: rotate(0deg);
+            transform: rotate(0deg);
+        }
+
+        .transformed2 {
+            -webkit-transform: rotate(357deg);
+            -moz-transform: rotate(357deg);
+            -ms-transform: rotate(357deg);
+            transform: rotate(357deg);
+        }
+
+        .redDot {
+            color: #ff605f;
+        }
+
+        .dot {
+            color: transparent;
+        }
+
+        .amountTitle {
+            width: 5.7rem;
+        }
+
+        .aui-list input.amountInput {
+            width: 45vw;
+        }
+    </style>
+</head>
+
+<body>
+    <section>
+        <div class="aui-card-list">
+            <div class="aui-card-list-header aui-border-b">
+                <span class="line"></span>
+                <span class="cardHeader">基础信息</span>
+            </div>
+            <div class="aui-card-list-content">
+                <ul class="aui-list" id="basicInfo">
+
+                </ul>
+            </div>
+            <div class="aui-card-list-footer aui-text-center noFooter">
+            </div>
+        </div>
+
+        <div class="aui-card-list">
+            <div class="aui-card-list-header aui-border-b">
+                <span class="line"></span>
+                <span class="cardHeader">巡检信息</span>
+            </div>
+            <div class="aui-card-list-content">
+                <ul class="aui-list">
+                    <li class="aui-list-item">
+                        <div class="aui-list-item-inner dashed">
+                            <div class="aui-list-item-title"><span class="redDot">*</span>设备点状态：</div>
+                            <div class="aui-list-item-text">
+                                <div class="aui-radio" data-param="1" tapmode data-action="selectRadio"></div>
+                                <span style="margin-right:1.25rem">正常</span>
+                                <div class="aui-radio" data-param="2" tapmode data-action="selectRadio"></div>
+                                <span>异常</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="aui-list-item" id="errorType" style="display:none ">
+                        <div class="aui-list-item-inner dashed">
+                            <div class="aui-list-item-title Title"><span class="redDot">*</span>异常类型：</div>
+                            <div class="aui-list-item-text Text">
+                                <select class="" name="">
+                              </select>
+                                <span class="aui-iconfont aui-icon-down"></span>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="aui-list-item" id="eventType" style="display:none ">
+                        <div class="aui-list-item-inner dashed">
+                            <div class="aui-list-item-title Title"><span class="redDot">*</span>事件类型：</div>
+                            <div class="aui-list-item-text Text">
+                                <select class="" name="">
+                              </select>
+                                <span class="aui-iconfont aui-icon-down"></span>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="aui-list-item" id="predictWaterLossLi" style="display:none ">
+                        <div class="aui-list-item-inner dashed">
+                            <div class="aui-list-item-title Title amountTitle"><span class="dot">*</span>预估损失水量：</div>
+                            <div class="aui-list-item-text Text">
+                                <input class="amountInput" type="number" id="predictWaterLoss" placeholder="请输入水量">
+                                <div class="aui-list-item-right">m³</div>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="aui-list-item">
+                        <div class="aui-list-item-inner dashed">
+                            <div class="aui-list-item-title Title"><span class="dot">*</span>巡检状态：</div>
+                            <div class="aui-list-item-text Text"><textarea id="inspectStatus" placeholder="请输入巡检内容" rows="1"></textarea></div>
+                        </div>
+                    </li>
+
+                    <li class="aui-list-item">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-title Title" style="flex-wrap:wrap"><span class="dot">*</span>
+                                <div class="">
+                                    附件：
+                                </div>
+                                <div class="" style="padding: 0 0.2rem;">
+                                    (仅限图片和视频)
+                                </div>
+                            </div>
+                            <div class="aui-list-item-text ImgOrVideo">
+                                <!-- <div class="aui-col-xs-4">
+                                    <img src="../../../image/inspection/file.png" alt="">
+                                    <div class="play">
+
+                                    </div>
+                                </div> -->
+                                <div class="aui-col-xs-4">
+                                    <div class="file" tapmode data-action="fileUpload">
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="aui-card-list-footer aui-text-center noFooter">
+            </div>
+        </div>
+    </section>
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/diy/public.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/hammer.min.js"></script>
+<script type="text/javascript" src="../../../script/diy/template.js"></script>
+<script type="text/template" id="optionTpl">
+    {{each items value i}}
+    <option value="{{value.value}}">{{value.name}}</option>
+    {{/each}}
+</script>
+<script type="text/template" id="imgTpl">
+    {{each items value i}}
+    <div class="aui-col-xs-4 imgDiv">
+        <img src="{{value.thumbPath}}" data-param={{value}} tapmode>
+        <div class="close closeHide" tapmode data-action="clearImg"></div>
+        {{if systemType == 'ios'}} {{if value.mediaType == 'video'}}
+        <div class="play"></div>
+        {{/if}} {{/if}} {{if systemType == 'android'}} {{if value.videoPath != undefined}}
+        <div class="play"></div>
+        {{/if}} {{/if}}
+    </div> {{/each}}
+</script>
+<script type="text/template" id="basicInfoTpl">
+    <li class="aui-list-item">
+        <div class="aui-list-item-inner dashed">
+            <div class="aui-list-item-title">设备名称：</div>
+            <div class="aui-list-item-text">{{item.deviceName}}</div>
+        </div>
+    </li>
+    <li class="aui-list-item">
+        <div class="aui-list-item-inner dashed">
+            <div class="aui-list-item-title">设备编号：</div>
+            <div class="aui-list-item-text">{{item.deviceCode}}</div>
+        </div>
+    </li>
+    <li class="aui-list-item">
+        <div class="aui-list-item-inner dashed">
+            <div class="aui-list-item-title">设备点巡检时间：</div>
+            <div class="aui-list-item-text">{{if item.inspectionTime != null}}{{item.inspectionTime}}{{else}}暂无{{/if}}</div>
+        </div>
+    </li>
+    <li class="aui-list-item">
+        <div class="aui-list-item-inner dashed">
+            <div class="aui-list-item-title">设备点坐标：</div>
+            <div class="aui-list-item-text">{{item.devicePoint}}</div>
+        </div>
+    </li>
+    <li class="aui-list-item">
+        <div class="aui-list-item-inner dashed">
+            <div class="aui-list-item-title">巡检状态：</div>
+            <div class="aui-list-item-text">{{item.inspectionStatusString}}</div>
+        </div>
+    </li>
+    <li class="aui-list-item">
+        <div class="aui-list-item-inner">
+            <div class="aui-list-item-title">地址：</div>
+            <div class="aui-list-item-text">{{item.address}}</div>
+        </div>
+    </li>
+</script>
+<script type="text/javascript">
+    var text1 = document.getElementById("inspectStatus");
+    var picturePath = [];
+    autoTextarea(text1);
+    var deviceStatus = 0;
+    apiready = function() {
+        photoBrowser = api.require('photoBrowser');
+        api.addEventListener({
+            name: 'changedFontSize'
+        }, function(ret, err) {
+            if (ret) {
+                changeFontSize();
+            }
+        });
+        api.addEventListener({
+            name: 'closePhotoBrowser'
+        }, function(ret, err) {
+            if (ret) {
+                photoBrowser.close();
+            }
+        });
+        if (api.systemType != 'ios') {
+            $('.cardHeader').addClass('androidText');
+        }
+        $api.rmStorage('isPhotoView');
+        api.parseTapmode();
+        fnReady();
+        deviceId = api.pageParam.id;
+        TenantId = $api.getStorage('tenantId');
+        OrgId = $api.getStorage('orgId');
+        ProductId = $api.getStorage('insepProductId');
+        getDeviceDetails();
+        getDictionary();
+        // getEventType();
+        api.addEventListener({
+            name: 'clickedEqpSureBtn'
+        }, function(ret, err) {
+            if (ret) {
+                var list = $('img');
+                for (var i = 0; i < list.length; i++) {
+                    var data = JSON.parse($(list[i]).attr('data-param'));
+                    if (api.systemType == 'ios') {
+                        UIAlbumBrowser.transVideoPath({
+                            path: data.path
+                        }, function(ret, err) {
+                            if (ret) {
+                                if (ret.status) {
+                                    // console.log(ret.albumVideoPath);
+                                    picturePath.push(ret.albumVideoPath);
+                                }
+                            }
+                        });
+                    } else {
+                        picturePath.push(data.path);
+                    }
+                }
+                var errorType = 0;
+                var eventType = 0;
+                var predictWaterLoss = 0;
+                if (deviceStatus == 2) {
+                    errorType = parseInt($('#errorType select').val());
+                    eventType = parseInt($('#eventType select').val());
+                    if ($("#predictWaterLoss").val() != "") {
+                        predictWaterLoss = parseInt($("#predictWaterLoss").val());
+                    }
+                }
+
+                api.sendEvent({
+                    name: 'receiveEqpPicture',
+                    extra: {
+                        picturePath: picturePath,
+                        deviceStatus: deviceStatus,
+                        errorType: errorType,
+                        eventType: eventType,
+                        predictWaterLoss: predictWaterLoss,
+                        deviceLongitude: lon == 0 ? null : lon,
+                        deviceLatitude: lat == 0 ? null : lat,
+                        deviceRemark: $('#inspectStatus').val(),
+                        id: deviceId
+                    }
+                });
+            }
+        });
+    };
+
+    var UIAlbumBrowser;
+
+    var actionList = {
+        'selectRadio': function() {
+            $(this).parent().find('.aui-radio').removeClass('aui-checked');
+            $(this).addClass('aui-checked');
+            if ($(this).attr('data-param') == '2') {
+                deviceStatus = 2;
+                setTimeout(function() {
+                    $('#errorType').show();
+                    $('#eventType').show();
+                    $("#predictWaterLossLi").show();
+                    api.sendEvent({
+                        name: 'chooseError',
+                    });
+                }, 200);
+            } else {
+                deviceStatus = 1;
+                setTimeout(function() {
+                    $('#errorType').hide();
+                    $('#eventType').hide();
+                    $("#predictWaterLossLi").hide();
+                    api.sendEvent({
+                        name: 'cancelError',
+                    });
+                }, 200);
+            }
+        },
+        'fileUpload': function() {
+            $('.close').hide();
+            clearInterval(timer);
+            $('img').parent().removeClass('transformed0 transformed1 transformed2');
+            UIAlbumBrowser = api.require('UIAlbumBrowser');
+            UIAlbumBrowser.open({
+                max: 9,
+                type: 'all',
+                styles: {
+                    bg: '#fff',
+                    mark: {
+                        icon: '',
+                        position: 'bottom_left',
+                        size: 20
+                    },
+                    nav: {
+                        bg: 'rgba(0,0,0,0.6)',
+                        titleColor: '#fff',
+                        titleSize: 18,
+                        cancelColor: '#fff',
+                        cancelSize: 16,
+                        finishColor: '#fff',
+                        finishSize: 16
+                    }
+                },
+                rotation: true
+            }, function(ret) {
+                if (ret) {
+                    if (ret.eventType == 'confirm') {
+                        var list = {
+                            items: ret.list,
+                            systemType: api.systemType
+                        }
+                        var str = template('imgTpl', list);
+                        $('.file').parent().before(str);
+                        longpress();
+                        openDetail();
+                        addEvenImgOther();
+                        api.parseTapmode();
+                        operationDom();
+                    }
+
+                }
+            });
+        },
+        'clearImg': function() {
+            $(this).parent().remove();
+            if ($('img').length == 0) {
+                clearInterval(timer);
+            }
+        }
+    }
+
+    var lon = 0;
+    var lat = 0;
+
+    function getDeviceDetails() {
+        fnGet('services/GISInspection/Task/GetTaskDeviceInfoByDeviceId?id=' + deviceId + '', {}, false, function(ret, err) {
+            if (ret && ret.success) {
+                var list = {
+                    item: ret.result
+                }
+                var lonAndLat = ret.result.devicePoint.split(",");
+                if (lonAndLat.length > 1) {
+                    lon = lonAndLat[0];
+                    lat = lonAndLat[1];
+                    api.sendEvent({
+                        name: 'reciveLocation',
+                        extra: {
+                            lon: lon,
+                            lat: lat
+                        }
+                    });
+                }
+                var str = template('basicInfoTpl', list);
+                $('#basicInfo').html(str);
+            }
+        })
+    }
+
+    function getDictionary() {
+        var publicDictionaryInputDto = [];
+        var tenantId = parseInt($api.getStorage('tenantId'));
+        var orgId = parseInt($api.getStorage('orgId'));
+        var productId = parseInt($api.getStorage('insepProductId'));
+        var errorType = {
+            tenantId: tenantId,
+            orgId: orgId,
+            productId: productId,
+            cateCode: 'ErrorType'
+        }
+        publicDictionaryInputDto.push(errorType);
+        var eventType = {
+            tenantId: tenantId,
+            orgId: orgId,
+            productId: productId,
+            cateCode: 'EventType'
+        }
+        publicDictionaryInputDto.push(eventType)
+        fnPost('services/app/Authorization/PostPublicDictionarys', {
+            body: JSON.stringify({
+                publicDictionaryInputDto: publicDictionaryInputDto
+            })
+        }, 'application/json', true, false, function(ret, err) {
+            if (ret) {
+                if (ret.success) {
+                    var data = ret.result;
+                    for (var i = 0; i < data.length; i++) {
+                        if (data[i].dictionaryCate.cateCode == 'ErrorType') {
+                            var list = {
+                                items: data[i].dictionaryList
+                            };
+                            var str = template('optionTpl', list);
+                            $('#errorType select').html(str);
+                        } else if (data[i].dictionaryCate.cateCode == 'EventType') {
+                            var list = {
+                                items: data[i].dictionaryList
+                            };
+                            list.items = list.items.filter(function(item) {
+                                if (item.value != 2) {
+                                    return item;
+                                }
+                            });
+                            var str = template('optionTpl', list);
+                            $('#eventType select').html(str);
+                        }
+                    }
+                }
+            }
+        })
+    }
+
+    var timer;
+
+    function longpress() {
+        var list = $api.domAll('img');
+        for (var i = 0; i < list.length; i++) {
+            var hammer = new Hammer(list[i]);
+            hammer.get('press').set({
+                time: 300
+            });
+            hammer.on("press", function(e) {
+                $('.close').show();
+                var dom = $(e.target);
+                direction = 1; // 1, -1
+                state = 1; // 0,1,2
+                oldClass = "";
+                clearInterval(timer);
+                timer = setInterval(function() {
+                    $('img').parent().removeClass(oldClass);
+                    if (state + direction > 2 || state + direction < 0) {
+                        direction = -direction;
+                    }
+                    state = state + direction;
+                    newClass = "transformed" + state;
+                    // console.log("set new class to " + newClass);
+                    $('img').parent().addClass(newClass);
+                    $('img').parent().innerText = newClass;
+                    oldClass = newClass;
+                }, 85);
+            });
+
+        }
+    }
+
+    function openDetail() {
+        var list = $api.domAll('img');
+        for (var i = 0; i < list.length; i++) {
+            var hammer = new Hammer(list[i]);
+            hammer.on("tap", function(ret) {
+                var dom = $(ret.target);
+                var data = JSON.parse(dom.attr('data-param'));
+                var imgList = $('img');
+                var allImgData = [];
+                var activeIndex = 0;
+                for (var j = 0; j < imgList.length; j++) {
+                    var imgData = JSON.parse($(imgList[j]).attr('data-param'));
+                    if (imgData.videoPath == undefined) {
+                        allImgData.push(imgData.path);
+                        if (imgData.path == data.path) {
+                            activeIndex = j;
+                        }
+                    }
+                }
+                if (api.systemType == 'ios') {
+                    if (data.mediaType == 'video') {
+                        UIAlbumBrowser.transVideoPath({
+                            path: data.path
+                        }, function(ret, err) {
+                            if (ret) {
+                                if (ret.status) {
+                                    // console.log(ret.albumVideoPath);
+                                    api.openVideo({
+                                        url: ret.albumVideoPath
+                                    });
+                                }
+                            }
+                        });
+                    } else {
+                        for (var k = 0; k < allImgData.length; k++) {
+                            UIAlbumBrowser.transPath({
+                                path: allImgData[k]
+                            }, function(ret, err) {
+                                if (ret) {
+                                    allImgData[k] = ret.path
+                                }
+                            });
+                        }
+                        photoBrowser.open({
+                            images: allImgData,
+                            activeIndex: activeIndex,
+                            placeholderImg: 'widget://res/img/apicloud.png',
+                            bgColor: '#000'
+                        }, function(ret, err) {
+                            if (ret) {
+                                $api.setStorage('isPhotoView', true);
+                                if (ret.eventType == 'click') {
+                                    photoBrowser.close();
+                                    $api.rmStorage('isPhotoView');
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    if (data.videoPath != undefined) {
+                        api.openVideo({
+                            url: data.videoPath
+                        });
+                    } else {
+                        photoBrowser.open({
+                            images: allImgData,
+                            activeIndex: activeIndex,
+                            placeholderImg: 'widget://res/img/apicloud.png',
+                            bgColor: '#000'
+                        }, function(ret, err) {
+                            if (ret) {
+                                $api.setStorage('isPhotoView', true);
+                                if (ret.eventType == 'click') {
+                                    photoBrowser.close();
+                                    $api.rmStorage('isPhotoView');
+                                }
+                            }
+                        });
+                    }
+                }
+            })
+        }
+    }
+
+    function addEvenImgOther() {
+        var imgDiv = $api.domAll('.imgDiv');
+        for (var i = 0; i < imgDiv.length; i++) {
+            $api.addEvt(imgDiv[i], 'touchstart', function(event) {
+                event = event || window.event;
+                event.stopPropagation();
+            });
+        }
+        //  监听图片外的单击
+        document.addEventListener('touchstart', function() {
+            $('.close').hide();
+            clearInterval(timer);
+            $('img').parent().removeClass('transformed0 transformed1 transformed2');
+        });
+
+    }
+</script>
+
+</html>

@@ -1,0 +1,305 @@
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    overflow-y: hidden;
+    background: #fff;
+}
+
+.flex-box {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    overflow-y: hidden;
+}
+
+header.aui-bar-nav {
+    background: #fff;
+    font-size: 0.8rem;
+    font-family: PingFangSC-Semibold, PingFang SC;
+    font-weight: 600;
+    color: #333;
+}
+
+header.aui-bar-nav .aui-btn .aui-iconfont {
+    color: #333;
+    width: 1.2rem;
+    height: 1.2rem;
+    font-weight: bold;
+    border: none;
+}
+
+header .aui-icon-left:before {
+    content: url('../image/closeWin.png');
+    width: 1.2rem;
+    height: 1.2rem;
+}
+
+.condition_box {
+    width: 100%;
+    height: 95%;
+    background: #fff;
+    overflow: hidden;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+}
+
+.condition_box .aui-list .aui-list-item {
+    height: 3.85rem;
+    line-height: 3.85re background-size: 100% 1px;
+    background-position: 0.75rem bottom;
+    background-image: linear-gradient(0, #eee, #eee 50%, transparent 50%);
+    background-image: -webkit-linear-gradient(90deg, #eee, #eee 50%, transparent 50%);
+}
+
+.aui-list .aui-list-item-label {
+    color: #666;
+    font-size: 0.8rem;
+}
+
+.condition_box .aui-list {
+    background-image: none;
+}
+
+.condition_box .btns_box {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    margin-top: 2.05rem;
+    justify-content: center;
+}
+
+ ::-webkit-input-placeholder, select:invalid {
+    color: #999;
+    font-size: 0.75rem;
+}
+
+.dot {
+    width: 0.3rem;
+    height: 0.3rem;
+    background: #5545F0;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 0.6rem;
+    margin-top: -0.2rem;
+}
+
+.btns_box .btn {
+    width: 7.5rem;
+    height: 2rem;
+    line-height: 2rem;
+    border-radius: 2.5rem;
+    font-size: 0.7rem;
+    text-align: center;
+    letter-spacing: 2px;
+}
+
+.btns_box .btn:first-child {
+    background: #ccc;
+    color: #333;
+}
+
+.btns_box .btn:last-child {
+    background: #6F7EF6;
+    color: #fff;
+}
+
+
+/*搜索结果*/
+
+.clear_search {
+    font-size: 0.6rem;
+    color: rgba(36, 52, 176, 0.5);
+}
+
+.search_content {
+    width: 100%;
+    height: 76vh;
+    font-size: 0.7rem;
+    background: #fff;
+    margin: 0 auto;
+    overflow: hidden;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+    margin-bottom: 5rem;
+    padding-left: 0.75rem;
+    box-shadow: none;
+}
+
+.search_content .aui-row-other {
+    height: 4.5rem;
+    line-height: 4.5rem;
+    border: none;
+    background-size: 100% 1px;
+    background-repeat: no-repeat;
+    background-position: 0.75rem bottom;
+    background-image: linear-gradient(0, #eee, #eee 50%, transparent 50%);
+    background-image: -webkit-linear-gradient(90deg, #eee, #eee 50%, transparent 50%);
+    padding-top: 0.3rem;
+}
+.aui-row-other.active{
+  background: #eee;
+}
+.aui-row-other .aui-col-xs-12 {
+    margin-top: 0.25rem;
+    height: 0.85rem;
+    line-height: 0.85rem;
+    color: #999999;
+    font-size: 0.6rem;
+    font-weight: normal;
+}
+.aui-row-other .aui-col-xs-12:first-child{
+    height: 1.1rem;
+    line-height: 1.1rem;
+    font-size: 0.8rem;
+    color: #666666;
+    font-weight: 600;
+}
+.aui-row-other .lon {
+    margin-right: 1.75rem;
+}
+
+
+/*分页*/
+
+.page_box {
+    width: 100%;
+    position: absolute;
+    bottom: 0rem;
+    font-size: 0.7rem;
+    color: #333;
+    height: 2.65rem;
+    background: #fff;
+    padding-top: 0.5rem;
+    display: none;
+    /*vue中不需要*/
+}
+
+.page_box .aui-iconfont {
+    font-weight: bold;
+}
+.not_next{
+  color: #eee;
+}
+
+/*地图显示按钮*/
+
+.map_btn_box {
+    width: 100%;
+    height: 2rem;
+    position: absolute;
+    bottom: 2.8rem;
+
+}
+
+.map_btn_box .map_btn {
+    width: 7.7rem;
+    height: 2rem;
+    line-height: 2rem;
+    background: #6F7EF6;
+    border-radius: 1rem;
+    margin: 0 auto;
+    font-size: 0.7rem;
+    text-align: center;
+    color: #fff;
+    letter-spacing: 2px;
+}
+.content_other_box{
+  display: none;
+  position: relative;
+  /*vue中不需要*/
+}
+.aui-bar-nav .map_close.aui-iconfont {
+    display: none;
+    color: #333;
+    font-weight: bold;
+}
+.point_pipe_box {
+    width: 100%;
+    background: #fff;
+    min-height: 3rem;
+    position: absolute;
+    bottom: 0rem;
+    z-index: 1005;
+    font-size: 0.7rem;
+    padding: 0.5rem 0 0.8rem 0;
+    border-radius: 0.4rem 0.4rem 0 0;
+    display: none;
+}
+
+.point_pipe_box .btns {
+    position: absolute;
+    top: -1rem;
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.point_pipe_box .btns div {
+    width: 2.5rem;
+    height: 2rem;
+    line-height: 2rem;
+    border: 1px solid rgba(121, 121, 121, 0.7);
+    text-align: center;
+    border-radius: 0.3rem;
+    margin-right: 0.5rem;
+    font-size: 0.7rem;
+}
+
+.point_pipe_box .btns .infoDelete{
+    border: none;
+    width: 2rem;
+    height: 1.9rem;
+    background: url('../image/delete.png');
+    background-size: 100% 100%;
+}
+
+.point_pipe_box .btns .infoEdite{
+    border: none;
+    width: 1.9rem;
+    height: 1.9rem;
+    background: url('../image/edit.png');
+    background-size: 100% 100%;
+}
+.hasbookmark{
+  border: none!important;
+  width: 2.05rem!important;
+  height: 1.9rem!important;
+  background: url('../image/bookmark.png');
+  background-size: 100% 100%;
+
+}
+.no_bookmark {
+width: 1.9rem !important;
+height: 1.8rem!important;
+background: url('../image/no_bookmark.png');
+background-size: 100% 100%;
+border: none!important;
+}
+
+.point_pipe_box .aui-row {
+    margin-top: 0.6rem;
+    color: #666;
+    font-size: 0.6rem;
+}
+
+.m_t_1rem {
+    margin-top: 1rem!important;
+    color: #333!important;
+    font-size: 0.8rem!important;
+    font-weight: bold;
+}
+
+.point_pipe_box div[class*='aui-col-xs-'] {
+    padding-left: 1.75rem;
+}
+.point_pipe_box .dot {
+    width: 0.2rem;
+    height: 0.2rem;
+    background: rgba(113, 128, 248, 1);
+    border-radius: 0.3rem;
+    margin-right: 0.3rem;
+    display: inline-block;
+margin-bottom: 0.1rem;
+}

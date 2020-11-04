@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>专题地图</title>
+    <link rel="stylesheet" href="../../../css/api.css">
+    <link rel="stylesheet" href="../../../css/aui.css">
+    <link rel="stylesheet" href="../css/ol.css">
+    <style rel="stylesheet">
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            overflow-y: hidden;
+            background: #fff;
+        }
+
+        .flex-box {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            overflow-y: hidden;
+        }
+
+        header.aui-bar-nav {
+            background: #fff;
+            font-size: 0.8rem;
+            font-family: PingFangSC-Semibold, PingFang SC;
+            font-weight: 600;
+            color: #333;
+
+        }
+
+        header.aui-bar-nav .aui-btn .aui-iconfont {
+            color: #333;
+            width: 1.2rem;
+            height: 1.2rem;
+            font-weight: bold;
+            border: none;
+        }
+        header .aui-icon-left:before {
+          content:url('../image/closeWin.png');
+          width: 1.2rem;
+          height: 1.2rem;
+        }
+
+        .thematic_box {
+            width: 100%;
+            height: auto;
+        }
+
+        .aui-list {
+            background-image: none;
+        }
+
+        .aui-list.aui-list-in .aui-list-item {
+            background-image: linear-gradient(0, #EEEEEE, #EEEEEE 50%, transparent 50%);
+            background-image: -webkit-linear-gradient(90deg, #EEEEEE, #EEEEEE 50%, transparent 50%);
+        }
+
+        .aui-list.aui-list-in .aui-list-item:last-child {
+            background-position: 0.75rem bottom;
+        }
+
+        .aui-list-item-arrow:before {
+            margin-right: 2.15rem;
+        }
+
+        .aui-list-item-inner.aui-list-item-arrow {
+            height: 3.25rem;
+            line-height: 3.25;
+            font-size: 0.7rem;
+            font-family: PingFangSC-Semibold, PingFang SC;
+            font-weight: 600;
+            color: rgba(51, 51, 51, 1);
+        }
+    </style>
+
+</head>
+
+<body class="flex-box" id='flex-box'>
+    <header class="aui-bar aui-bar-nav" id='header'>
+        <div class="aui-pull-left aui-btn" onclick="closeWin()" tapmode>
+            <span class="aui-iconfont aui-icon-left"></span>
+        </div>
+        <div class="aui-title">更多专题</div>
+    </header>
+    <div class="thematic_box">
+        <ul class="aui-list aui-list-in">
+            <li class="aui-list-item"tapmode onclick="thematicMapWin('shuibiao','水表','point')">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    水表专题
+                </div>
+            </li>
+            <li class="aui-list-item"tapmode onclick="thematicMapWin('jianxiujing','检修井','point')">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    检修井专题
+                </div>
+            </li>
+            <li class="aui-list-item"tapmode onclick="thematicMapWin('bengzhan','泵站','point')">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    泵站
+                </div>
+            </li>
+            <li class="aui-list-item"tapmode onclick="thematicMapWin('guanjian','管件类','point')">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    管件类
+                </div>
+            </li>
+            <li class="aui-list-item"tapmode onclick="thematicMapWin('famen','阀门类','point')">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    阀门类
+                </div>
+            </li>
+            <li class="aui-list-item"tapmode onclick="thematicMapWin('qita','其他类','point')">
+                <div class="aui-list-item-inner aui-list-item-arrow">
+                    其他类
+                </div>
+            </li>
+        </ul>
+    </div>
+
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/ol-debug.js"></script>
+<script type="text/javascript" src="../script/base64.js"></script>
+
+<!-- 初始化地图 -->
+<script type="text/javascript" src="../script/initmap.js"></script>
+<!-- 添加图层js,管点管线等操作  -->
+<script type="text/javascript" src="../script/addordeletelayer.js"></script>
+
+<script type="text/javascript">
+    apiready = function() {
+        api.setWinAttr({
+            bounces: false
+        });
+        // 初始化，包括沉浸式等
+        initWindow();
+    }
+
+    function closeWin() {
+        api.closeWin({
+            name: 'thematicmap'
+        });
+        api.closeWin();
+
+    }
+
+    function thematicMapWin(name, thematicName, type) {
+        api.openWin({
+            name: 'thematicmapmany',
+            url: './thematicmapmany.html',
+            pageParam: {
+                name: name,
+                type: type,
+                thematicName: thematicName,
+            }
+        });
+    }
+</script>
+
+</html>

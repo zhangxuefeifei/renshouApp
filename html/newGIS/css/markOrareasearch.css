@@ -1,0 +1,199 @@
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #fff;
+}
+
+.flex-box {
+    display: flex;
+    flex-direction: column;
+}
+
+header.aui-bar-nav {
+    background: #fff;
+    font-size: 0.8rem;
+    font-family: PingFangSC-Semibold, PingFang SC;
+    font-weight: 600;
+    color: #333;
+}
+
+header.aui-bar-nav .aui-btn .aui-iconfont {
+    color: #333;
+    width: 1.2rem;
+    height: 1.2rem;
+    font-weight: bold;
+    border: none;
+}
+
+header .aui-icon-left:before {
+    content: url('../image/closeWin.png');
+    width: 1.2rem;
+    height: 1.2rem;
+}
+/*tab切换*/
+
+.aui-tab {
+    width: 100%;
+    height: 3rem;
+    line-height: 3rem;
+    padding-left: 1.3rem;
+}
+
+.aui-tab-item {
+    width: 2rem;
+    color: #999;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.aui-tab-item:first-child {
+    margin-right: 1.6rem;
+}
+
+.aui-tab-item.aui-active {
+    font-size: 0.9rem;
+    color: #6F7EF6;
+    border-bottom: 2px solid #6F7EF6;
+}
+/*搜索结果*/
+.content_other_box{
+  /*height:73vh;*/
+  /*padding-bottom: 2.6rem;*/
+}
+.content_other_box .aui-row {
+    height: 2rem;
+    line-height: 2rem;
+}
+
+.search_content {
+    width: 100%;
+    height:70vh;
+    background: #fff;
+    overflow: hidden;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+    /*display: none;*/
+}
+.search_content .aui-row-other {
+    width: 16rem;
+    height: 8.5rem;
+    background: #fff;
+    box-shadow: 0rem 0.2rem 0.4rem 0rem rgba(0, 0, 0, 0.08), 0rem 0rem 0.05rem 0rem rgba(0, 0, 0, 0.08);
+    border-radius: 0.6rem;
+    margin: 0 auto;
+    margin-bottom: 1rem;
+}
+
+.aui-row-other .aui-col-xs-12:first-child {
+    height: 2.75rem;
+    line-height: 2.75rem;
+    font-size: 0.75rem;
+    color: #333;
+    margin-bottom: 0.85rem;
+    font-weight: 600;
+    border: none;
+    background-size: 100% 1px;
+    background-repeat: no-repeat;
+    background-position: bottom;
+    background-image: linear-gradient(0, #eee, #eee 50%, transparent 50%);
+    background-image: -webkit-linear-gradient(90deg, #eee, #eee 50%, transparent 50%);
+}
+
+.aui-row-other .aui-col-xs-12{
+    height: 1rem;
+    line-height: 1rem;
+    color: #666;
+    font-size: 0.7rem;
+    font-weight: normal;
+    background-image: none;
+    margin-bottom: 0.5rem;
+}
+
+.lon {
+    margin-right: 1.55rem;
+}
+/*分页*/
+
+.search_content .page {
+    width: 100%;
+    height: 2rem;
+    position: absolute;
+    bottom: 0;
+}
+
+.search_content .page .pageNumber {
+    width: 1.5rem;
+    height: 1.5rem;
+    line-height: 1.5rem;
+    margin-top: 0.25rem;
+    border: 1px solid #eee;
+    border-radius: 0.3rem;
+    text-align: center;
+    margin-left: 45%;
+}
+
+.pageNumber.aui-active {
+    background: #eee;
+}
+/*列表内容框*/
+
+.clear_search {
+    font-size: 0.6rem;
+    color: rgba(36, 52, 176, 0.5);
+}
+
+.content_box {
+    width: 100%;
+    margin-left: 0rem;
+}
+
+.content_box_show {
+    margin-left: 0rem;
+    transition: margin-left 0.2s;
+}
+
+.content_box_hide {
+    margin-left: -3rem;
+    transition: margin-left 0.3s;
+}
+
+.delete_btn {
+    width: 3rem;
+    height: 8.5rem;
+    line-height: 8.5rem;
+    text-align: center;
+    background: red;
+    border-radius: 0.3rem;
+    color: #fff;
+    letter-spacing: 2px;
+    margin-right: -3rem;
+}
+
+.delete_btn_show {
+    margin-right: 0rem;
+    transition: margin-right 0.5s;
+}
+
+.delete_btn_hide {
+    margin-right: -3rem;
+    transition: margin-right 0.1s;
+}
+
+.page_box {
+    width: 100%;
+    position: absolute;
+    bottom: 0rem;
+    font-size: 0.7rem;
+    color: #333;
+    height: 2.65rem;
+    background: #fff;
+    padding-top: 0.5rem;
+    /*display: none;*/
+}
+
+.page_box .aui-iconfont {
+    font-weight: bold;
+}

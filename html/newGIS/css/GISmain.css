@@ -1,0 +1,744 @@
+lengthAreahtml, body {
+    width: 100%!important;
+    height: 100%!important;
+    overflow: hidden!important;
+    overflow-y: hidden!important;
+}
+
+.flex-box {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden!important;
+    overflow-y: hidden!important;
+}
+
+header.aui-bar-nav {
+    background-color: rgba(248, 250, 255, 1);
+    font-size: 0.8rem;
+    font-family: PingFangSC-Semibold, PingFang SC;
+    font-weight: 600;
+    color: #333;
+}
+
+header.aui-bar-nav .aui-btn .aui-iconfont {
+    color: #333;
+    width: 1.2rem;
+    height: 1.2rem;
+    font-weight: bold;
+    border: none;
+}
+
+header .aui-icon-left:before {
+    content: url('../image/closeWin.png');
+    width: 1.2rem;
+    height: 1.2rem;
+}
+
+.map {
+    width: 100%;
+    height: 90vh;
+}
+
+.search_box {
+    width: 100%;
+    height: 5rem;
+    background: rgba(248, 250, 255, 1);
+    box-shadow: 0rem 0.5rem 0.8rem 0rem rgba(10, 36, 99, 0.14);
+    border-radius: 0rem 0rem 1.6rem 1.6rem;
+    /*position: absolute;*/
+    /*top: 4.2rem;*/
+    z-index: 1006;
+    border: none;
+    padding-top: 1.2rem;
+}
+
+.search_box_menu_open {
+    height: 10rem;
+    transition: 0.3s;
+}
+
+.search_box_menu_close {
+    height: 5rem;
+    transition: 0.3s;
+}
+
+.search_box .search_input {
+    width: 16.35rem;
+    height: 2.4rem;
+    line-height: 2.4rem;
+    display: flex;
+    flex-direction: row;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0rem 0.2rem 0.4rem 0rem rgba(0, 0, 0, 0.08), 0rem 0rem 0.05rem 0rem rgba(0, 0, 0, 0.08);
+    border-radius: 1.5rem;
+    margin: 0 auto;
+    margin-bottom: 0.6rem;
+}
+
+.search_box .aui-iconfont {
+    font-size: 0.8rem;
+    font-weight: bold;
+    line-height: 2.4rem;
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
+    color: #ccc;
+}
+
+.search_box .search_input input {
+    height: 2.4rem;
+    line-height: 2.4rem;
+}
+
+.search_box ::-webkit-input-placeholder {
+    color: #ccc;
+    font-size: 0.8rem;
+    font-weight: 400;
+}
+
+.search_box .menu_close_box {
+    width: 100%;
+    height: 2rem;
+}
+
+.search_box .menu_open_box {
+    width: 100%;
+    height: 2rem;
+}
+
+.search_box .menu_close {
+    width: 2rem;
+    height: 0.25rem;
+    background: url('../image/menu_close.png');
+    background-size: 2rem 0.25rem;
+    margin: 0 auto;
+}
+
+.search_box .menu_open {
+    width: 1.1rem;
+    height: 0.5rem;
+    background: url('../image/menu_open.png');
+    background-size: 1.1rem 0.5rem;
+    margin: 0 auto;
+    margin-top: 0.8rem;
+}
+
+.main_menu {
+    display: none;
+}
+
+.main_menu .aui-col-xs-6 {
+    width: 100%;
+    text-align: center;
+}
+
+.main_menu .aui-col-xs-3 .aui-col-xs-6:last-child {
+    font-size: 0.7rem;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: rgba(102, 102, 102, 1);
+}
+
+.menu_location, .menu_clear, .menu_reset, .menu_layer {
+    width: 3.2rem;
+    height: 3.2rem;
+}
+
+.menu_location {
+    background: url('../image/menu_location.png');
+    background-size: 3.2rem 3.2rem;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.menu_clear {
+    background: url('../image/menu_clear.png');
+    background-size: 3.2rem 3.2rem;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.menu_reset {
+    background: url('../image/menu_reset.png');
+    background-size: 3.2rem 3.2rem;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.menu_layer {
+    background: url('../image/menu_layer.png');
+    background-size: 3.2rem 3.2rem;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.rightMenu {
+    width: 3.2rem;
+    position: absolute;
+    top: 43.67vh;
+    right: 0.4rem;
+    z-index: 1000;
+    opacity: 1;
+}
+
+.rightMenu ul {
+    width: 100%;
+}
+
+.rightMenu ul li {
+    width: 3.2rem;
+    height: 3.2rem;
+}
+
+.rightMenu ul li:first-child {
+    background: url('../image/go_last.png');
+    background-size: 3.2rem 3.2rem;
+    background-repeat: no-repeat;
+    /*background-position: 0.8rem;*/
+}
+
+.rightMenu ul li:nth-child(2) {
+    background: url('../image/go_next.png');
+    background-size: 3.2rem 3.2rem;
+    background-repeat: no-repeat;
+    /*background-position: 0.8rem;*/
+}
+
+.rightMenu ul li:nth-child(3) {
+    background: url('../image/add_zoom.png');
+    background-size: 3.2rem 3.2rem;
+    background-repeat: no-repeat;
+    /*background-position: 0.8rem;*/
+}
+
+.rightMenu ul li:last-child {
+    background: url('../image/reduce_zoom.png');
+    background-size: 3.2rem 3.2rem;
+    background-repeat: no-repeat;
+    /*background-position: 0.8rem;*/
+}
+
+.rightMenu_show {
+    opacity: 1;
+    transition: 0.3s;
+}
+
+.rightMenu_hide {
+    opacity: 0;
+    transition: 0.3s;
+}
+
+.footer_menu {
+    position: absolute;
+    bottom: 2.15rem;
+    width: 93%;
+    height: 3rem;
+    left: 0.25rem;
+    z-index: 1002;
+}
+
+.footer_menu .footer_main_menu {
+    display: block;
+}
+
+.footer_menu .menu_content {
+    line-height: 2.2rem;
+    margin-left: -20rem;
+}
+
+.footer_menu .menu_content_ative {
+    height: 3.75rem;
+    margin-left: 0;
+    transition: 0.5s;
+}
+
+.footer_menu .menu_content_noAtive {
+    height: 3rem;
+    margin-left: -20rem;
+    transition: 0.5s;
+}
+
+.footer_menu .menu_content_left {
+    width: 15rem;
+    height: 3.75rem;
+    background: url('../image/footer_bg1.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+.footer_menu .menu_content_right {
+    width: 3.75rem;
+    height: 2.2rem;
+    background: url('../image/footer_bg2.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    margin-left: -2.5rem;
+    margin-top: 0.65rem;
+    transform: rotate(-1.2deg);
+}
+
+.footer_menu .footer_main_menu {
+    height: 2.2rem;
+    margin-left:1.33rem;
+    margin-top: 0.67rem;
+    width:70vw;
+    overflow: hidden;
+    overflow-x: scroll;
+    -webkit-overflow-scrolling: touch;
+}
+.footer_menu .footer_main_menu div{
+  width: 100vw;
+}
+
+.footer_menu .menu_content .footer_main_menu li, .main_tagging li, .main_meter li {
+    display: inline-block;
+    width: auto;
+    height: 2.09rem;
+    padding: 0 0.17rem;
+    color: #fff;
+    font-size: 0.65rem;
+}
+
+.footer_menu .li_active {
+    background: url('../image/footer_menu_active.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    margin-top: 0.1rem;
+}
+
+.main_tagging li, .main_meter li, .main_addnewdata li {
+    width: 3rem!important;
+    text-align: center;
+}
+
+.footer_menu .menu_show {
+    width: 3.2rem;
+    height: 3.2rem;
+    background: url('../image/footer_right.png');
+    background-size: 3.2rem 3.2rem;
+    background-repeat: no-repeat;
+}
+
+.footer_menu .menu_hide {
+    width: 1.05rem;
+    height: 0.95rem;
+    background: url('../image/footer_left.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    margin-right: 0.8rem;
+    margin-top: 0.65rem;
+    transform: rotate(1.2deg);
+}
+
+.footer_menu .menu_show_hide {
+    margin-left: -3.5rem;
+}
+
+.footer_menu .menu_hide {
+    display: none;
+}
+
+.main_tagging, .main_meter, .main_addnewdata {
+    margin-left: -21rem;
+    display: none;
+}
+
+.child_menu_show {
+    margin-left: 0%;
+    transition: 0.5s;
+}
+
+.child_menu_hide {
+    margin-left: -21rem;
+    transition: 0.5s;
+}
+
+.main_tagging:first-child, .main_meter:first-child {
+    height: 2rem;
+    line-height: 2rem;
+    border-radius: 0.2rem;
+}
+
+.main_tagging:first-child, .main_meter:first-child {
+    height: 2rem;
+    line-height: 2rem;
+    border-radius: 0.2rem;
+}
+
+
+/*更多*/
+
+.aui-popup {
+    z-index: 1004;
+}
+
+.aui-popup-bottom-left {
+    left: 8.5rem;
+}
+
+.aui-popup-bottom-left {
+    bottom: 4rem;
+}
+
+.aui-popup .aui-list .aui-list-item {
+    background-color: rgba(0, 60, 136, .5);
+    color: #fff;
+}
+
+.aui-popup .aui-popup-arrow {
+    background-image: -webkit-linear-gradient(45deg, rgba(0, 60, 136) 20%, rgba(0, 60, 136) 20%, transparent 50%);
+    background-image: linear-gradient(45deg, rgba(0, 60, 136)20%, rgba(0, 60, 136) 20%, transparent 50%);
+}
+
+
+/*图层选择*/
+
+.layer_box_mask {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.3);
+    z-index: 1006;
+    display: none;
+}
+
+.layer_box {
+    width: 10.05rem;
+    height: 100%;
+    position: absolute;
+    top: 0rem;
+    right: -10rem;
+    background-color: rgba(248, 250, 255, 1);
+    overflow: hidden;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+    z-index: 1110;
+    display: none;
+}
+
+.layer_box_show {
+    right: 0rem;
+    transition: 0.3s;
+}
+
+.layer_box_hide {
+    right: -10rem;
+    transition: 0.3s;
+}
+
+.layer_box .aui-row-border {
+    border-bottom: 3px solid #E4E6EA;
+    padding-bottom: 1.35rem;
+}
+
+.layer_box .aui-row:first-child {
+    position: relative;
+    padding-bottom: 0.5rem;
+}
+
+.layer_box .aui-iconfont {
+    width: 1rem;
+    height: 1rem;
+    padding-left: 0.16rem;
+    border-radius: 50%;
+    z-index: 1003;
+    background: #fff;
+}
+
+.layer_box .aui-iconfont.aui-icon-right {
+    color: #ccc;
+    background: transparent;
+}
+
+.layer_title {
+    font-size: 0.75rem;
+    color: #333333;
+    margin: 1rem 0 0.8rem 0.55rem;
+    font-weight: bold;
+}
+
+.layer_title:first-child {
+    margin-top: 1.5rem;
+}
+
+.small_title {
+    color: #666666;
+    font-size: 0.7rem;
+}
+
+.small_title1 {
+    color: #333;
+    font-size: 0.7rem;
+}
+
+.layer_box .title_icon {
+    width: 0.25rem;
+    height: 0.5rem;
+    background: url('../image/title_icon.png');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    margin-left: 1.2rem;
+    margin-top: 0.3rem;
+}
+
+.layer_title_active {
+    color: red;
+}
+
+.layer_2D_img, .layer_moon_img {
+    width: 4.3rem;
+    height: 2.6rem;
+    margin-bottom: 0.3rem;
+}
+
+.layer_2D_img {
+    background: url('../image/2D.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    margin-left: 0.5rem;
+}
+
+.layer_moon_img {
+    background: url('../image/moon.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    margin-left: 0.3rem;
+}
+
+.layer_moon_img_border {
+    border: 1px solid #6979F8;
+    border-radius: 0.3rem;
+}
+
+.layer_checked {
+    width: 0.8rem;
+    height: 0.7rem;
+    background: url('../image/layer_checked.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    position: absolute;
+    bottom: 0rem;
+}
+
+#layerchecked {
+    display: block;
+    right: 0.3rem!important;
+}
+
+#moonchecked {
+    display: none;
+    right: 0.4rem;
+}
+
+.layer_box .aui-switch {
+    top: 0.1rem;
+    width: 2rem;
+    height: 1rem;
+    background: #ccc;
+    border: 1px solid #ccc;
+}
+
+.layer_box .aui-switch:before {
+    width: 0.9rem;
+    height: 0.9rem;
+    background: #999;
+    left: 0rem;
+}
+
+.aui-switch.aui-checked:before {
+    left: 1.1rem!important;
+    background: #6979F8!important;
+}
+
+.layer_box .aui-switch.aui-checked {
+    border-color: #DFE3FF;
+    background-color: #DFE3FF;
+}
+
+
+/*定位*/
+
+.location_more_box {
+    position: absolute;
+    top: 16.1rem;
+    left: 5.8rem;
+    width: 6.5rem;
+    height: 2.85rem;
+    line-height: 2.85rem;
+    z-index: 1001;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0rem 0.2rem 0.4rem 0rem rgba(0, 0, 0, 0.08), 0rem 0rem 0.05rem 0rem rgba(0, 0, 0, 0.08);
+    border-radius: 2.5rem;
+    display: none;
+}
+
+.location_more_box div {
+    width: 100%;
+    height: 1.425rem;
+    line-height: 1.425rem;
+    font-size: 0.6rem;
+    text-align: center;
+    color: #0A2463;
+    font-weight: bold;
+}
+
+.new_add_pipe_box, .new_add_point_box {
+    position: absolute;
+    top: 16.1rem;
+    left: 7.7rem;
+    z-index: 1001;
+    display: none;
+}
+
+.new_add_pipe_box div, .new_add_point_box div {
+    width: 3.5rem;
+    height: 1.85rem;
+    line-height: 1.85rem;
+    font-size: 0.6rem;
+    text-align: center;
+    color: #0A2463;
+    font-weight: bold;
+    border-radius: 2.5rem;
+    background: rgba(255, 255, 255, 1)!important;
+    box-shadow: 0rem 0.2rem 0.4rem 0rem rgba(0, 0, 0, 0.08), 0rem 0rem 0.05rem 0rem rgba(0, 0, 0, 0.08);
+}
+
+.aui-mask.aui-mask-in {
+    z-index: 1001;
+}
+
+.aui-popup-content {
+    background: transparent;
+}
+
+#show_add_more_menu {
+    bottom: 17rem;
+    left: 8rem;
+}
+
+#show_add_more_menu.aui-popup-bottom-left .aui-popup-arrow {
+    left: 6.75rem;
+    right: 0;
+    top: 0.8rem;
+    margin-right: -0.3rem;
+    transform: rotate(223deg);
+}
+
+
+/*鹰眼图*/
+
+.ol-overviewmap {
+    left: .5em;
+    bottom: 8rem;
+}
+
+#show_meter_more_menu, #show_tagging_more_menu, #show_add_more_menu {
+    display: none;
+}
+
+
+/*测量中，长度的距离*/
+
+.lengthArea {
+    min-width: 7.5rem;
+    height: 2.5rem;
+    line-height: 2.1rem;
+    background: url('../image/measure_box.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    font-size: 0.6rem;
+    color: #7180F8;
+    text-align: center;
+    display: none;
+    padding: 0 0.3rem;
+}
+
+.lengthArea .icon {
+    width: 0.7rem;
+    height: 0.95rem;
+    background: url('../image/measure.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    display: inline-block;
+    margin: 0.6rem 0.3rem 0 0.6rem;
+}
+
+.themtice_more {
+    font-size: 0.6rem;
+    color: #6979F8;
+    margin-top: 1.6rem;
+}
+
+
+/*地图标注*/
+
+
+/*搜周边和导航*/
+
+.point_point_overlay {
+    width: 12rem;
+    position: absolute;
+    display: none;
+    z-index: 1005;
+    margin-left: 1rem;
+    margin-bottom: 1rem;
+}
+
+.point_point_overlay div {
+    float: left;
+    width: 3.5rem;
+    height: 1.9rem;
+    line-height: 1.9rem;
+    background: #fff;
+    box-shadow: 0rem 0.05rem 0.1rem 0rem rgba(10, 36, 99, 0.24), 0rem 0rem 0.4rem 0rem rgba(10, 36, 99, 0.08);
+    border-radius: 2.5rem;
+    font-size: 0.6rem;
+    color: #0A2463;
+    font-weight: bold;
+    text-align: center;
+}
+
+
+/*提交后台审核提示语*/
+
+.toast_box {
+    width: 9.5rem;
+    height: 2.85rem;
+    line-height: 2.85rem;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0rem 0.2rem 0.4rem 0rem rgba(0, 0, 0, 0.08), 0rem 0rem 0.05rem 0rem rgba(0, 0, 0, 0.08);
+    font-size: 0.6rem;
+    font-family: PingFangSC-Semibold, PingFang SC;
+    font-weight: 600;
+    color: rgba(10, 36, 99, 1);
+    font-weight: 600;
+    text-align: center;
+    position: absolute;
+    z-index: 1005;
+    border-radius: 2.5rem;
+    top: 18rem;
+    left: 4.5rem;
+    letter-spacing: 2px;
+    display: none;
+}
+
+.label_box {
+    width: 9.5rem;
+    min-height: 2.85rem;
+    line-height: 2.85rem;
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0rem 0.2rem 0.4rem 0rem rgba(0, 0, 0, 0.08), 0rem 0rem 0.05rem 0rem rgba(0, 0, 0, 0.08);
+    font-size: 0.6rem;
+    font-family: PingFangSC-Semibold, PingFang SC;
+    font-weight: 600;
+    color: rgba(10, 36, 99, 1);
+    font-weight: 600;
+    text-align: center;
+    position: absolute;
+    z-index: 1005;
+    border-radius: 2.5rem;
+    top: 18rem;
+    left: 4.5rem;
+    letter-spacing: 2px;
+    display: none;
+}

@@ -1,0 +1,1282 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>新增或修改组织机构页面</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/aui1.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/city/demo.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/city/ydui.css" />
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #FFF;
+        }
+
+        .overHidden {
+            overflow: hidden;
+        }
+
+        #wrap {
+            height: 100%;
+        }
+
+        .aui-bar-nav {
+            top: 0;
+            z-index: 3;
+            background-color: #fff;
+            color: #333333;
+            font-size: var(--fontsize9);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+        }
+
+        .aui-bar-nav .aui-btn .aui-iconfont {
+            color: #333333;
+            font-weight: 900;
+        }
+
+        .flex-con {
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .aui-list {
+            background-image: none;
+        }
+
+        .aui-list .aui-list-item-title {
+            font-size: var(--fontsize85);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #333333;
+        }
+
+        .aui-list .aui-list-item-text:first-child,
+        .aui-list .aui-list-item-text:last-child {
+            margin-bottom: 0;
+        }
+
+        .aui-list .aui-list-item-text {
+            font-size: var(--fontsize7);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+            margin-bottom: 0.65rem;
+        }
+
+        .aui-media-list .aui-list-item-inner {
+            padding: 0.75rem 0.75rem 0.75rem 0;
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+
+        .Title {
+            width: var(--width42);
+            display: inline-flex;
+            justify-content: flex-end;
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #333333;
+        }
+
+        .Text {
+            width: calc(100% - var(--width42) - 0.2rem);
+            display: inline-flex;
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+            height: auto;
+        }
+
+        input::-webkit-input-placeholder,
+        textarea::-webkit-input-placeholder {
+            color: #999999;
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+        }
+
+        .contactLi {
+            padding-bottom: 0.75rem !important;
+            padding-left: 0.6rem !important;
+        }
+
+        .contactLi:active {
+            background-color: transparent !important;
+        }
+
+        .contactLi .aui-media-list .aui-list-item-inner {
+            padding-right: 0.6rem !important;
+        }
+
+        .contactCard {
+            width: calc(100% - 0.6rem);
+            height: auto;
+            background-color: #ffffff;
+            box-shadow: 0rem 0.2rem 0.68rem 0rem rgba(0, 0, 0, 0.2);
+            border: 1px solid #fff;
+            border-radius: 0.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .contactCard:last-child {
+            margin-bottom: 0
+        }
+
+        .aui-card-list {
+            height: 100%;
+            margin-bottom: 0;
+        }
+
+        .aui-card-list-content {
+            height: 100%;
+            padding: 1.2rem 0.8rem;
+        }
+
+        .cardRow {
+            height: auto;
+            display: -webkit-box;
+            margin-bottom: 1.2rem;
+            font-size: var(--fontsize65);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+        }
+
+        .cardRow:last-child {
+            margin-bottom: 0;
+        }
+
+        .aui-col-xs-6,
+        .aui-col-xs-12 {
+            display: flex;
+        }
+
+        .rowTitle {
+            width: var(--width2);
+            display: inline-flex;
+            justify-content: flex-end;
+            color: #333333;
+        }
+
+        .rowText {
+            width: calc(100% - var(--width2) - 0.7rem);
+        }
+
+        .rowTitle-12 {
+            width: var(--width34);
+            display: inline-flex;
+            justify-content: flex-end;
+            color: #333333;
+        }
+
+        .rowText-12 {
+            width: calc(100% - var(--width34) - 0.2rem);
+            display: inline-flex;
+        }
+
+        .aui-input,
+        input[type="text"],
+        input[type="password"],
+        input[type="search"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="url"],
+        input[type="date"],
+        input[type="datetime-local"],
+        input[type="time"],
+        input[type="number"] {
+            height: inherit;
+            line-height: inherit !important;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #666666 !important;
+        }
+
+        .redDot {
+            color: #ff605f;
+        }
+
+        .dot {
+            color: transparent;
+        }
+
+        .aui-iconfont.aui-icon-right {
+            position: absolute;
+            right: 0.75rem;
+            font-size: var(--fontsize9);
+            color: #999999;
+            font-weight: 900;
+            pointer-events: none;
+        }
+
+        .aui-iconfont.aui-icon-close {
+            position: absolute;
+            right: 0.75rem;
+            font-size: var(--fontsize9);
+            color: #999999;
+            font-weight: 900;
+        }
+
+        .contactLi .aui-iconfont.aui-icon-right,
+        .contactLi .aui-iconfont.aui-icon-close {
+            right: 0;
+            font-size: var(--fontsize65);
+        }
+
+        .selectAreaText {
+            width: calc(100% - 0.9rem) !important;
+        }
+
+        .aui-list textarea {
+            margin: 0;
+            height: auto;
+            color: #666666;
+            font-size: var(--fontsize8) !important;
+            font-weight: normal;
+            letter-spacing: 0rem;
+            line-height: inherit;
+        }
+
+        #footer {
+            background-color: #f0f0f0;
+            padding: 0.63rem 1.88rem;
+        }
+
+        .sureOrgBtn {
+            background: #4f79e8;
+            color: #fff;
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0.08rem;
+            height: 2.2rem;
+            line-height: inherit;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5rem;
+        }
+
+        .contactLi textarea,
+        .contactLi input {
+            font-size: var(--fontsize65) !important;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #666666;
+        }
+
+        .contactLi input::-webkit-input-placeholder,
+        .contactLi textarea::-webkit-input-placeholder {
+            color: #999999;
+            font-size: var(--fontsize65);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+        }
+
+        .aui-btn {
+            padding: 0.3rem 0.4rem;
+            font-size: var(--fontsize65);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0.07rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .addBtn {
+            border-radius: 2rem;
+            border: solid 1px #4f79e8;
+            font-size: var(--fontsize6);
+            letter-spacing: 0.06rem;
+            color: #4f79e8;
+            background: transparent;
+            float: right;
+        }
+
+        .aui-media-list .contactLi .aui-list-item-inner {
+            align-items: center;
+        }
+
+        .contactLi .Text {
+            justify-content: flex-end;
+        }
+
+        .aui-card-list-footer {
+            justify-content: flex-end;
+        }
+
+        .selectBtn {
+            background-color: #4f79e8;
+            border-radius: 2rem;
+            color: #ffffff;
+            margin-right: 0.6rem;
+        }
+
+        .cancelBtn {
+            background-color: #fff;
+            border-radius: 2rem;
+            border: solid 1px #4f79e8;
+            color: #4f79e8;
+        }
+
+        .TextActive {
+            color: #666666;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="aui-content" id="content">
+        <ul class="aui-list aui-media-list">
+            <li class="aui-list-item aui-list-item-middle">
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-inner">
+                        <span class="redDot">*</span>
+                        <span class="Title">机构性质：</span>
+                        <span class="Text" id="nature" tapmode data-action="openNatureSelect">请选择机构性质</span>
+                        <span class="aui-iconfont aui-icon-right"></span>
+                    </div>
+                </div>
+            </li>
+
+            <li class="aui-list-item aui-list-item-middle">
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-inner">
+                        <span class="redDot">*</span>
+                        <span class="Title">上级：</span>
+                        <span class="Text" id="parent" tapmode data-action="selectParent">请选择上级</span>
+                        <span class="aui-iconfont aui-icon-right" tapmode data-action="selectParent"></span>
+                    </div>
+                </div>
+            </li>
+
+            <li class="aui-list-item aui-list-item-middle">
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-inner">
+                        <span class="redDot">*</span>
+                        <span class="Title">名称：</span>
+                        <span class="Text"><textarea   id="orgName" placeholder="请输入名称" rows="1"></textarea></span>
+                    </div>
+                </div>
+            </li>
+
+            <li class="aui-list-item aui-list-item-middle">
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-inner">
+                        <span class="redDot">*</span>
+                        <span class="Title">编号：</span>
+                        <span class="Text"><textarea   id="orgCode" placeholder="请输入编号" rows="1"></textarea></span>
+                    </div>
+                </div>
+            </li>
+
+            <li class="aui-list-item aui-list-item-middle">
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-inner">
+                        <span class="dot">*</span>
+                        <span class="Title">简称：</span>
+                        <span class="Text"><textarea   id="simpleName" placeholder="请输入简称" rows="1"></textarea></span>
+                    </div>
+                </div>
+            </li>
+
+            <li class="aui-list-item aui-list-item-middle">
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-inner">
+                        <span class="dot">*</span>
+                        <span class="Title">邮编：</span>
+                        <span class="Text"><input style="-webkit-user-select:auto;" contenteditable="true" type="tel" oninput = "value=value.replace(/[^\d]/g,'')" pattern="[0-9]*" id="zipCode" placeholder="请输入邮编" maxlength="6"/></span>
+                    </div>
+                </div>
+            </li>
+
+            <li class="aui-list-item aui-list-item-middle">
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-inner">
+                        <span class="dot">*</span>
+                        <span class="Title">区域：</span>
+                        <span class="Text"><span class="selectAreaText" id="area">请选择区域</span></span>
+                        <span class="aui-iconfont aui-icon-right" id="selectArea"></span>
+                        <span class="aui-iconfont aui-icon-close" id="clearArea" style="display:none" tapmode></span>
+                    </div>
+                </div>
+            </li>
+
+            <li class="aui-list-item aui-list-item-middle">
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-inner">
+                        <span class="dot">*</span>
+                        <span class="Title">地址：</span>
+                        <span class="Text"><textarea   id="address" placeholder="请输入地址" rows="1"></textarea></span>
+                    </div>
+                </div>
+            </li>
+
+            <li class="aui-list-item aui-list-item-middle">
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-inner">
+                        <span class="dot">*</span>
+                        <span class="Title">备注：</span>
+                        <span class="Text"><textarea id="remark" placeholder="请输入备注" rows="1"></textarea></span>
+                    </div>
+                </div>
+            </li>
+
+            <li class="aui-list-item aui-list-item-middle">
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-inner">
+                        <span class="redDot">*</span>
+                        <span class="Title">排序：</span>
+                        <span class="Text"><input type="tel" oninput = "value=value.replace(/[^\d]/g,'')" pattern="[0-9]*" maxlength="10" id="sort" placeholder="请输入排序" /></span>
+                    </div>
+                </div>
+            </li>
+
+            <li class="aui-list-item aui-list-item-middle contactLi">
+                <div class="aui-media-list-item-inner contactHeader">
+                    <div class="aui-list-item-inner">
+                        <span class="dot">*</span>
+                        <span class="Title">联系人：</span>
+                        <span class="Text"><div class="aui-btn addBtn" tapmode data-action="addContact">
+                            添加联系人
+                        </div></span>
+                    </div>
+                </div>
+                <!-- <div class="contactCard">
+                    <div class="aui-card-list">
+                        <div class="aui-card-list-content">
+                            <div class="cardRow">
+                                <div class="aui-col-xs-6">
+                                    <span class="rowTitle">姓名：</span>
+                                    <span class="rowText"><textarea id="remark" placeholder="请输入姓名" rows="1">张三</textarea></span>
+                                </div>
+                                <div class="aui-col-xs-6">
+                                    <span class="rowTitle">电话：</span>
+                                    <span class="rowText">023-41583369</span>
+                                </div>
+                            </div>
+                            <div class="cardRow">
+                                <div class="aui-col-xs-6">
+                                    <span class="rowTitle">手机：</span>
+                                    <span class="rowText">13125896834</span>
+                                </div>
+                                <div class="aui-col-xs-6">
+                                    <span class="rowTitle">邮箱：</span>
+                                    <span class="rowText">zhangsan@163.com</span>
+                                </div>
+                            </div>
+                            <div class="cardRow">
+                                <div class="aui-col-xs-6">
+                                    <span class="rowTitle">微信：</span>
+                                    <span class="rowText">zhangsan1121</span>
+                                </div>
+                                <div class="aui-col-xs-6">
+                                    <span class="rowTitle">钉钉：</span>
+                                    <span class="rowText">zhangsan0612</span>
+                                </div>
+                            </div>
+                            <div class="cardRow">
+                                <div class="aui-col-xs-6">
+                                    <span class="rowTitle">QQ：</span>
+                                    <span class="rowText">3511654846</span>
+                                </div>
+                                <div class="aui-col-xs-6">
+                                    <span class="rowTitle">排序：</span>
+                                    <span class="rowText">1</span>
+                                </div>
+                            </div>
+                            <div class="cardRow">
+                                <div class="aui-col-xs-12">
+                                    <span class="rowTitle-12">所在区域：</span>
+                                    <span class="rowText-12"><span class="selectAreaText" id="area{{value.id}}">请选择区域</span></span>
+                                    <span class="aui-iconfont aui-icon-right" id="selectArea{{value.id}}"></span>
+                                    <span class="aui-iconfont aui-icon-close" id="clearArea{{value.id}}" style="display:none" tapmode></span>
+                                </div>
+                            </div>
+                            <div class="cardRow">
+                                <div class="aui-col-xs-12">
+                                    <span class="rowTitle-12">详细地址：</span>
+                                    <span class="rowText-12">上清寺环球广场</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="aui-card-list-footer">
+                            <div class="aui-btn selectBtn" tapmode>
+                                选择联系人
+                            </div>
+                            <div class="aui-btn cancelBtn" tapmode>
+                                取消
+                            </div>
+                        </div>
+                    </div>
+                </div> -->
+            </li>
+        </ul>
+    </div>
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/diy/public.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/city/jquery.min.js"></script>
+<script type="text/javascript" src="../../../script/diy/template.js"></script>
+<script type="text/javascript" src="../../../script/city/ydui.citys.js"></script>
+<script type="text/javascript" src="../../../script/city/ydui.js"></script>
+<script type="text/template" id="contactCardTpl">
+    {{if hasId }} {{each items value i}}
+    <div class="contactCard" id="card{{value.id}}" hasId="{{value.id}}">
+        <div class="aui-card-list">
+            <div class="aui-card-list-content aui-border-b">
+                <div class="cardRow">
+                    <div class="aui-col-xs-6">
+                        <span class="redDot">*</span>
+                        <span class="rowTitle">姓名：</span>
+                        <span class="rowText"><textarea class="contactName" placeholder="请输入备注" rows="1">{{value.contactName}}</textarea></span>
+                    </div>
+                    <div class="aui-col-xs-6">
+                        <span class="redDot">*</span>
+                        <span class="rowTitle">电话：</span>
+                        <span class="rowText"><input class="tel" type="tel" oninput = "value=value.replace(/[^\d]/g,'')" pattern="[0-9]*" placeholder="请输入电话" value="{{value.tel}}"/></span>
+                    </div>
+                </div>
+                <div class="cardRow">
+                    <div class="aui-col-xs-6">
+                        <span class="dot">*</span>
+                        <span class="rowTitle">手机：</span>
+                        <span class="rowText"><input class="mobile" type="tel" oninput = "value=value.replace(/[^\d]/g,'')" pattern="[0-9]*" placeholder="请输入手机" value="{{value.mobile}}"/></span>
+                    </div>
+                    <div class="aui-col-xs-6">
+                        <span class="dot">*</span>
+                        <span class="rowTitle">邮箱：</span>
+                        <span class="rowText"><textarea class="email" placeholder="请输入邮箱" rows="1">{{value.email}}</textarea></span>
+                    </div>
+                </div>
+                <div class="cardRow">
+                    <div class="aui-col-xs-6">
+                        <span class="dot">*</span>
+                        <span class="rowTitle">微信：</span>
+                        <span class="rowText"><textarea class="wexin" placeholder="请输入微信" rows="1">{{value.wexin}}</textarea></span>
+                    </div>
+                    <div class="aui-col-xs-6">
+                        <span class="dot">*</span>
+                        <span class="rowTitle">钉钉：</span>
+                        <span class="rowText"><textarea class="dingding" placeholder="请输入钉钉" rows="1">{{value.dingding}}</textarea></span>
+                    </div>
+                </div>
+                <div class="cardRow">
+                    <div class="aui-col-xs-6">
+                        <span class="dot">*</span>
+                        <span class="rowTitle">QQ：</span>
+                        <span class="rowText"><input class="qq" type="tel" oninput = "value=value.replace(/[^\d]/g,'')" pattern="[0-9]*" placeholder="请输入QQ" value="{{value.qq}}"/></span>
+                    </div>
+                    <div class="aui-col-xs-6">
+                        <span class="dot">*</span>
+                        <span class="rowTitle">排序：</span>
+                        <span class="rowText"><input class="sort" type="tel" oninput = "value=value.replace(/[^\d]/g,'')" pattern="[0-9]*" maxlength="10" placeholder="请输入排序" value="{{value.sort}}"/></span>
+                    </div>
+                </div>
+                <div class="cardRow">
+                    <div class="aui-col-xs-12">
+                        <span class="dot">*</span>
+                        <span class="rowTitle-12">所在区域：</span>
+                        <span class="rowText-12"><span class="selectAreaText" provinceCode="{{value.provinceCode}}" cityCode="{{value.cityCode}}" districtCode="{{value.districtCode}}" id="area{{value.id}}">请选择区域</span></span>
+                        <span class="aui-iconfont aui-icon-right" id="selectArea{{value.id}}"></span>
+                        <span class="aui-iconfont aui-icon-close" id="clearArea{{value.id}}" style="display:none" tapmode></span>
+                    </div>
+                </div>
+                <div class="cardRow">
+                    <div class="aui-col-xs-12">
+                        <span class="dot">*</span>
+                        <span class="rowTitle-12">详细地址：</span>
+                        <span class="rowText-12"><textarea class="address" placeholder="请输入详细地址" rows="1">{{value.address}}</textarea></span>
+                    </div>
+                </div>
+            </div>
+            <div class="aui-card-list-footer">
+                <div class="aui-btn selectBtn" tapmode data-param='{{value}}' data-action="openSelectContact">
+                    选择联系人
+                </div>
+                <div class="aui-btn cancelBtn" tapmode data-action="cancel">
+                    取消
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/each}} {{else}}
+    <div class="contactCard" id="card{{index}}" noId="{{index}}">
+        <div class="aui-card-list">
+            <div class="aui-card-list-content aui-border-b">
+                <div class="cardRow">
+                    <div class="aui-col-xs-6">
+                        <span class="redDot">*</span>
+                        <span class="rowTitle">姓名：</span>
+                        <span class="rowText"><textarea class="contactName" placeholder="请输入姓名" rows="1"></textarea></span>
+                    </div>
+                    <div class="aui-col-xs-6">
+                        <span class="redDot">*</span>
+                        <span class="rowTitle">电话：</span>
+                        <span class="rowText"><input class="tel" type="tel" oninput = "value=value.replace(/[^\d]/g,'')" pattern="[0-9]*" placeholder="请输入电话"/></span>
+                    </div>
+                </div>
+                <div class="cardRow">
+                    <div class="aui-col-xs-6">
+                        <span class="dot">*</span>
+                        <span class="rowTitle">手机：</span>
+                        <span class="rowText"><input class="mobile" type="tel" oninput = "value=value.replace(/[^\d]/g,'')" pattern="[0-9]*" placeholder="请输入手机"/></span>
+                    </div>
+                    <div class="aui-col-xs-6">
+                        <span class="dot">*</span>
+                        <span class="rowTitle">邮箱：</span>
+                        <span class="rowText"><textarea class="email" placeholder="请输入邮箱" rows="1"></textarea></span>
+                    </div>
+                </div>
+                <div class="cardRow">
+                    <div class="aui-col-xs-6">
+                        <span class="dot">*</span>
+                        <span class="rowTitle">微信：</span>
+                        <span class="rowText"><textarea class="wexin" placeholder="请输入微信" rows="1"></textarea></span>
+                    </div>
+                    <div class="aui-col-xs-6">
+                        <span class="dot">*</span>
+                        <span class="rowTitle">钉钉：</span>
+                        <span class="rowText"><textarea class="dingding" placeholder="请输入钉钉" rows="1"></textarea></span>
+                    </div>
+                </div>
+                <div class="cardRow">
+                    <div class="aui-col-xs-6">
+                        <span class="dot">*</span>
+                        <span class="rowTitle">QQ：</span>
+                        <span class="rowText"><input class="qq" type="tel" oninput = "value=value.replace(/[^\d]/g,'')" pattern="[0-9]*" placeholder="请输入QQ"/></span>
+                    </div>
+                    <div class="aui-col-xs-6">
+                        <span class="dot">*</span>
+                        <span class="rowTitle">排序：</span>
+                        <span class="rowText"><input class="sort" type="tel" oninput = "value=value.replace(/[^\d]/g,'')" pattern="[0-9]*" maxlength="10" placeholder="请输入排序"/></span>
+                    </div>
+                </div>
+                <div class="cardRow">
+                    <div class="aui-col-xs-12">
+                        <span class="dot">*</span>
+                        <span class="rowTitle-12">所在区域：</span>
+                        <span class="rowText-12"><span class="selectAreaText" provinceCode="0" cityCode="0" districtCode="0" id="area{{index}}">请选择区域</span></span>
+                        <span class="aui-iconfont aui-icon-right" id="selectArea{{index}}"></span>
+                        <span class="aui-iconfont aui-icon-close" id="clearArea{{index}}" style="display:none" tapmode></span>
+                    </div>
+                </div>
+                <div class="cardRow">
+                    <div class="aui-col-xs-12">
+                        <span class="dot">*</span>
+                        <span class="rowTitle-12">详细地址：</span>
+                        <span class="rowText-12"><textarea class="address" placeholder="请输入详细地址" rows="1"></textarea></span>
+                    </div>
+                </div>
+            </div>
+            <div class="aui-card-list-footer">
+                <div class="aui-btn selectBtn" tapmode data-param='0' data-action="openSelectContact">
+                    选择联系人
+                </div>
+                <div class="aui-btn cancelBtn" tapmode data-action="cancel">
+                    取消
+                </div>
+            </div>
+        </div>
+    </div>
+    {{/if}}
+</script>
+<script type="text/javascript">
+    var text1 = document.getElementById("orgName");
+    var text2 = document.getElementById("orgCode");
+    var text3 = document.getElementById("simpleName");
+    var text4 = document.getElementById("address");
+    var text5 = document.getElementById("remark");
+    autoTextarea(text1);
+    autoTextarea(text2);
+    autoTextarea(text3);
+    autoTextarea(text4);
+    autoTextarea(text5);
+    var nature = null;
+    var parentOrgId = null;
+    var orgId;
+    var provinceCode = 0;
+    var cityCode = 0;
+    var districtCode = 0;
+    apiready = function() {
+        api.addEventListener({
+            name: 'changedFontSize'
+        }, function(ret, err) {
+            if (ret) {
+                changeFontSize();
+            }
+        });
+        api.parseTapmode();
+
+        type = api.pageParam.type;
+        natureData = api.pageParam.natureData;
+        allOrgs = api.pageParam.allOrgs;
+        if (type == 'add') {
+
+        } else {
+            orgId = api.pageParam.id;
+            setTimeout(function() {
+                getOrgById();
+            }, 300);
+        }
+
+        fnReady();
+
+        Top = null;
+
+        api.addEventListener({
+            name: 'lockScroll'
+        }, function(ret, err) {
+            if (ret) {
+                Top = $(window).scrollTop();
+                $('body').css("top", -Top + "px"); //给body一个负的top值；
+                $('body').addClass('overHidden'); //使网页不可滚动
+            }
+        });
+
+        api.addEventListener({
+            name: 'unlockSrcoll'
+        }, function(ret, err) {
+            if (ret) {
+                $(window).scrollTop(Top);
+                $('body').removeAttr("style"); //去掉内联样式
+                $('body').removeClass('overHidden'); //使网页恢复可滚动
+            }
+        });
+
+        api.addEventListener({
+            name: 'setNature' //监听机构性质确定，赋值
+        }, function(ret, err) {
+            if (ret) {
+                nature = ret.value.nature;
+                if (nature == 99) { //当机构性质为部门时，邮编、区域、地址不显示
+                    $('#address').parents('li').hide();
+                    $('#area').parents('li').hide();
+                    $('#zipCode').parents('li').hide();
+                } else {
+                    $('#address').parents('li').show();
+                    $('#area').parents('li').show();
+                    $('#zipCode').parents('li').show();
+                }
+                if (ret.value.natureName == "") {
+                    $('#nature').html('请选择机构性质');
+                    $('#nature').removeClass('TextActive');
+                } else {
+                    $('#nature').html(ret.value.natureName);
+                    $('#nature').addClass('TextActive');
+
+                }
+            }
+        });
+
+        api.addEventListener({
+            name: 'setOrgParent' //监听组织机构选择确定，赋值
+        }, function(ret, err) {
+            if (ret) {
+                parentOrgId = ret.value.selectedOrg.id;
+                if (ret.value.selectedOrg.orgName == "") {
+                    $('#parent').html('请选择上级');
+                    $('#parent').removeClass('TextActive');
+                } else {
+                    $('#parent').html(ret.value.selectedOrg.orgName);
+                    $('#parent').addClass('TextActive');
+                }
+            }
+        });
+
+        api.addEventListener({
+            name: 'choseContact'
+        }, function(ret, err) {
+            if (ret) {
+                // console.log(JSON.stringify(ret.value));
+                var contactData = ret.value.value;
+                contactData['id'] = contactData.contactId;
+                var contactId = contactData.contactId;
+                var cardId = ret.value.cardId;
+                var id = cardId.substring(4);
+                $('#' + cardId + '').removeAttr('noId');
+                $('#' + cardId + '').attr('hasId', contactId);
+                $('#' + cardId + '').find('.selectBtn').attr('data-param', JSON.stringify(contactData));
+                $('#' + cardId + '').find('.address').val(contactData.address);
+                $('#' + cardId + '').find('.contactName').val(contactData.contactName);
+                $('#' + cardId + '').find('.tel').val(contactData.tel);
+                $('#' + cardId + '').find('.mobile').val(contactData.mobile);
+                $('#' + cardId + '').find('.email').val(contactData.email);
+                $('#' + cardId + '').find('.qq').val(contactData.qq);
+                $('#' + cardId + '').find('.dingding').val(contactData.dingding);
+                $('#' + cardId + '').find('.wexin').val(contactData.wexin);
+                $('#' + cardId + '').find('.sort').val(contactData.sort);
+                $('#area' + id + '').attr('provinceCode', contactData.provinceCode);
+                $('#area' + id + '').attr('cityCode', contactData.cityCode);
+                $('#area' + id + '').attr('districtCode', contactData.districtCode);
+                $('#area' + id + '').attr('id', 'area' + contactId + '');
+                $('#clearArea' + id + '').attr('id', 'clearArea' + contactId + '');
+                $('#selectArea' + id + '').attr('id', 'selectArea' + contactId + '');
+                if (contactData.districtCode != 0) {
+                    getAreaNameByCode('#area' + contactId + '', '#clearArea' + contactId + '', '#selectArea' + contactId + '', contactData.districtCode);
+                } else if (contactData.cityCode != 0) {
+                    getAreaNameByCode('#area' + contactId + '', '#clearArea' + contactId + '', '#selectArea' + contactId + '', contactData.cityCode);
+                } else if (contactData.provinceCode != 0) {
+                    getAreaNameByCode('#area' + contactId + '', '#clearArea' + contactId + '', '#selectArea' + contactId + '', contactData.provinceCode);
+                } else {
+                    $('#area' + contactId + '').html('请选择区域');
+                    $('#area' + contactId + '').removeClass('TextActive');
+                    $('#area' + contactId + '').citySelect({});
+                }
+                $('#area' + contactId + '').on('click', function(event) {
+                    event.stopPropagation();
+                    $('#area' + contactId + '').citySelect('open');
+                });
+
+                $('#clearArea' + contactId + '').on('click', function(event) {
+                    $('#area' + contactId + '').html('请选择区域');
+                    $('#area' + contactId + '').removeClass('TextActive');
+                    $('#area' + contactId + '').citySelect('clear');
+                    $('#clearArea' + contactId + '').hide();
+                    $('#selectArea' + contactId + '').show();
+                });
+
+                $('#area' + contactId + '').on('done.ydui.cityselect', function(ret) {
+                    $('#area' + contactId + '').html(ret.provance.n + ' ' + ret.city.n + ' ' + ret.area.n);
+                    $('#area' + contactId + '').addClass('TextActive');
+                    $('#area' + contactId + '').attr('provinceCode', ret.provance.code);
+                    $('#area' + contactId + '').attr('cityCode', ret.city.code);
+                    $('#area' + contactId + '').attr('districtCode', ret.area.code);
+                    $('#clearArea' + contactId + '').show();
+                    $('#selectArea' + contactId + '').hide();
+                });
+                $('#' + cardId + '').attr('id', 'card'+contactId);
+            }
+        });
+
+        api.addEventListener({
+            name: 'clickSureBtn' //监听win页面点击确定按钮，传值到win页面
+        }, function(ret, err) {
+            if (ret) {
+                var orgType = 1;
+                if (nature == 99) {
+                    orgType = 2;
+                }
+                var AddContactArray = [];
+                var UpdateContactArray = [];
+                var contactIdArray = [];
+                var content = $('.contactLi .contactCard');
+                for (var i = 0; i < content.length; i++) {
+                    var OwnContactId = content.eq(i).attr("hasId");
+                    if (OwnContactId == undefined) {
+                        var orderBy = $(content[i]).find('.sort').val();
+                        var numId = content.eq(i).attr("noId");
+                        var tenantData = {
+                            "orgId": orgId,
+                            "provinceCode": $('#area' + numId + '').attr('provinceCode') == "0" ? 0 : parseInt($('#area' + numId + '').attr('provinceCode')),
+                            "cityCode": $('#area' + numId + '').attr('cityCode') == "0" ? 0 : parseInt($('#area' + numId + '').attr('cityCode')),
+                            "districtCode": $('#area' + numId + '').attr('districtCode') == "0" ? 0 : parseInt($('#area' + numId + '').attr('districtCode')),
+                            "address": $(content[i]).find('.address').val(),
+                            "contactName": $(content[i]).find('.contactName').val(),
+                            "tel": $(content[i]).find('.tel').val(),
+                            "mobile": $(content[i]).find('.mobile').val(),
+                            "email": $(content[i]).find('.email').val(),
+                            "qq": $(content[i]).find('.qq').val(),
+                            "dingding": $(content[i]).find('.dingding').val(),
+                            "wexin": $(content[i]).find('.wexin').val(),
+                            "sort": orderBy == null || orderBy == '' ? 0 : parseInt(orderBy),
+                        };
+                        AddContactArray.push(tenantData);
+                    } else {
+                        contactIdArray.push(parseInt(OwnContactId));
+                        var orderBy = $(content[i]).find('.t_orderby').val();
+                        var DataForUpdate = {
+                            "id": parseInt(OwnContactId),
+                            "oldOrgId": 0,
+                            "newOrgId": 0,
+                            "provinceCode": $('#area' + OwnContactId + '').attr('provinceCode') == "0" ? 0 : parseInt($('#area' + OwnContactId + '').attr('provinceCode')),
+                            "cityCode": $('#area' + OwnContactId + '').attr('cityCode') == "0" ? 0 : parseInt($('#area' + OwnContactId + '').attr('cityCode')),
+                            "districtCode": $('#area' + OwnContactId + '').attr('districtCode') == "0" ? 0 : parseInt($('#area' + OwnContactId + '').attr('districtCode')),
+                            "address": $(content[i]).find('.address').val(),
+                            "contactName": $(content[i]).find('.contactName').val(),
+                            "tel": $(content[i]).find('.tel').val(),
+                            "mobile": $(content[i]).find('.mobile').val(),
+                            "email": $(content[i]).find('.email').val(),
+                            "qq": $(content[i]).find('.qq').val(),
+                            "dingding": $(content[i]).find('.dingding').val(),
+                            "wexin": $(content[i]).find('.wexin').val(),
+                            "sort": orderBy == null || orderBy == '' ? 0 : parseInt(orderBy),
+                        };
+                        UpdateContactArray.push(DataForUpdate);
+                    }
+                };
+                var OrgDataForUpdate = {};
+                var OrgDataForAdd = {};
+                if (type == 'add') {
+                    OrgDataForAdd = {
+                        "parentId": parentOrgId,
+                        "nature": nature,
+                        "orgName": $("#orgName").val(),
+                        "orgCode": $("#orgCode").val(),
+                        "simpleName": $('#simpleName').val(),
+                        "orgType": orgType,
+                        "provinceCode": provinceCode,
+                        "cityCode": cityCode,
+                        "districtCode": districtCode,
+                        "address": $("#address").val(),
+                        "zipCode": $("#zipCode").val() == "" ? 0 : parseInt($("#zipCode").val()),
+                        "remark": $("#remark").val(),
+                        "sort": $('#sort').val() == "" ? 0 : parseInt($('#sort').val()),
+                        "orgagencyContactIds": contactIdArray,
+                    };
+                } else {
+                    OrgDataForUpdate = {
+                        "parentId": parentOrgId,
+                        "nature": nature,
+                        "orgName": $("#orgName").val(),
+                        "orgCode": $("#orgCode").val(),
+                        "simpleName": $('#simpleName').val(),
+                        "orgType": orgType,
+                        "provinceCode": provinceCode,
+                        "cityCode": cityCode,
+                        "districtCode": districtCode,
+                        "address": $("#address").val(),
+                        "zipCode": $("#zipCode").val() == "" ? 0 : parseInt($("#zipCode").val()),
+                        "remark": $("#remark").val(),
+                        "sort": $('#sort').val() == "" ? 0 : parseInt($('#sort').val()),
+                        "orgagencyContactIds": contactIdArray,
+                        "id": orgId,
+                    };
+                }
+                api.sendEvent({
+                    name: 'clickedSureBtn', //传值到win页面
+                    extra: {
+                        UpdateContactArray: UpdateContactArray,
+                        AddContactArray: AddContactArray,
+                        OrgDataForUpdate: OrgDataForUpdate,
+                        OrgDataForAdd: OrgDataForAdd,
+                    }
+                });
+            }
+        });
+
+    };
+
+    //当点击修改进入时，根据id获取组织机构数据页面显示默认值
+    function getOrgById() {
+        fnGet('services/app/Orgagency/GetOrgagencyById?Id=' + orgId + '', {}, false, function(ret, err) {
+            if (ret) {
+                if (ret.success) {
+                    var data = ret.result;
+                    parentOrgId = data.parentId;
+                    $('#orgName').val(data.orgName);
+                    $('#orgCode').val(data.orgCode);
+                    $('#simpleName').val(data.simpleName);
+                    if (data.zipCode != 0) {
+                        $('#zipCode').val(data.zipCode);
+                    }
+                    $('#sort').val(data.sort);
+                    $('#remark').val(data.remark);
+                    autoTextarea(text1);
+                    autoTextarea(text2);
+                    autoTextarea(text3);
+                    autoTextarea(text4);
+                    autoTextarea(text5);
+                    if (data.parentId == 0) {
+                        $('#parent').parents('li').hide(); //当机构为顶级时不显示上级
+                    }
+                    if (data.nature == 99) { //当机构性质为部门时，邮编、区域、地址不显示
+                        $('#address').parents('li').hide();
+                        $('#area').parents('li').hide();
+                        $('#zipCode').parents('li').hide();
+                    } else {
+                        $('#address').parents('li').show();
+                        $('#area').parents('li').show();
+                        $('#zipCode').parents('li').show();
+                        provinceCode = data.provinceCode;
+                        cityCode = data.cityCode;
+                        districtCode = data.districtCode;
+                        if (data.districtCode != 0) {
+                            getAreaNameByCode('#area', '#clearArea', '#selectArea', data.districtCode);
+                        } else if (data.cityCode != 0) {
+                            getAreaNameByCode('#area', '#clearArea', '#selectArea', data.cityCode);
+                        } else if (data.provinceCode != 0) {
+                            getAreaNameByCode('#area', '#clearArea', '#selectArea', data.provinceCode);
+                        } else {
+                            $target.html('请选择区域');
+                            $target.removeClass('TextActive');
+                            $target.citySelect({});
+                        }
+                    }
+                    for (var i = 0; i < natureData.length; i++) {
+                        if (natureData[i].value == data.nature) {
+                            $('#nature').html(natureData[i].name);
+                            $('#nature').addClass('TextActive');
+                            nature = data.nature;
+                        }
+                    };
+                    for (var i = 0; i < allOrgs.length; i++) {
+                        if (allOrgs[i].id == data.parentId) {
+                            $('#parent').html(allOrgs[i].orgName);
+                            $('#parent').addClass('TextActive');
+                        }
+                    };
+                    var contactData = ret.result.orgagencyContacts;
+                    for (m in contactData) {
+                        contactData[m].parentId = ret.result.parentId;
+                    }
+                    var list = {
+                        items: contactData,
+                        hasId: true
+                    };
+                    var str = template('contactCardTpl', list);
+                    $('.contactLi').append(str);
+                    operationDom();
+                    api.parseTapmode();
+                    fnReadyOpenWin();
+                    for (var i = 0; i < contactData.length; i++) {
+                        (function() {
+                            var id = contactData[i].id;
+                            var data = contactData[i];
+                            if (data.districtCode != 0) {
+                                getAreaNameByCode('#area' + id + '', '#clearArea' + id + '', '#selectArea' + id + '', data.districtCode);
+                            } else if (data.cityCode != 0) {
+                                getAreaNameByCode('#area' + id + '', '#clearArea' + id + '', '#selectArea' + id + '', data.cityCode);
+                            } else if (data.provinceCode != 0) {
+                                getAreaNameByCode('#area' + id + '', '#clearArea' + id + '', '#selectArea' + id + '', data.provinceCode);
+                            } else {
+                                $('#area' + id + '').html('请选择区域');
+                                $('#area' + id + '').removeClass('TextActive');
+                                $('#area' + id + '').citySelect({});
+                            }
+
+                            $('#area' + id + '').on('click', function(event) {
+                                event.stopPropagation();
+                                $('#area' + id + '').citySelect('open');
+                            });
+
+                            $('#clearArea' + id + '').on('click', function(event) {
+                                $('#area' + id + '').html('请选择区域');
+                                $('#area' + id + '').removeClass('TextActive');
+                                $('#area' + id + '').citySelect('clear');
+                                $('#clearArea' + id + '').hide();
+                                $('#selectArea' + id + '').show();
+                            });
+
+                            $('#area' + id + '').on('done.ydui.cityselect', function(ret) {
+                                $('#area' + id + '').html(ret.provance.n + ' ' + ret.city.n + ' ' + ret.area.n);
+                                $('#area' + id + '').addClass('TextActive');
+                                $('#area' + id + '').attr('provinceCode', ret.provance.code);
+                                $('#area' + id + '').attr('cityCode', ret.city.code);
+                                $('#area' + id + '').attr('districtCode', ret.area.code);
+                                $('#clearArea' + id + '').show();
+                                $('#selectArea' + id + '').hide();
+                            });
+                        })(i);
+                    }
+                }
+            }
+        })
+    }
+
+    //根据code返回省市区名字
+    function getAreaNameByCode(el1, el2, el3, code) { //el1为省市区文字显示区域，el2为清除按钮，el3为选择角标
+        fnGet('services/app/BaiduArea/GetBaiduAreaByCode?code=' + code + '', {}, false, function(ret, err) {
+            if (ret) {
+                if (ret.success) {
+                    var data = ret.result;
+                    var provinceName = data.provinceName;
+                    var cityName = data.cityName;
+                    var districtName = data.districtName;
+                    if (provinceName == null) {
+                        provinceName = '';
+                    }
+                    if (cityName == null) {
+                        cityName = '';
+                    }
+                    if (districtName == null) {
+                        districtName = '';
+                    }
+                    $(el2).show();
+                    $(el3).hide();
+                    $(el1).html(provinceName + ' ' + cityName + ' ' + districtName);
+                    $(el1).addClass('TextActive');
+                    $(el1).citySelect({
+                        provance: {
+                            n: provinceName,
+                            code: data.provinceCode
+                        },
+                        city: {
+                            n: cityName,
+                            code: data.cityCode
+                        },
+                        area: {
+                            n: districtName,
+                            code: data.districtCode
+                        }
+                    });
+                    $(el1).citySelect('change',{
+                        provance: {
+                            n: provinceName,
+                            code: data.provinceCode
+                        },
+                        city: {
+                            n: cityName,
+                            code: data.cityCode
+                        },
+                        area: {
+                            n: districtName,
+                            code: data.districtCode
+                        }
+                    });
+                }
+            }
+        })
+    }
+
+    //省市区选择器
+    var $target = $('#area');
+    var $clear = $('#clearArea');
+
+    $target.on('click', function(event) { //打开省市区选择器
+        event.stopPropagation();
+        $target.citySelect('open');
+    });
+
+    $clear.on('click', function(event) { //清除省市区信息
+        $target.html('请选择区域');
+        $target.removeClass('TextActive')
+        $target.citySelect('clear');
+        $('#clearArea').hide();
+        $('#selectArea').show();
+    });
+
+    $target.on('done.ydui.cityselect', function(ret) { //确定省市区后赋值
+        $(this).html(ret.provance.n + ' ' + ret.city.n + ' ' + ret.area.n);
+        $(this).addClass('TextActive')
+        provinceCode = ret.provance.code;
+        cityCode = ret.city.code;
+        districtCode = ret.area.code;
+        $('#clearArea').show();
+        $('#selectArea').hide();
+    });
+    //省市区选择器结束
+
+    var actionList = {
+        'selectParent': function() { //打开组织机构选择页面
+            api.openWin({
+                name: 'orgSelect',
+                url: './orgSelect.html',
+                pageParam: {
+                    orgId: parentOrgId,
+                    from: 'orgAddOrUpdate'
+                }
+            });
+        },
+        'openNatureSelect': function() { //打开机构性质选择页面
+            var activeOne = $('#nature').html();
+            api.openFrame({
+                name: 'orgNature_frm',
+                url: './orgNature_frm.html',
+                rect: {
+                    x: 0,
+                    y: 0,
+                    w: 'auto',
+                    h: 'auto'
+                },
+                pageParam: {
+                    from: 'addOrUpdate',
+                    activeOne: activeOne
+                },
+                bounces: false,
+                bgColor: 'rgba(0,0,0,0.38)',
+            });
+        },
+        'addContact': function() { //点击添加联系人，添加新的联系人卡片
+            var card = $('.contactLi .contactCard');
+            var num = card.length;
+            for (var i = 0; i < card.length; i++) {
+                if ($(card[i]).attr('hasId') != undefined) {
+                    --num;
+                }
+            }
+            var list = {
+                items: [],
+                hasId: false,
+                index: num
+            }
+            var str = template('contactCardTpl', list);
+            $('.contactLi .contactHeader').after(str);
+            operationDom();
+            api.parseTapmode();
+            fnReadyOpenWin();
+            $('#area' + num + '').on('click', function(event) {
+                event.stopPropagation();
+                $('#area' + num + '').citySelect('open');
+            });
+
+            $('#clearArea' + num + '').on('click', function(event) {
+                $('#area' + num + '').html('请选择区域');
+                $('#area' + num + '').removeClass('TextActive');
+                $('#area' + num + '').citySelect('clear');
+                $('#clearArea' + num + '').hide();
+                $('#selectArea' + num + '').show();
+            });
+
+            $('#area' + num + '').on('done.ydui.cityselect', function(ret) {
+                $('#area' + num + '').html(ret.provance.n + ' ' + ret.city.n + ' ' + ret.area.n);
+                $('#area' + num + '').addClass('TextActive');
+                $('#area' + num + '').attr('provinceCode', ret.provance.code);
+                $('#area' + num + '').attr('cityCode', ret.city.code);
+                $('#area' + num + '').attr('districtCode', ret.area.code);
+                $('#clearArea' + num + '').show();
+                $('#selectArea' + num + '').hide();
+            });
+        },
+        'openSelectContact': function() {
+            var cardId = $(this).parents('.contactCard').attr('id');
+            var data = {};
+            if ($(this).attr('data-param') != '0') {
+                data = JSON.parse($(this).attr('data-param'));
+            }
+
+            api.openWin({
+                name: 'ChoiceContact',
+                url: '../contact/ChoiceContact.html',
+                pageParam: {
+                    data: data,
+                    cardId: cardId
+                }
+            });
+
+        },
+        'cancel': function() {
+            var that = this
+            setTimeout(function() {
+                $(that).parents('.contactCard').remove();
+            }, 100);
+        },
+    }
+</script>
+
+</html>

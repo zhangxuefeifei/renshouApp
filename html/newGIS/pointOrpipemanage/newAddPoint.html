@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>新增管点</title>
+    <link rel="stylesheet" href="../../../css/api.css">
+    <link rel="stylesheet" href="../../../css/aui.css">
+    <link rel="stylesheet" href="../../../css/rolldate.css">
+    <link rel="stylesheet" href="../css/ol.css">
+    <link rel="stylesheet" href="../css/dialogAlert.css">
+    <link rel="stylesheet" href="../css/newAddPointOrPipeLine.css">
+    <style rel="stylesheet">
+
+    </style>
+
+</head>
+
+<body class="flex-box" id='flex-box'>
+    <header class="aui-bar aui-bar-nav" id='header'>
+        <div class="aui-pull-left aui-btn aui-margin-l-10" onclick="closeWin()" tapmode>
+            <span class="aui-iconfont aui-icon-left"></span>
+        </div>
+        <div class="aui-title">新增管点</div>
+
+    </header>
+    <div class="map" id="map"></div>
+    <!--条件 -->
+    <div class="condition_other_box">
+      <div class="goup aui-pull-right" tapmode onclick="goUPorDown(this)">
+          <i class="aui-iconfont aui-icon-top"></i>
+      </div>
+      <div class="condition_box aui-margin-t-15">
+        <ul class="aui-list aui-form-list aui-padded-l-10">
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        <span class="dot_red"></span>管点编号
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input type="text" placeholder="请输入管点编号" id='number'>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        <span class="dot_red"></span>经度
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input type="text" placeholder="请输入经度" id='lon' readonly>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        <span class="dot_red"></span>纬度
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input type="text" placeholder="请输入纬度" id='lat' readonly>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        <span class="dot_red"></span>设备类型
+                    </div>
+                    <div class="aui-list-item-input">
+                        <select id='pointtype' required>
+                     </select>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        <span class="dot_red"></span>高程
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input type="text" placeholder="请输入高程" id='pointElevation'>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        <span class="dot_red"></span>埋深
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input type="text" placeholder="请输入埋深" id='pointDeep'>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        <span class="dot_red"></span>埋设日期
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input type="text" placeholder="请选择埋设日期" id='buildTime'>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        <span class="dot_red"></span>状态类别:
+                    </div>
+                    <div class="aui-list-item-input">
+                        <select id='stateClass'  required>
+                        <option value="">请选择状态类别</option>
+                   </select>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        <span class="dot"></span>所属道路
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input type="text" placeholder="请输入所属道路" id='location'>
+                    </div>
+                </div>
+            </li>
+
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        <span class="dot"></span>材料厂商
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input type="text" placeholder="请输入材料厂商" id='firm'>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        <span class="dot_red"></span>型号
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input type="text" placeholder="请输入型号" id='unitType'>
+                    </div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-label">
+                        <span class="dot"></span>所属单位
+                    </div>
+                    <div class="aui-list-item-input">
+                        <input type="text" placeholder="请输入所属单位" id='buildUnit'>
+                    </div>
+                </div>
+            </li>
+
+        </ul>
+    </div>
+    </div>
+    <div class="btns_box">
+        <div class="btn aui-margin-r-5" tapmode onclick="clearContent()">清空</div>
+        <div class="btn btn-active  aui-margin-l-5" tapmode onclick="getReqSearch()">提交</div>
+    </div>
+
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/moment.js"></script>
+<script type="text/javascript" src="../../../script/rolldateMin.js"></script>
+<script type="text/javascript" src="../script/ol-debug.js"></script>
+<script type="text/javascript" src="../script/base64.js"></script>
+<!-- 公共方法 -->
+<script type="text/javascript" src="../script/common.js"></script>
+<!-- 初始化地图 -->
+<script type="text/javascript" src="../script/initmap.js"></script>
+<!-- 添加图层js,管点管线等操作  -->
+<script type="text/javascript" src="../script/addordeletelayer.js"></script>
+
+<script type="text/javascript">
+    var isCloseWin = true;
+    var WKT = null;
+    apiready = function() {
+        // 页面初始化，沉浸式等
+        initWindow();
+        // 初始化地图
+        initpointMap();
+        initData();
+        // 设备类型
+        searchAllClass('PointName','#pointtype');
+        // 状态类别
+        searchStateClass('#stateClass');
+        initTime();
+        // 图标移动后获取最新的坐标，然后请求接口重新获取编号
+        api.addEventListener({
+            name: 'newCoordinate'
+        }, function(ret, err){
+            if( ret ){
+              var newlon =parseFloat(ret.value.lon);
+              var newlat= parseFloat(ret.value.lat);
+              pointOrPipemap.getView().setCenter([newlon, newlat]);
+              $('#lon').val(newlon.toFixed(5));
+              $('#lat').val(newlat.toFixed(5));
+              // 修改坐标和wkt
+              addFeatureToPage(newlon,newlat);
+            }
+        });
+    }
+
+
+    // 关闭窗口
+    function closeWin() {
+      dialogAlert({
+          title: '提示',
+          content: '确认退出新增吗?',
+          buttons: ['确定', '取消'],
+      }, function(ret) {
+          if (ret.buttonIndex == 1) {
+            removeAddLayer('newPointLayer',8,pointOrPipemap);
+            sendEvent();
+            api.closeWin();
+          }
+      });
+    }
+
+    function initData() {
+      //添加管点图层
+     addOrDeletePoint('add', 18,true,pointOrPipemap);
+        $('#lon').val(api.pageParam.lon);
+        $('#lat').val(api.pageParam.lat);
+        $('#number').val(api.pageParam.number);
+        var lon = parseFloat(api.pageParam.lon);
+        var lat = parseFloat(api.pageParam.lat);
+           addFeatureToPage(lon,lat);
+    }
+    // 添加图标
+    var newPointLayer = new ol.layer.Vector({
+        source: new ol.source.Vector()
+    });
+    function addFeatureToPage(lon,lat){
+       if(newPointLayer!=null){
+         newPointLayer.getSource().clear();
+         removeAddLayer('newPointLayer',18,pointOrPipemap);
+       }
+      pointOrPipemap.getView().setCenter([lon, lat]);
+      newPointLayer.set('name','newPointLayer');
+      pointOrPipemap.addLayer(newPointLayer);
+      // 创建一个7边边形,并设置好图标在地图上的位置
+      var feature = new ol.Feature({
+          geometry: new ol.geom.Point([lon, lat])
+      });
+      // 为特点设置样式
+      feature.setStyle(new ol.style.Style({
+        image: new ol.style.Icon({
+            src: '../image/location.png'
+        })
+      }));
+      // 添加到vectorLayer层中
+      newPointLayer.getSource().addFeature(feature);
+      WKT = new ol.format.WKT().writeFeature(feature);
+            // 添加图标移动功能
+        addMoveInteraction(pointOrPipemap);
+    }
+
+
+
+    // 清空
+    function clearContent() {
+        $('#pointtype').val(''); // 设备类型
+        $('#pointElevation').val(''); //高程
+        $('#pointDeep').val(''); //设备埋深
+        $('#location').val(''); //所属道路
+        $('#buildTime').val(''); //埋设时间
+        $('#firm').val(''); //材料厂商
+        $('#buildUnit').val(''); //所属单位
+        $('#unitType').val(''); //型号
+        $('#stateClass').val(''); //状态类别
+    }
+    // 搜索
+    function getReqSearch() {
+      if($('#pointtype').val() == ''){
+        api.toast({
+            msg: '设备类型不能为空',
+            duration: 2000,
+            location: 'bottom'
+        });
+        return false;
+      }
+      if($('#pointElevation').val() == ''){
+        api.toast({
+            msg: '高程不能为空',
+            duration: 2000,
+            location: 'bottom'
+        });
+        return false;
+      }
+      if($('#pointDeep').val() == ''){
+        api.toast({
+            msg: '埋深不能为空',
+            duration: 2000,
+            location: 'bottom'
+        });
+        return false;
+      }
+      if($('#buildTime').val() == ''){
+        api.toast({
+            msg: '埋设日期不能为空',
+            duration: 2000,
+            location: 'bottom'
+        });
+        return false;
+      }
+      if($('#stateClass').val() == ''){
+        api.toast({
+            msg: '状态类别不能为空',
+            duration: 2000,
+            location: 'bottom'
+        });
+        return false;
+      }
+      if($('#unitType').val() == ''){
+        api.toast({
+            msg: '型号不能为空',
+            duration: 2000,
+            location: 'bottom'
+        });
+        return false;
+      }
+
+        var body = {
+          body:JSON.stringify({
+              number: $('#number').val(),
+              wkt: WKT,
+              pointName: $('#pointtype').val(),
+              pointElevation:removeBblankSpace($('#pointElevation').val()),
+              pointDeep: removeBblankSpace($('#pointDeep').val()),
+              location: $('#location').val(),
+              buildTime: $('#buildTime').val(),
+              firm: $('#firm').val(),
+              buildUnit: $('#buildUnit').val(),
+              unitType:removeBblankSpace($('#unitType').val()),
+              stateClass: $('#stateClass').val(),
+          })
+        }
+       addNewPoint(body,function(ret) {
+         api.sendEvent({
+             name: 'submitAudit',
+         });
+           api.closeWin();
+           removeAddLayer('newPointLayer',8,pointOrPipemap);
+       });
+    }
+
+    // 放大条件框
+    function goUPorDown(that) {
+        if ($(that).parent().hasClass('condition_other_box_up')) {
+            $(that).parent().removeClass('condition_other_box_up').addClass('condition_other_box_down');
+            $(that).siblings().removeClass('condition_box_up').addClass('condition_box_down');
+        } else {
+            $(that).parent().removeClass('condition_other_box_down').addClass('condition_other_box_up');
+            $(that).siblings().removeClass('condition_box_down').addClass('condition_box_up');
+        }
+    }
+
+
+    // 时间初始化
+    function initTime() {
+        new rolldate.Date({
+            el: "#buildTime",
+            format: "YYYY-MM-DD",
+            beginYear: 2000,
+            endYear: 2100,
+            theme: "blue",
+            tapBefore: function(el) {
+                // 插件开始触发
+            },
+            moveEnd: function(el, iscroll) {
+                // 滚动结束
+            },
+            confirmBefore: function(el, date) {
+                // 确定按钮触发
+
+            },
+            confirmEnd: function(el, date) {
+                // 插件运行结束
+            }
+        });
+    }
+</script>
+
+</html>

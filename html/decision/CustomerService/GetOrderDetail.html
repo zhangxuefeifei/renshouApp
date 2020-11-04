@@ -1,0 +1,572 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>客户工单钻取页面</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/aui1.css" />
+    <link rel=stylesheet type=text/css href=../../../css/rolldate.css />
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #FFF;
+            -webkit-box-orient: vertical;
+            -webkit-flex-flow: column;
+            flex-flow: column;
+            display: flex;
+            overflow-x: hidden;
+        }
+
+        .aui-bar-nav {
+            top: 0;
+            z-index: 1;
+            background-color: #0c9ff4;
+            color: #FFF;
+            font-size: var(--fontsize9);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+        }
+
+        .aui-bar-nav .aui-btn .aui-iconfont {
+            color: #FFF;
+            font-weight: 900;
+        }
+
+        .aui-tab {
+            width: 100%;
+            border-bottom: solid 0.03rem #e6e6e6;
+        }
+
+        .aui-tab-item {
+            font-size: var(--fontsize7);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0vw;
+            color: #333333;
+        }
+
+        .aui-tab-item.aui-active {
+            border-bottom: 0.05rem solid #0c9ff4;
+        }
+
+        .aui-tab-item.aui-active,
+        .aui-tab-item.aui-active .aui-iconfont {
+            color: #0c9ff4;
+        }
+
+        .aui-tab-item .aui-iconfont {
+            color: #999999;
+            font-weight: 900;
+            margin-left: 0.15rem;
+        }
+
+        .aui-card-list-header {
+            padding: 4.13vw 3.2vw;
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0vw;
+            color: #262626;
+        }
+
+        .timeIcon {
+            width: 4.27vw;
+            height: 4.27vw;
+            background-image: url('../../../image/decision/time.png');
+            background-size: 100% 100%;
+        }
+
+        .aui-card-list-header input {
+            width: 74.67vw;
+            height: 7.73vw;
+            border-radius: 0.4vw;
+            border: solid 0.13vw #dcdcdc;
+            font-size: var(--fontsize7);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0.4vw;
+            color: #262626;
+            padding: 2vw 3.33vw;
+        }
+
+        .downArrow {
+            width: 2.93vw;
+            height: 1.6vw;
+            position: absolute;
+            top: 7.2vw;
+            right: 6.27vw;
+            background-image: url('../../../image/decision/downArrow.png');
+            background-size: 100% 100%;
+        }
+
+        .close {
+            width: 3.0vw;
+            height: 3.0vw;
+            position: absolute;
+            top: 6.5vw;
+            right: 8.27vw;
+            background-image: url('../../../image/message_frame/close2.png');
+            background-size: 100% 100%;
+        }
+
+        section {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tab_display {
+            display: none;
+        }
+        /*时间外边框*/
+
+        .aui-card-list {
+            margin-bottom: 0;
+        }
+        /*echart*/
+        /*图标外面边框*/
+
+        .Tab_content {
+            background: #F0F0F0;
+        }
+
+        .echartMarigin {
+            width: 93.6vw;
+            height: 100%;
+            background-color: #ffffff;
+            border-radius: 1.33vw;
+            border: solid 1px #ffffff;
+            margin: 3vw auto;
+        }
+
+        .tableechartMarigin {
+            width: 93.6vw;
+            height: 100vw;
+            background-color: #ffffff;
+            border-radius: 1.33vw;
+            border: solid 1px #ffffff;
+            margin: 3vw auto;
+        }
+
+        .echartMarigin .aui-col-xs-6 {
+            height: 10vw;
+            line-height: 10vw;
+        }
+
+        .span_border_l {
+            border-left: 3px solid #0c9ff4;
+            margin-left: 0.75rem;
+            margin-right: 0.3rem;
+        }
+
+        .echarts_title {
+            font-family: PingFang-SC-Medium;
+            font-size: var(--fontsize7);
+            color: #0c9ff4;
+        }
+
+        .noData {
+            width: 100%;
+            height: 60vw;
+            line-height: 53vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--fontsize7);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0vw;
+            color: #0c9ff4;
+            text-align: cnt;
+            text-align: center;
+        }
+        /*tab2*/
+
+        .Table_Title {
+            height: 10vw;
+            line-height: 10vw;
+            border-bottom: 1 solid #FDFAFA;
+        }
+
+        .Table_Title span {
+            font-family: MicrosoftYaHei;
+            font-size: var(--fontsize7);
+            color: #333333;
+            font-weight: 800;
+        }
+
+        .Table_Content {
+            height: 8vw;
+            line-height: 8vw;
+        }
+
+        .Table_Content span {
+            font-family: MicrosoftYaHei;
+            font-size: var(--fontsize7);
+            color: #333333;
+        }
+
+        .Content_table {
+            height: 100vw!important;
+            overflow: scroll;
+        }
+
+        .Content_table .aui-col-xs-4,
+        .Table_Content .aui-col-xs-4 {
+            text-align: center;
+        }
+        /*顶部滚动*/
+
+        #Top_tab {
+            width: 100%;
+            overflow: hidden;
+            height: 12.2vw;
+        }
+
+        .Top_tab {
+            width: 85%;
+            height: 12.2vw;
+            border-bottom: none;
+            overflow-x: scroll!important;
+            -webkit-overflow-scrolling: touch;
+            -webkit-align-self: auto;
+            align-self: auto;
+            white-space: nowrap;
+            float: left;
+            padding-left: 0.75rem;
+        }
+
+        .slide-item {
+            display: inline-block;
+            font-size: var(--fontsize7);
+            height: 12.2vw;
+            line-height: 12.2vw;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0vw;
+            color: #333333;
+            min-width: 20vw;
+            text-align: center;
+        }
+
+        .tab_active {
+            min-width: 20vw;
+            height: 12.2vw;
+            line-height: 12.2vw;
+            color: #0c9ff4;
+            border-bottom: 1px solid #e6e6e6!important;
+        }
+
+        .moreIcon {
+            width: 10%;
+            height: 2.2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .moreIcon img {
+            width: 3.87vw;
+            height: 3.33vw;
+        }
+
+        .Table_Title .aui-col-xs-4 {
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav" id="header">
+        <div class="aui-pull-left aui-btn" tapmode data-action='back'>
+            <span class="aui-iconfont aui-icon-left"></span>
+        </div>
+        <div class="aui-title">客户工单钻取</div>
+    </header>
+    <div id="Top_tab">
+        <div class="Top_tab" id="tab_scroll">
+
+        </div>
+        <div class="moreIcon" tapmode data-action="chooseParent">
+            <img src="../../../image/decision/more.png">
+        </div>
+    </div>
+    <section class='Tab_content'>
+        <div class="echartMarigin">
+
+            <div id="tabEchart" style="width:100%;">
+            </div>
+            <div class="noData aui-show">
+                暂无数据！
+            </div>
+        </div>
+        <div class="tableechartMarigin" id="tabTableDemo">
+            <div class="Content_table">
+                <div class="aui-row Table_Title">
+                    <div class="aui-col-xs-4"><span>工单类别</span></div>
+                    <div class="aui-col-xs-4"><span>工单数量</span></div>
+                    <div class="aui-col-xs-4"><span>占比</span></div>
+                    <div class="aui-col-xs-4 aui-show">暂无数据！</div>
+                </div>
+            </div>
+        </div>
+
+
+    </section>
+
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/diy/public.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/aui-tab.js"></script>
+<script type="text/javascript" src="../../../script/rolldate.js"></script>
+<script type="text/javascript" src="../../../script/echarts.min.js"></script>
+<script type="text/javascript" src="../../../script/diy/template.js"></script>
+<script type="text/javascript" src="../../../script/CustomerService.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/moment.js"></script>
+<script type="text/template" id='tabScrollList'>
+    {{each list value i}}
+    <div class="slide-item" data-action="Tab" data-value='{{value}}'>
+        {{value}}
+    </div>
+    {{/each}}
+</script>
+<script type="text/template" id='tabTableList'>
+    <div class="Content_table">
+        <div class="aui-row Table_Title">
+            <div class="aui-col-xs-4"><span>工单类别</span></div>
+            <div class="aui-col-xs-4"><span>工单数量</span></div>
+            <div class="aui-col-xs-4"><span>占比</span></div>
+        </div>
+        {{each list value i}}
+        <div class="aui-row Table_Content">
+            <div class="aui-col-xs-4">{{value.name}}</div>
+            <div class="aui-col-xs-4">{{value.value}}</div>
+            <div class="aui-col-xs-4">{{value.ratio}}</div>
+        </div>
+        {{/each}}
+    </div>
+
+
+</script>
+<script type="text/javascript">
+    var Time = "";
+    var param;
+    var typeName;
+    var departNames;
+    document.body.addEventListener('touchstart', function() {});
+    apiready = function() {
+        api.addEventListener({
+            name: 'changedFontSize'
+        }, function(ret, err) {
+            if (ret) {
+                changeFontSize();
+            }
+        });
+        api.parseTapmode();
+        var header = $api.byId('header');
+        // 实现沉浸式状态栏效果
+        $api.fixStatusBar(header);
+        headerH = $api.offset(header).h;
+        fnReady();
+        param = JSON.parse(api.pageParam.name);
+        Init();
+        api.addEventListener({
+            name: 'changedParent'
+        }, function(ret, err) {
+            typeName = ret.value.parent;
+            var tabs = $('.slide-item');
+            for (var i = 0; i < tabs.length; i++) {
+                var Name = $(tabs[i]).attr('data-value');
+                if (typeName == Name) {
+                    $(tabs[i]).addClass('tab_active');
+                    $(tabs[i]).siblings().removeClass('tab_active');
+                }
+            }
+            getTableDatas(typeName, Time);
+        });
+    };
+
+    function Init() {
+        if (param != null) {
+            Time = param.date;
+            typeName = '';
+            getEchartsDatas(typeName, Time);
+        } else {
+            api.toast({
+                msg: '暂无数据！',
+                duration: 2000,
+                location: 'bottom'
+            });
+
+        }
+    }
+
+    // 单击
+    operationDom();
+    var actionList = {
+        'back': function() {
+            api.closeWin();
+        },
+        'Tab': function() {
+            $(this).addClass('tab_active');
+            $(this).siblings().removeClass('tab_active');
+            typeName = $(this).attr('data-value');
+            getTableDatas(typeName, Time);
+
+        },
+        'chooseParent': function() {
+            api.openFrame({
+                name: 'chooseParent_frm',
+                url: '../chooseParent_frm.html',
+                rect: {
+                    x: 0,
+                    y: 0,
+                    w: 'auto',
+                    h: 'auto'
+                },
+                pageParam: {
+                    nameData: departNames,
+                    activeOne: typeName
+                },
+                bounces: false,
+                bgColor: 'rgba(0,0,0,0.38)',
+            });
+
+        }
+    }
+
+    function getEchartsDatas(typeName, Time) {
+        var url = 'services/Report/CustomerCenter/GetOrderDetail';
+        if (Time != "") {
+            url = url + '?date=' + Time + '&departName=' + typeName;
+        } else {
+            var data = moment().format('YYYY-MM-DD');
+            url = url + '?date=' + data + '&departName=' + typeName;
+        }
+        fnGet(url, {}, false, function(ret, err) {
+            if (ret) {
+                if (ret.success && ret.result != null) {
+                    $('#tabEchart').removeClass('aui-hide').addClass('aui-show');
+                    $('#tabEchart').siblings('.noData').removeClass('aui-show').addClass('aui-hide');
+                    // 顶部切换
+                    departNames = ret.result.nameList;
+                    var data = {
+                        list: ret.result.nameList
+                    };
+                    var str = template('tabScrollList', data);
+                    $('#tab_scroll').append(str);
+                    $('.slide-item').eq(0).addClass('tab_active');
+                    typeName = $('.slide-item').eq(0).attr('data-value');
+                    operationDom();
+                    // 表格数据
+                    if (ret.result.tableObj != null) {
+                        var datas = {
+                            list: ret.result.tableObj.dataList
+                        };
+                        $('#tabTableDemo').html('');
+                        var str = template('tabTableList', datas);
+                        $('#tabTableDemo').append(str);
+                    }
+                    var nameList = ret.result.nameList;
+                    var valueList = ret.result.valueList;
+                    var seriesDatas = [];
+                    //  for(var i=0;i<valueList.length;i++){
+                    //   var series = {
+                    //            type: 'bar',
+                    //            data: valueList[i]
+                    //        };
+                    //   seriesDatas.push(series);
+                    //  }
+
+                    var Echarts = echarts.init(document.getElementById('tabEchart'));
+                    var option = {
+                        color: ['#2BB0FD', '#10E1C4', '#7FD709', '#FDEF4D', '#FDC963', '#FFA75D', '#FD7A72', '#FE4747', '#FF61D2', '#B962FE', '#5B5AE9', '#2A8AFB'],
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: { // 坐标轴指示器，坐标轴触发有效
+                                type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+                            }
+                        },
+                        grid: {
+                            left: '3%',
+                            right: '10%',
+                            bottom: '3%',
+                            top: "3%",
+                            containLabel: true
+                        },
+                        xAxis: {
+                            type: 'value'
+                        },
+                        yAxis: {
+                            type: 'category',
+                            data: nameList,
+                            formatter: function(value) {
+                                if (value.length > 5) {
+                                    return value.substring(0, 5) + "...";
+                                } else {
+                                    return value;
+                                }
+                            }
+                        },
+                        series: [{
+                            type: 'bar',
+                            data: valueList
+                        }]
+                    };
+                    Echarts.setOption(option);
+                    var autoHeight = nameList.length * 50 + 50; // counst.length为柱状图的条数，即数据长度。35为我给每个柱状图的高度，50为柱状图x轴内容的高度(大概的)。
+                    Echarts.getDom().style.height = autoHeight + "px";
+                    Echarts.resize();
+                } else {
+                    $('#tabEchart').removeClass('aui-show').addClass('aui-hide');
+                    $('#tabEchart').siblings('.noData').removeClass('aui-hide').addClass('aui-show');
+                }
+            }
+        });
+    }
+
+    function getTableDatas(typeName, Time) {
+        var url = 'services/Report/CustomerCenter/GetOrdersDetailTable';
+        if (Time != "") {
+            url = url + '?date=' + Time + '&departName=' + typeName;
+        } else {
+            var data = moment().format('YYYY-MM-DD');
+            url = url + '?date=' + data + '&departName=' + typeName;
+        }
+        fnGet(url, {}, false, function(ret, err) {
+            if (ret) {
+                if (ret.success && ret.result != null) {
+                    // 表格数据
+                    if (ret.result.tableObj != null) {
+                        var datas = {
+                            list: ret.result.tableObj.dataList
+                        };
+                        $('#tabTableDemo').html('');
+                        var str = template('tabTableList', datas);
+                        $('#tabTableDemo').append(str);
+                    } else {
+                        var datas = {
+                            list: []
+                        };
+                        $('#tabTableDemo').html('');
+                        var str = template('tabTableList', datas);
+                        $('#tabTableDemo').append(str);
+                    }
+                }
+            }
+        });
+    }
+</script>
+
+</html>

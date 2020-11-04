@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>搜周边</title>
+    <link rel="stylesheet" href="../../../css/api.css">
+    <link rel="stylesheet" href="../../../css/aui.css">
+    <link rel="stylesheet" href="../css/ol.css">
+    <link rel="stylesheet" href="../css/markOrareasearch.css">
+
+    <style rel="stylesheet">
+        /*tab切换*/
+
+        .aui-tab {
+            width: 100%;
+            height: 3rem;
+            line-height: 3rem;
+            padding-left: 1.3rem;
+        }
+
+        .aui-tab-item {
+            width: 2rem;
+            color: #999;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .aui-tab-item:first-child {
+            margin-right: 1.6rem;
+        }
+
+        .aui-tab-item.aui-active {
+            font-size: 0.9rem;
+            color: #6F7EF6;
+            border-bottom: 2px solid #6F7EF6;
+        }
+
+        .clear_search {
+            font-size: 0.6rem;
+            color: rgba(36, 52, 176, 0.5);
+        }
+
+        .search_content {
+            width: 100%;
+            height: 27.5rem;
+            font-size: 0.7rem;
+            background: #fff;
+            margin: 0 auto;
+            overflow: hidden;
+            overflow-y: scroll;
+            -webkit-overflow-scrolling: touch;
+            position: relative;
+            margin-bottom: 2.65rem;
+            padding-left: 0.75rem;
+            box-shadow: none;
+        }
+
+        .search_content .aui-row-other {
+            height: 4.5rem;
+            line-height: 4.5rem;
+            border: none;
+            background-size: 100% 1px;
+            background-repeat: no-repeat;
+            background-position: 0.75rem bottom;
+            background-image: linear-gradient(0, #eee, #eee 50%, transparent 50%);
+            background-image: -webkit-linear-gradient(90deg, #eee, #eee 50%, transparent 50%);
+            border-radius: 0rem;
+            width: 100%;
+            border: none;
+            box-shadow: none;
+            margin-bottom: 0rem;
+            padding-top: 0.2rem;
+        }
+
+        .aui-row-other.active {
+            background: #eee;
+        }
+
+        .aui-row-other .aui-col-xs-12 {
+            margin-top: 0.25rem;
+            height: 0.85rem;
+            line-height: 0.85rem;
+            color: #999999;
+            font-size: 0.6rem;
+            font-weight: normal;
+        }
+
+        .aui-row-other .aui-col-xs-12:first-child {
+            height: 1.1rem;
+            line-height: 1.1rem;
+            font-size: 0.8rem;
+            color: #666666;
+            font-weight: 600;
+            background-image: none;
+            margin-bottom: 0.3rem;
+        }
+
+        .aui-row-other .lon {
+            margin-right: 1.75rem;
+        }
+
+        .not_next {
+            color: #eee;
+        }
+        #pageCountTitle,.page_box{
+        display: none;
+        }
+    </style>
+
+</head>
+
+<body class="flex-box" id='flex-box'>
+    <header class="aui-bar aui-bar-nav" id='header'>
+        <div class="aui-pull-left aui-btn  aui-margin-l-10" onclick="closeWin()" tapmode>
+            <span class="aui-iconfont aui-icon-left"></span>
+        </div>
+        <div class="aui-title">搜索结果</div>
+
+    </header>
+    <!-- tab切换 -->
+    <div class="aui-tab" id="tab">
+        <div class="aui-tab-item aui-active">管点</div>
+        <div class="aui-tab-item">管线</div>
+    </div>
+
+    <!-- 搜索到的内容 -->
+    <div class="content_other_box">
+        <div class="aui-row aui-margin-l-15 aui-text-left" id='pageCountTitle'>
+            <span class='clear_search aui-padded-l-10'>共<span id='resuiltCount'>0</span>条搜索结果,总共<span id='pageCount'>0</span>页</span>
+        </div>
+        <div class="search_content aui-padded-l-10">
+
+        </div>
+    </div>
+
+    <div class="page_box">
+        <div class="row">
+            <div class="aui-col-xs-4 aui-text-right" tapmode onclick="Pages('pre')">
+                <i class="aui-iconfont aui-icon-left not_next"></i>
+            </div>
+            <div class="aui-col-xs-4 aui-text-center"><span id='currentPage'>1</span>/<span id='allPages'></span></div>
+            <div class="aui-col-xs-4 aui-text-left" tapmode onclick="Pages('next')">
+                <i class="aui-iconfont aui-icon-right"></i>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/template.js"></script>
+<script type="text/javascript" src="../../../script/aui-tab.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/template" id='pointDemo'>
+    {{ if pointAttribute.length > 0}} {{each pointAttribute value i }}
+    <div class="aui-row aui-padded-l-15 aui-row-other" params='{{value}}' tapmode onclick="openInfomationWin(this)">
+        <div class="content_box aui-pull-left">
+            <div class="aui-col-xs-12">管点编号: <span>{{value.pointNumbe}}</span></div>
+            <div class="aui-col-xs-12">名称: <span class="lon">{{value.pointName}}</div>
+            <div class="aui-col-xs-12">道路: <span class="lon">{{value.location}}</div>
+        </div>
+    </div>
+    {{/each}}
+    {{else}}
+    <div class="aui-row aui-text-center no-data">
+    <span class='clear_search'>暂无数据!</span>
+            </div>
+            {{/if}}
+
+</script>
+<script type="text/template" id='pipeDemo'>
+    {{ if lineAttribute.length > 0}} {{each lineAttribute value i }}
+    <div class="aui-row aui-padded-l-15 aui-row-other" params='{{value}}' tapmode onclick="openInfomationWin(this)">
+        <div class="content_box aui-pull-left">
+            <div class="aui-col-xs-12">管线编号: <span>{{value.lineNumber}}</span></div>
+            <div class="aui-col-xs-12">名称: <span class="lon">{{value.material}}</div>
+            <div class="aui-col-xs-12">道路: <span class="lon">{{value.location}}</div>
+        </div>
+    </div>
+    {{/each}}
+    {{else}}
+    <div class="aui-row aui-padded-l-15 aui-text-center no-data">
+    <span class='clear_search'>暂无数据!</span>
+            </div>
+            {{/if}}
+</script>
+<script type="text/javascript">
+    var PageIndex = 1;
+    var currentActive = 'Point';
+    apiready = function() {
+        // 页面初始化，沉浸式等
+        initWindow();
+        // console.log(JSON.parse(api.pageParam.data));
+        // 初始化页面数据。默认显示管点数据
+        loadDelayTHMS(function() {
+            searchAround();
+        });
+
+        initTab();
+        api.addEventListener({
+            name: 'removeActive'
+        }, function(ret, err) {
+            if (ret) {
+                setTimeout(() => {
+                    $('.search_content').find('.active').removeClass('active');
+                }, 500)
+            }
+        });
+    }
+
+    // 输入框模糊查询
+
+    function searchAround() {
+        var params = api.pageParam.data;
+        fnPost('services/SNTGIS/SearchPipe/SearchAround', {
+            body: JSON.stringify({
+                pageIndex: PageIndex,
+                maxResultCount: 10,
+                wkt: params.wkt,
+                distence: 30
+            })
+        }, 'application/json', true, false, function(ret, err) {
+            api.hideProgress();
+            if (ret && ret.success) {
+                var pagesSum = 0;
+                var allCount = 0;
+                var ListArray = [];
+                if (currentActive == 'Point') {
+                    result = ret.result.point;
+                    allCount = result.resuiltCount;
+                    pagesSum = result.pageCount;
+                    ListArray = result.pointAttribute;
+                } else {
+                    result = ret.result.line;
+                    allCount = result.resuiltCount;
+                    pagesSum = result.pageCount;
+                    ListArray = result.lineAttribute;
+                }
+                if(ListArray.length>0){
+                  $('#pageCountTitle').show();
+                  $('.page_box').show();
+                  initPages(ListArray, pagesSum, allCount, PageIndex);
+                } else {
+                  $('#pageCountTitle').hide();
+                    $('.page_box').hide();
+                }
+
+
+                var data = result
+                if (currentActive == 'Point') {
+                    $('.search_content').html('');
+                    var str = template('pointDemo', data);
+                    $('.search_content').append(str);
+                } else {
+                    $('.search_content').html('');
+                    var str = template('pipeDemo', data);
+                    $('.search_content').append(str);
+                }
+
+
+            }
+        });
+    }
+
+
+    //  页码
+    function Pages(type) {
+        changePages(type, PageIndex, function(index) {
+            PageIndex = index;
+            var keywords = $('#search-input').val();
+            searchAround();
+        }); //type 前一页或者后一页，PageIndex当前页数，initListDatas 请求数据方法名
+    }
+
+    // 打开信息页面
+    function openInfomationWin(that) {
+        $(that).addClass('active');
+        $(that).siblings().removeClass('active');
+        var Params = JSON.parse($(that).attr('params'));
+        if (currentActive == 'Point') {
+            var params = {
+                bookmark: false,
+                type: 'Point',
+                number: Params.pointNumbe
+            }
+        } else {
+            var params = {
+                bookmark: false,
+                type: 'Line',
+                number: Params.lineNumber
+            }
+        }
+        api.openWin({
+            name: 'pointOrlineInfomation',
+            url: './pointOrlineInfomation.html',
+            pageParam: params
+        });
+    }
+
+
+
+    // 初始化tab切换
+    function initTab() {
+        var tab = new auiTab({
+            element: document.getElementById("tab"),
+        }, function(ret) {
+            if (ret) {
+                PageIndex = 1;
+                $('#currentPage').text(1);
+                $('.aui-icon-left').addClass('not_next');
+                if (ret.index == 1) {
+                    currentActive = 'Point';
+                    searchAround();
+                } else {
+                    currentActive = 'Line';
+                    searchAround();
+                }
+            }
+
+        });
+    }
+</script>
+
+</html>

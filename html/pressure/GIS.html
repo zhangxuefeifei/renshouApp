@@ -1,0 +1,980 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>设备分布页面</title>
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/dialog.css" />
+    <link rel="stylesheet" type="text/css" href="../../script/gis/openlayers/ol.css" />
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+        }
+
+        .aui-bar-nav {
+            top: 0;
+            z-index: 1;
+            background-color: #fff;
+            color: #333333;
+            font-size: var(--fontsize9);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            border-bottom: solid 0.03rem #e6e6e6;
+        }
+
+        .aui-bar-nav .aui-btn .aui-iconfont {
+            color: #333333;
+            font-weight: 900;
+        }
+
+        .flex-con {
+            overflow: auto;
+            /*-webkit-overflow-scrolling: touch;*/
+        }
+
+        .deviceList.aui-card-list {
+            position: absolute;
+            bottom: 2vw;
+            width: 96vw;
+            right: 2vw;
+            max-height: 65vw;
+            background-color: transparent;
+            margin-bottom: 0;
+            -webkit-box-orient: vertical;
+            -webkit-flex-flow: column;
+            flex-flow: column;
+            display: flex;
+            border: 1px solid transparent;
+            border-radius: 0.3rem;
+            box-shadow: 0rem 0rem 1rem 0rem rgba(210, 210, 210, 0.77);
+        }
+
+        .deviceList .close {
+            width: 1rem;
+            height: 1rem;
+            background-image: url('../../image/gis/close.png');
+            background-size: 100%;
+            position: absolute;
+            right: 0;
+            top: -0.25rem;
+            z-index: 1;
+        }
+
+        .deviceList .aui-card-list-user-name {
+            justify-content: flex-end;
+        }
+        /*.deviceList .aui-card-list-header.aui-card-list-user {
+            padding: 0;
+            height: 0.25rem;
+            min-height: 0.25rem;
+            background-color: transparent;
+        }*/
+
+        .deviceList .aui-card-list-content-padded {
+            border-radius: 0.3rem;
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            padding: 0;
+        }
+        /*-webkit-overflow-scrolling: touch; ios上会让z-index的无效*/
+
+        .deviceList .aui-list {
+            padding-left: 0.75rem;
+            border-radius: 0.3rem;
+        }
+
+        .deviceList .aui-list .aui-list-item {
+            padding-left: 0;
+            padding: 0.85rem 0.8rem;
+            font-size: 0.6rem;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #333333;
+        }
+
+        .deviceList .aui-list .aui-list-item.active {
+            background-color: #f5f5f5;
+        }
+
+        .deviceList .aui-media-list .aui-list-item-inner {
+            padding-left: 0.75rem;
+        }
+
+        .deviceList .aui-list,
+        .deviceList .aui-list .aui-list-item:last-child {
+            background-image: none;
+        }
+
+        .deviceList .aui-media-list-item-inner {
+            align-items: flex-start;
+        }
+
+        .deviceList .aui-col-xs-6 {
+            width: calc((100% - 0.5rem)/2);
+            margin-right: 0.25rem;
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+
+        .deviceList .textTitle1 {
+            flex: 0 0 2.8rem;
+            height: 0.9rem;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .deviceList .textTitle2 {
+            flex: 0 0 3.9rem;
+            height: 0.9rem;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .deviceList .dot {
+            width: 0.15rem;
+            height: 0.15rem;
+            margin-right: 0.25rem;
+            background: rgba(173, 58, 255, 1);
+            border-radius: 50%;
+            border: 1px solid rgba(173, 58, 255, 1);
+        }
+
+        .menu {
+            width: 4rem;
+            /*position: absolute;
+            top: 6.4rem;
+            right: 0.6rem;*/
+            z-index: 999;
+            text-align: center;
+        }
+
+        .menu button {
+            margin: 1px;
+            padding: 0;
+            color: #fff;
+            font-size: 0.8em;
+            text-decoration: none;
+            text-align: center;
+            width: 6.25em;
+            line-height: .4em;
+            background-color: rgba(0, 60, 136, .5);
+            border: none;
+            border-radius: 0.1rem;
+            padding: 0.3rem;
+        }
+
+        .menuBox {
+            position: fixed;
+            z-index: 999;
+            right: 0.4rem;
+            /*top: 3rem;*/
+        }
+        /*.menulist {
+            display: none;
+            border: 1px solid rgba(0, 60, 136, .5);
+            width: 4.1rem;
+            font-size: 0.7rem;
+            border-radius: 0.1rem;
+        }*/
+
+        .menulist {
+            display: none;
+            width: 3.3rem;
+            background: linear-gradient(-5deg, rgba(98, 84, 255, 1), rgba(75, 120, 191, 1));
+            box-shadow: 0rem 0rem 1rem 0rem rgba(150, 150, 150, 0.77);
+            border-radius: 3rem;
+            /*padding-bottom: 0.5rem;*/
+        }
+
+        .menulist li {
+            text-align: center;
+            font-size: 0.7rem;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 1);
+            padding: 0.55rem 0;
+        }
+
+        .menulist li:last-child {
+            border-bottom: none;
+        }
+
+        .Menu_ative {
+            display: block!important;
+        }
+
+        .content {
+            position: absolute;
+            bottom: 0.75rem;
+            width: 92vw;
+            /*min-height: 15.3rem;*/
+            background: #fff;
+            z-index: 99;
+            right: 4vw;
+            /*margin: 0.4rem 0.4rem 0.75rem 0.4rem;*/
+            background: rgba(255, 255, 255, 1);
+            border: 2px solid rgba(238, 238, 238, 1);
+            box-shadow: 3px 5px 21px 0px rgba(210, 210, 210, 0.77);
+            border-radius: 0.3rem;
+        }
+
+        .content ul {
+            border-radius: 0.3rem;
+            max-height: 20.5rem;
+            overflow-y: scroll;
+        }
+
+        .content .aui-row {
+            width: 100%;
+            line-height: 1rem;
+        }
+
+        .content .aui-row input {
+            /*border: 1px solid black;*/
+            height: 1rem;
+        }
+        /*.content .aui-list.aui-list-in .aui-list-item {
+            background-position: 0rem bottom;
+        }*/
+
+        .content .aui-list.aui-list-in .aui-list-item {
+            min-height: 2.45rem;
+        }
+
+        .content .aui-list-header {
+            height: 0.5rem;
+            background: #fff;
+            height: 1rem;
+            line-height: 1rem;
+            border-radius: 0.3rem 0.3rem 0 0;
+        }
+
+        .content .delete {
+            position: absolute;
+            top: -0.4rem;
+            right: 0rem;
+            width: 1rem;
+            height: 1rem;
+            background: url('../../image/gis/close.png');
+            background-size: 1rem 1rem;
+            z-index: 100;
+        }
+
+        .content .aui-row .aui-col-xs-6 button {
+            margin: 0.1rem;
+            padding: 0;
+            color: #fff;
+            font-size: 0.7rem;
+            text-decoration: none;
+            text-align: center;
+            width: 6rem;
+            height: 2rem;
+            line-height: .4rem;
+            border-radius: 0.3rem;
+            padding: 0.5rem;
+            font-family: PingFangSC-Medium;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 1);
+        }
+
+        .li_padding {
+            height: 3.6rem;
+            padding-left: 1rem!important;
+            background-image: none;
+        }
+
+        .li_padding .button1 {
+            background: #ccc;
+        }
+
+        .li_padding .button2 {
+            background: linear-gradient(-5deg, rgba(98, 84, 255, 1), rgba(75, 120, 191, 1));
+            box-shadow: 0px 7px 13px 0px rgba(150, 150, 150, 0.77);
+        }
+        /*
+        .menulist li {
+            background: #fff;
+            color: black;
+        }*/
+
+        .menuActive {
+            text-decoration: none;
+            background-color: rgba(0, 60, 136, 0.7)!important;
+        }
+
+        .liActive {
+            text-decoration: none;
+            background-color: rgba(0, 60, 136, 0.7)!important;
+            color: #fff;
+        }
+
+        .menulist li:last-child.liActive {
+            text-decoration: none;
+            background-color: rgba(0, 60, 136, 0.7)!important;
+            color: #fff;
+            border-radius: 0 0 3rem 3rem;
+        }
+
+        .menulist li:first-child.liActive {
+            text-decoration: none;
+            background-color: rgba(0, 60, 136, 0.7)!important;
+            color: #fff;
+            border-radius: 3rem 3rem 0 0;
+        }
+
+        .last-control {
+            top: 3.5rem;
+            left: .5em;
+        }
+
+        .aui-col-xs-12 span {
+            height: 1.2rem;
+            color: #757575;
+            font-size: 0.7rem;
+        }
+
+        .textStyle {
+            height: 1.2rem;
+            text-align: justify;
+        }
+
+        .textStyle:after {
+            content: '.';
+            width: 100%;
+            display: inline-block;
+            overflow: hidden;
+            height: 0;
+        }
+
+        .textStyle1 {
+            height: 1.2rem;
+            text-align: justify;
+        }
+
+        .textStyle1:after {
+            content: '.';
+            width: 100%;
+            display: inline-block;
+            overflow: hidden;
+            height: 0;
+        }
+
+        .lineStyle {
+            text-align: left!important;
+        }
+        /*菜单图标*/
+
+        .caidan {
+            position: absolute;
+            top: 3.65rem;
+            right: 0.65rem;
+            width: 3.1rem;
+            height: 3.1rem;
+            background: url('../../image/gis/caidan.png');
+            background-size: 3.1rem 3.1rem;
+            z-index: 999;
+        }
+
+        .Quick {
+            position: absolute;
+            top: 4.8rem;
+            left: 0.33rem;
+            width: 2.2rem;
+            height: auto;
+            z-index: 100;
+        }
+
+        .Quick ul li {
+            list-style: none;
+        }
+
+        .Quick ul li:first-child {
+            width: 2.2rem;
+            height: 2.2rem;
+            background: url('../../image/gis/left.png');
+            background-size: 2.2rem 2.2rem;
+        }
+
+        .Quick ul li:nth-child(2) {
+            width: 2.2rem;
+            height: 2.2rem;
+            background: url('../../image/gis/right.png');
+            background-size: 2.2rem 2.2rem;
+        }
+
+        .Quick ul li:nth-child(3) {
+            width: 2.2rem;
+            height: 2.2rem;
+            background: url('../../image/gis/jia.png');
+            background-size: 2.2rem 2.2rem;
+        }
+
+        .Quick ul li:last-child {
+            width: 2.2rem;
+            height: 2.2rem;
+            background: url('../../image/gis/jianhao.png');
+            background-size: 2.2rem 2.2rem;
+        }
+
+        .dot {
+            float: left;
+            width: 0.15rem;
+            height: 0.15rem;
+            background: rgba(173, 58, 255, 1);
+            border-radius: 50%;
+            margin: 0.45rem;
+        }
+
+        .content .aui-col-xs-3 {
+            width: 30%;
+        }
+
+        .content .aui-col-xs-9 {
+            width: 70%;
+        }
+
+        .content .aui-col-xs-6 .aui-col-xs-5 {
+            width: 56%;
+        }
+
+        .content .aui-col-xs-6 .aui-col-xs-7 {
+            width: 44%;
+        }
+
+        .aui-list {
+            background-position: top;
+            background-image: none
+        }
+
+        .aui-list.aui-list-in .aui-list-item:last-child {
+            background-position: none;
+        }
+
+        .aui-list.aui-list-in .aui-list-item:last-child {
+            background-position: none;
+            background-image: none;
+            background-image: none;
+        }
+
+        .aui-list .aui-list-item-title {
+            font-size: 0.7rem;
+        }
+
+        .menulist li {
+            text-align: center;
+        }
+
+        .close1 {
+            width: 1rem;
+            height: 1rem;
+            background: url('../../image/gis/close1.png');
+            background-size: 1rem 1rem;
+            margin: 0 auto;
+        }
+
+        .aui-list .aui-list-item:active {
+            background-color: #fff;
+        }
+
+        .buttonS {
+            position: absolute;
+            top: 10rem;
+            z-index: 99;
+            margin-left: 0.5rem;
+            background: #fff;
+            border: 0.1px solid rgba(238, 238, 238, 1);
+            box-shadow: 0rem 0rem 1rem 0rem rgba(210, 210, 210, 0.77);
+            border-radius: 0.5rem;
+        }
+
+        .jiahao,
+        .jianhao {
+            width: 2rem;
+            height: 2rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .jiahao {
+            background: url('../../image/gis/jia.png');
+            background-size: 2rem 2rem;
+        }
+/*
+        .jiahao:after {
+            content: '';
+            width: 1rem;
+            height: 0.05rem;
+            background: rgba(204, 204, 204, 1);
+            position: absolute;
+            left: 0.5rem;
+            bottom: 2.2rem;
+        }*/
+
+        .jianhao {
+            background: url('../../image/gis/jianhao.png');
+            background-size: 2rem 2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrap" class="flex-wrap flex-vertical">
+        <!-- <header class="aui-bar aui-bar-nav aui-border-b" id="header">
+            <div class="aui-pull-left aui-btn" tapmode data-action="back">
+                <span class="aui-iconfont aui-icon-left"></span>
+            </div>
+            <div class="aui-title">GIS</div>
+        </header> -->
+        <header class="aui-bar aui-bar-nav aui-border-b" id="header">
+            <div class="aui-pull-left aui-btn" tapmode data-action="back">
+                <span class="aui-iconfont aui-icon-left"></span>
+            </div>
+            <div class="aui-title">设备分布</div>
+            <!-- <div class="aui-pull-right aui-btn aui-btn-outlined menu">
+                <button type="button" name="button" data-action='OpenMenu' class="buttonMenu">线路范围</button>
+            </div> -->
+        </header>
+
+        <!-- 按钮 -->
+        <div class="buttonS">
+            <div class="jiahao" onclick="fangda();"></div>
+            <div class="jianhao" onclick="suoxiao();"></div>
+        </div>
+
+        <!-- 菜单 -->
+        <div class="caidan" tapmode data-action='OpenMenu'></div>
+        <div class='menuBox' id="menu">
+            <ul class="menulist">
+                <li>
+                    <div class="close1" tapmode data-action='closeMenu1'></div>
+                </li>
+
+            </ul>
+
+        </div>
+        <!-- 菜单结束 -->
+        <div class="content aui-hide">
+        </div>
+
+        <div class="flex-con" id="map">
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/diy/public.js"></script>
+<script type="text/javascript" src="../../script/remote.js"></script>
+<script type="text/javascript" src="../../script/zepto.js"></script>
+<script type="text/javascript" src="../../script/gis/openlayers/ol.js"></script>
+<script type="text/javascript" src="../../script/gis/map/pressure.js"></script>
+<script type="text/javascript" src="../../script/moment.js"></script>
+<script type="text/javascript" src="../../script/aui-dialog.js"></script>
+<script type="text/javascript" src="../../script/diy/template.js"></script>
+<script type="text/template" id="menuList">
+    <div class="delete" tapmode data-action='closeMenu'></div>
+    <ul class="aui-list aui-list-in">
+        {{if type == 'CollectionPoint'}}
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-12">
+                        <div class="dot"></div>{{result.title}}
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-12">
+                        <div class="dot"></div> 经度:<span id='navCoordinatelon'>{{result.lon}}</span>
+
+                    </div>
+                </div>
+
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-12">
+                        <div class="dot"></div> 纬度:<span id='navCoordinatelat'>{{result.lat}}</span>
+
+                    </div>
+                </div>
+
+            </div>
+        </li>
+        {{each result.pressures value i}}
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-12">
+                        <div class="dot"></div> {{value.pressure}}<span id='pressValue+"' {{i}} '"'>:{{value.pressureValue}}{{value.unit}}</span>
+
+                    </div>
+                </div>
+
+            </div>
+        </li>
+        {{/each}} {{/if}}
+        <li class="aui-list-item li_padding">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-6 aui-text-center">
+                        <button class='button1' type="button" name="button" tapmode onclick="cancel()">关闭</button>
+                    </div>
+                    <div class="aui-list-item-title aui-col-xs-6 aui-text-center">
+                        <button class='button2' type="button" name="button" tapmode onclick="navigation()">到这去</button>
+                    </div>
+
+                </div>
+            </div>
+        </li>
+    </ul>
+</script>
+<script type="text/template" id="deviceCardTpl">
+    <div class="aui-card-list deviceList">
+        <!-- <div class="aui-card-list-header aui-card-list-user">
+            <div class="aui-card-list-user-name">
+
+            </div>
+        </div> -->
+        <div class="close" tapmode data-action="closeCard"></div>
+        <div class="aui-card-list-content-padded">
+            <ul class="aui-list aui-media-list">
+                {{each items value i}}
+                <li class="aui-list-item aui-list-item-middle" data-param="{{value.properties}}" tapmode data-action="movelocation">
+                    <div class="aui-media-list-item-inner">
+                        <div class="aui-col-xs-6">
+                            <span class="textTitle1"><span class="dot"></span>经度：</span>{{value.properties.SmX}}
+                        </div>
+                        <div class="aui-col-xs-6">
+                            <span class="textTitle1"><span class="dot"></span>纬度：</span>{{value.properties.SmY}}
+                        </div>
+                    </div>
+                    <div class="aui-media-list-item-inner">
+                        <div class="aui-col-xs-6">
+                            <span class="textTitle2"><span class="dot"></span>设备类型：</span>{{value.properties.devicename}}
+                        </div>
+                        <div class="aui-col-xs-6">
+                            <span class="textTitle2"><span class="dot"></span>管点编号：</span>{{value.properties.mapno}}
+                        </div>
+                    </div>
+                    <div class="aui-media-list-item-inner">
+                        <div class="aui-col-xs-6">
+                            <span class="textTitle2"><span class="dot"></span>所属道路：</span>{{value.properties.road}}
+                        </div>
+                        <div class="aui-col-xs-6">
+                            <span class="textTitle1"><span class="dot"></span>高程：</span>{{value.properties.elevation}}
+                        </div>
+                    </div>
+                </li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+</script>
+<script type="text/template" id="pipeCardTpl">
+    <div class="aui-card-list deviceList">
+        <!-- <div class="aui-card-list-header aui-card-list-user">
+            <div class="aui-card-list-user-name">
+
+            </div>
+        </div> -->
+        <div class="close" tapmode data-action="closeCard"></div>
+        <div class="aui-card-list-content-padded">
+            <ul class="aui-list aui-media-list">
+                {{each items value i}}
+                <li class="aui-list-item aui-list-item-middle" data-param="{{value.properties}}" tapmode data-action="linemovelocation">
+                    <div class="aui-media-list-item-inner">
+                        <div class="aui-col-xs-6">
+                            <span class="textTitle1"><span class="dot"></span>编号：</span>{{value.properties.mapno}}
+                        </div>
+                        <div class="aui-col-xs-6">
+                            <span class="textTitle1"><span class="dot"></span>管径：</span>{{value.properties.diameter}}
+                        </div>
+                    </div>
+                    <div class="aui-media-list-item-inner">
+                        <div class="aui-col-xs-6">
+                            <span class="textTitle1"><span class="dot"></span>道路：</span>{{value.properties.road}}
+                        </div>
+                        <div class="aui-col-xs-6">
+                            <span class="textTitle1"><span class="dot"></span>管材：</span>{{value.properties.material}}
+                        </div>
+                    </div>
+                </li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+</script>
+<script type="text/template" id='List'>
+    <li data-name='All' tapmode data-action='MenuItem'>全部</li>
+    {{each items value i}} {{ if value.Id == 1 }}
+    <li class='liActive' data-name='MainCity' tapmode data-action='MenuItem'>主城区</li>
+    {{ else if value.Id == 2 }}
+    <li data-name='OneLine' tapmode data-action='MenuItem'>1#线</li>
+    {{ else if value.Id == 3 }}
+    <li data-name='TwoLine' tapmode data-action='MenuItem'>2#线</li>
+    {{ else if value.Id == 4 }}
+    <li data-name='ThreeLine' tapmode data-action='MenuItem'>3#线</li>
+    {{ else if value.Id == 5 }}
+    <li data-name='FourLine' tapmode data-action='MenuItem'>4#线</li>
+    {{/if}} {{/each}}
+</script>
+<script type="text/javascript">
+    var arr = [];
+    var url;
+    var type;
+    var infoType;
+    apiready = function() {
+        api.parseTapmode();
+        var header = $api.byId('header');
+        // 实现沉浸式状态栏效果
+        $api.fixStatusBar(header);
+        headerH = $api.offset(header).h;
+        // $('.caidan').css('top', '' + (headerH+3) + 'px');
+        $('.menuBox').css('top', '' + (headerH + 3) + 'px');
+        fnReady();
+        GetScadaDominUrl = $api.getStorage('GetScadaDomin');
+        //  zhuchengscada();
+        loadData(1);
+        setTimeout(function() {
+            getAreaList();
+        }, 300);
+        var jsurl = 'http://api.tianditu.gov.cn/api?v=4.0&tk=7ab767e38fe3d9c04f144a091cff214f';
+        var jsapi = document.createElement('script');
+        jsapi.charset = 'utf-8';
+        jsapi.src = jsurl;
+        document.head.appendChild(jsapi);
+        api.addEventListener({
+            name: 'chooseDeviceType'
+        }, function(ret, err) {
+            if (ret) {
+                var data = ret.value.deviceType;
+                $('#deviceType').val(data.name);
+            }
+        });
+
+    }
+    operationDom();
+    var actionList = {
+            'back': function() {
+                api.closeWin();
+            },
+            'closeCard': function() {
+                $(this).parents('.aui-card-list').remove();
+                $(this).remove();
+            },
+            'OpenMenu': function() {
+                // $(this).toggleClass('menuActive');
+                $(this).removeClass('aui-show').addClass('aui-hide');
+
+                $('.menubox').toggleClass('aui-show');
+                $('.menulist').removeClass('aui-hide').addClass('aui-show');
+                if ($('.content').hasClass('aui-show')) {
+                    $('.content').removeClass('aui-show')
+                }
+
+            },
+            'MenuItem': function() {
+                var e = e || window.event;
+                e.stopPropagation();
+                $(this).siblings().removeClass('liActive');
+                $(this).addClass('liActive');
+                setTimeout(function() {
+                    $('.menulist').removeClass('aui-show').addClass('aui-hide');
+                    $('.caidan').removeClass('aui-hide').addClass('aui-show');
+                }, 200);
+                type = $(this).attr('data-name');
+                setTimeout(function() {
+                    if (type == 'All') {
+                        loadData(0);
+                    } else if (type == 'MainCity') {
+                        loadData(1);
+                    } else if (type == 'OneLine') {
+                        loadData(2);
+                    } else if (type == 'TwoLine') {
+                        loadData(3);
+                    } else if (type == 'ThreeLine') {
+                        loadData(4);
+                    } else if (type == 'FourLine') {
+                        loadData(5);
+                    }
+                }, 500);
+
+            },
+            'closeMenu': function() {
+                clearstyle();
+                clearslected(flag);
+                //  if(time){
+                //    clearInterval(time);
+                //  }
+                var e = e || window.event;
+                e.stopPropagation();
+
+                $('.content').removeClass('aui-show').addClass('aui-hide');
+                $('.caidan').removeClass('aui-hide').addClass('aui-show');
+                $('.menulist').removeClass('aui-show').addClass('aui-hide');
+
+            },
+            'closeMenu1': function() {
+                $('.caidan').removeClass('aui-hide').addClass('aui-show');
+                $('.menulist').removeClass('aui-show').addClass('aui-hide');
+            }
+        }
+        //获取设备点名称，放入数组arr中
+
+    function getAreaList() {
+        api.showProgress({
+            title: '加载中',
+            modal: false
+        });
+        api.ajax({
+            url: '' + GetScadaDominUrl + 'api/util/GetAreas',
+            method: 'get',
+        }, function(ret, err) {
+            api.hideProgress();
+            if (ret) {
+                var data = ret.Data;
+                var list = {
+                    items: data
+                };
+                var str = template('List', list);
+                $('.menulist').append(str);
+                operationDom();
+                api.parseTapmode();
+            }
+        });
+    }
+
+    //放大缩小
+    function fangda(){
+      var view = map.getView();
+      view.setZoom(view.getZoom() +1);
+    }
+    function suoxiao(){
+      var view = map.getView();
+      view.setZoom(view.getZoom() -1);
+    }
+// 关闭
+    function cancel() {
+        $('.content').removeClass('aui-show').addClass('aui-hide');
+    }
+    // 导航
+    var navCoordinate = null;
+
+    function navigation() {
+        var navCoordinatelon = document.getElementById('navCoordinatelon').innerText;
+        var navCoordinatelat = document.getElementById('navCoordinatelat').innerText;
+        navCoordinate = [navCoordinatelon, navCoordinatelat];
+        var navigator = api.require('navigator');
+
+        if (api.systemType == 'ios') {
+            MapNavigation(navigator, 'appleMap');
+        } else {
+            ifInstalled(navigator, 'bMap');
+        }
+    }
+    // 判断是否安装了其他地图
+    var ifInstalledNumber = 0;
+
+    function ifInstalled(navigator, mapName) {
+        navigator.installed({
+            target: mapName
+        }, function(ret, err) {
+            if (ret.status) {
+                MapNavigation(navigator, mapName);
+            } else {
+                ifInstalledNumber++;
+                if (ifInstalledNumber == 1) {
+                    ifInstalled(navigator, 'aMap');
+                }
+
+                if (ifInstalledNumber > 1) {
+                    api.toast({
+                        msg: mapName == 'bMap' ? '您未安装百度地图' : '您未安装高德地图',
+                        duration: 2000,
+                        location: 'top'
+                    });
+                }
+            }
+        });
+    }
+    // 打开其他地图app进行导航
+    function MapNavigation(navigator, type) {
+        // navCoordinate
+        var startLon = null,
+            startLat = null,
+            startName = null,
+            endName = null;
+        var bMap = api.require('bMap');
+        bMap.getLocation({
+            accuracy: '100m',
+            autoStop: true,
+            filter: 1
+        }, function(ret, err) {
+            if (ret.status) {
+                startLon = ret.lon;
+                startLat = ret.lat;
+                bMap.getNameFromCoords({
+                    lon: startLon,
+                    lat: startLat
+                }, function(ret, err) {
+                    if (ret.status) {
+                        startName = ret.address; //获取起点的坐标名字
+                        bMap.getNameFromCoords({
+                            lon: navCoordinate[0],
+                            lat: navCoordinate[1]
+                        }, function(ret, err) {
+                            if (ret.status) {
+                                endName = ret.address;
+                                var mapInfoDatas = {
+                                    start: { // 起点信息.
+                                        lon: startLon, // 经度.
+                                        lat: startLat, // 纬度.
+                                        name: startName
+                                    },
+                                    end: { // 终点信息.
+                                        lon: navCoordinate[0], // 经度
+                                        lat: navCoordinate[1], // 纬度
+                                        name: endName
+                                    },
+                                    mode: 'driving'
+                                };
+                                if (type == 'bMap') {
+                                    navigator.bMapNavigation(mapInfoDatas);
+                                } else if (type == 'aMap') {
+                                    navigator.aMapPath(mapInfoDatas);
+                                } else if (type == 'appleMap') {
+                                    navigator.appleNavigation(mapInfoDatas);
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+
+</script>
+
+</html>

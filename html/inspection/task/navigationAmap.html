@@ -1,0 +1,209 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>设备点详情页面</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/aui1.css" />
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #f5f5f5;
+        }
+
+        .flex-con {
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .aui-bar-nav {
+            top: 0;
+            z-index: 1;
+            background-color: #fff;
+            color: #333333;
+            font-size: var(--fontsize9);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+        }
+
+        .aui-bar-nav .aui-btn .aui-iconfont {
+            color: #999;
+            font-weight: 900;
+        }
+
+        .footer {
+            background-color: transparent;
+            padding: 0.63rem 1.88rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .footer .aui-btn {
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0.08rem;
+            height: 2.2rem;
+            line-height: inherit;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5rem;
+            width: 35vw;
+        }
+
+        .sureBtn {
+            background: #4f79e8;
+            color: #fff;
+        }
+
+        .daohangBtn {
+            background: transparent;
+            color: #4f79e8;
+            border: solid 1px #4f79e8;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrap" class="flex-wrap flex-vertical">
+        <header class="aui-bar aui-bar-nav aui-border-b" id="header">
+            <div class="aui-pull-left aui-btn" tapmode data-action="back">
+                <span class="aui-iconfont aui-icon-left"></span>
+            </div>
+            <div class="aui-title">导航</div>
+        </header>
+        <div class="flex-con" id="main">
+
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/diy/public.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/diy/template.js"></script>
+<script type="text/template" id="taskTpl">
+</script>
+<script type="text/javascript">
+    apiready = function() {
+        api.addEventListener({
+            name: 'changedFontSize'
+        }, function(ret, err) {
+            if (ret) {
+                changeFontSize();
+            }
+        });
+        api.parseTapmode();
+        var header = $api.byId('header');
+        // 实现沉浸式状态栏效果
+        $api.fixStatusBar(header);
+        headerH = $api.offset(header).h;
+        fnReady();
+        lon = parseFloat(api.pageParam.lon);
+        lat = parseFloat(api.pageParam.lat);
+        type = api.pageParam.type;
+        aMap = api.require('aMap');
+        aMap.open({
+            rect: {
+                x: 0,
+                y: headerH,
+                w: api.winWidth,
+                h: 'auto'
+            },
+            showUserLocation: true,
+            zoomLevel: 18,
+            fixedOn: api.frameName,
+            fixed: true,
+            showsAccuracyRing: false
+        }, function(ret, err) {
+            if (ret.status) {
+                getLocation();
+                aMap.setMapAttr({
+                    overlookEnabled: false,
+                    rotateEnabled: false
+                });
+            }
+        });
+    };
+
+    var actionList = {
+        'back': function() {
+            api.closeWin();
+        }
+    }
+
+    function getLocation() {
+        aMap.getLocation(function(ret, err) {
+            if (ret.status) {
+                aMap.setCenter({
+                    coords: {
+                        lon: ret.lon,
+                        lat: ret.lat
+                    },
+                    animation: true
+                });
+                searchRoute(ret);
+            }
+        });
+    }
+
+    function searchRoute(data) {
+        aMap.searchRoute({
+            type: type,
+            start: {
+                lon: data.lon,
+                lat: data.lat
+            },
+            end: {
+                lon: lon,
+                lat: lat
+            }
+        }, function(ret, err) {
+            if (ret.status) {
+                aMap.drawRoute({
+                    id: 1,
+                    autoresizing: false,
+                    index: 0,
+                    styles: {
+                        walkLine: {
+                            width: 3,
+                            color: '#698B22',
+                            lineDash: false,
+                            strokeImg: ''
+                        },
+                        driveLine: {
+                            width: 6,
+                            color: '#0000EE',
+                            lineDash: false,
+                            strokeImg: ''
+                        },
+                        busLine: {
+                            width: 4,
+                            color: '#00BFFF',
+                            lineDash: false,
+                            strokeImg: ''
+                        },
+                        icons: {
+                            start: '',
+                            end: '',
+                            bus: '',
+                            car: '',
+                            man: ''
+                        }
+                    }
+                });
+            }
+        });
+    }
+</script>
+
+</html>

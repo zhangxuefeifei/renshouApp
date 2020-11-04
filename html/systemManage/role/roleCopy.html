@@ -1,0 +1,371 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>角色复制页面</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/aui1.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/city/demo.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/city/ydui.css" />
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #FFF;
+        }
+
+        .aui-bar-nav {
+            top: 0;
+            z-index: 3;
+            background-color: #fff;
+            color: #333333;
+            font-size: var(--fontsize9);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+        }
+
+        .aui-bar-nav .aui-btn .aui-iconfont {
+            color: #333333;
+            font-weight: 900;
+        }
+
+        .flex-con {
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .aui-list {
+            background-image: none;
+        }
+
+        .aui-list .aui-list-item-title {
+            font-size: var(--fontsize85);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #333333;
+        }
+
+        .aui-list .aui-list-item-text:first-child,
+        .aui-list .aui-list-item-text:last-child {
+            margin-bottom: 0;
+        }
+
+        .aui-list .aui-list-item-text {
+            font-size: var(--fontsize7);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+            margin-bottom: 0.65rem;
+        }
+
+        .aui-media-list .aui-list-item-inner {
+            padding: 0.75rem 0.75rem 0.75rem 0;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .Title {
+            width: var(--width42);
+            display: inline-flex;
+            justify-content: flex-end;
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #333333;
+        }
+
+        .Text {
+            width: calc(100% - var(--width42) - 0.2rem);
+            display: inline-flex;
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+            height: auto;
+        }
+
+        .contactLi {
+            padding-bottom: 0.75rem !important;
+            padding-left: 0.6rem !important;
+        }
+
+        .contactLi .aui-media-list .aui-list-item-inner {
+            padding-right: 0.6rem !important;
+        }
+
+        .contactCard {
+            width: calc(100% - 0.6rem);
+            height: auto;
+            background-color: #ffffff;
+            box-shadow: 0rem 0.2rem 0.68rem 0rem rgba(0, 0, 0, 0.2);
+            border: 1px solid #fff;
+            border-radius: 0.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .contactCard:last-child {
+            margin-bottom: 0
+        }
+
+        .aui-card-list {
+            height: 100%;
+            margin-bottom: 0;
+        }
+
+        .aui-card-list-content {
+            height: 100%;
+            padding: 1.2rem 0.8rem;
+        }
+
+        .cardRow {
+            height: auto;
+            display: -webkit-box;
+            margin-bottom: 1.2rem;
+            font-size: var(--fontsize65);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+        }
+
+        .cardRow:last-child {
+            margin-bottom: 0;
+        }
+
+        .aui-col-xs-6,
+        .aui-col-xs-12 {
+            display: flex;
+        }
+
+        .rowTitle {
+            width: var(--width2);
+            display: inline-flex;
+            justify-content: flex-end;
+            color: #333333;
+        }
+
+        .rowText {
+            width: calc(100% - var(--width2) - 0.7rem);
+        }
+
+        .rowTitle-12 {
+            width: 3.4rem;
+            display: inline-flex;
+            justify-content: flex-end;
+            color: #333333;
+        }
+
+        .rowText-12 {
+            width: calc(100% - 3.6rem);
+            display: inline-flex;
+        }
+
+        input {
+            height: inherit !important;
+            line-height: inherit !important;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #666666 !important;
+        }
+
+        .redDot {
+            color: #ff605f;
+        }
+
+        .dot {
+            color: transparent;
+        }
+
+        .aui-iconfont.aui-icon-right {
+            position: absolute;
+            right: 0.75rem;
+            font-size: var(--fontsize9);
+            color: #999999;
+            font-weight: 900;
+            pointer-events: none;
+        }
+
+        .aui-iconfont.aui-icon-close {
+            position: absolute;
+            right: 0.75rem;
+            font-size: var(--fontsize9);
+            color: #999999;
+            font-weight: 900;
+        }
+
+        .selectAreaText {
+            width: calc(100% - 0.9rem) !important;
+        }
+
+        .aui-list textarea {
+            margin: 0;
+            height: auto;
+            color: #666666;
+            font-size: var(--fontsize8) !important;
+            font-weight: normal;
+            letter-spacing: 0rem;
+            line-height: inherit;
+        }
+
+        input::-webkit-input-placeholder,
+        textarea::-webkit-input-placeholder {
+            color: #999999;
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+        }
+
+        #footer {
+            background-color: #f0f0f0;
+            padding: 0.63rem 1.88rem;
+        }
+
+        .sureOrgBtn {
+            background: #4f79e8;
+            color: #fff;
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0.08rem;
+            height: 2.2rem;
+            line-height: inherit;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5rem;
+        }
+
+        .remarkText {
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+            height: auto;
+            padding-left: 0.1rem
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrap" class="flex-wrap flex-vertical">
+        <header class="aui-bar aui-bar-nav aui-border-b" id="header">
+            <div class="aui-pull-left aui-btn" tapmode data-action="back">
+                <span class="aui-iconfont aui-icon-left"></span>
+            </div>
+            <div class="aui-title">角色复制</div>
+        </header>
+
+        <div class="flex-con">
+            <div class="aui-content">
+                <ul class="aui-list aui-media-list">
+
+                    <li class="aui-list-item aui-list-item-middle">
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-inner">
+                                <span class="redDot">*</span>
+                                <span class="Title">角色名称：</span>
+                                <span class="Text"><textarea type="text" rows="1" id="roleName" placeholder="部门角色（复制1）"></textarea></span>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="aui-list-item aui-list-item-middle">
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-inner">
+                                <span class="dot">*</span>
+                                <span class="remarkText">复制后新角色将与此角色拥有相同的权限</span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="footer">
+            <div class="aui-btn sureOrgBtn" tapmode data-action="save">
+                保存
+            </div>
+        </div>
+
+    </div>
+
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/diy/public.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/diy/template.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        api.addEventListener({
+            name: 'changedFontSize'
+        }, function(ret, err) {
+            if (ret) {
+                changeFontSize();
+            }
+        });
+        api.parseTapmode();
+        var header = $api.byId('header');
+        // 实现沉浸式状态栏效果
+        $api.fixStatusBar(header);
+        fnReady();
+        roleId = api.pageParam.roleId;
+    };
+
+    var actionList = {
+        'back': function() {
+            api.closeWin();
+        },
+        'save': function() {
+            if ($('#roleName').val() == "") {
+                api.toast({
+                    msg: '请先输入角色名称！',
+                    duration: 2000,
+                    location: 'top'
+                });
+                return
+            }
+            var copyData = {
+                roleName: $('#roleName').val(),
+                id: roleId
+            }
+            fnPost('services/app/Role/InsertCopyRole', {
+                body: JSON.stringify(copyData)
+            }, 'application/json', true, false, function(ret, err) {
+                if (ret) {
+                    if (ret.success) {
+                        api.toast({
+                            msg: '复制成功！',
+                            duration: 2000,
+                            location: 'top'
+                        });
+                        api.sendEvent({
+                            name: 'refreshRoleList',
+                            extra: {}
+                        });
+                        setTimeout(function() {
+                            api.closeWin({});
+                        }, 300);
+                    }
+                }
+            })
+        }
+    }
+</script>
+
+</html>

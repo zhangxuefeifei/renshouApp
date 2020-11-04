@@ -1,0 +1,1526 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>选择角色权限页面</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/aui1.css" />
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #FFF;
+        }
+
+        #wrap {
+            height: 100%;
+        }
+
+        .aui-bar-nav {
+            top: 0;
+            z-index: 3;
+            background-color: #fff;
+            color: #333333;
+            font-size: var(--fontsize9);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+        }
+
+        .aui-bar-nav .aui-btn .aui-iconfont {
+            color: #333333;
+            font-weight: 900;
+        }
+
+        .flex-con {
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .border-t:before,
+        .border-b:after {
+            border-color: #F1F1F1;
+        }
+
+        .aui-searchbar {
+            background-color: #fff !important;
+            padding: 0.55rem 0.78rem;
+            width: auto;
+            height: auto;
+            color: #212121;
+            z-index: 3;
+        }
+
+        .aui-searchbar span {
+            font-size: var(--fontsize75);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #333333;
+        }
+
+        .aui-searchbar .arrow {
+            width: 0.8rem;
+            height: 0.8rem;
+            background: url(../../../image/main_frame/orgDownArrow.png);
+            background-size: 0.7rem 0.38rem;
+            background-position: center center;
+            background-repeat: no-repeat;
+            -webkit-transition: 200ms;
+            transition: 200ms;
+        }
+
+        .aui-searchbar-input input {
+            height: 1rem;
+            line-height: 1rem;
+        }
+
+        .aui-searchbar-input {
+            height: 1.6rem;
+            background-color: #f0f0f0;
+            border-radius: 0.8rem;
+            line-height: 1.6rem;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+            display: flex;
+            align-items: center;
+        }
+
+        .aui-searchbar-clear-btn {
+            background-color: #999999;
+            position: initial;
+            width: 0.8rem;
+            height: 0.8rem;
+        }
+
+        .aui-searchbar-clear-btn .aui-iconfont {
+            color: #FFF !important;
+            top: -5px;
+            font-size: var(--fontsize5);
+        }
+
+        .aui-media-list .aui-list-item {
+            display: flex;
+            padding-left: 0.78rem;
+        }
+
+        .aui-media-list-item-inner {
+            width: 100vw;
+        }
+
+        .aui-list .aui-list-item-inner {
+            padding-right: 0.78rem;
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+        }
+
+        .aui-list .aui-list-item-title {
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #333333;
+            width: 40vw;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+        }
+
+        .aui-list .aui-list-item-text {
+            font-size: var(--fontsize7);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+        }
+
+        .aui-list .aui-list-item-right {
+            font-size: var(--fontsize65);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+            margin-left: 0;
+        }
+
+        .sendUser span {
+            width: calc(100% - 0.5rem)
+        }
+
+        .aui-dot {
+            width: 0.5rem !important;
+            height: 0.5rem !important;
+            border-radius: 50% !important;
+            position: initial;
+            z-index: 1;
+        }
+
+        .aui-tab button {
+            background-color: #FFF;
+            outline: none;
+            box-sizing: content-box;
+            border-radius: 0;
+        }
+
+        .aui-radio:checked,
+        .aui-radio.aui-checked,
+        .aui-checkbox:checked,
+        .aui-checkbox.aui-checked {
+            background-color: #4f79e8;
+            border: solid 1px #4f79e8;
+        }
+
+        .filterDiv {
+            position: absolute;
+            width: 100%;
+            top: -2000px;
+            -webkit-transition: all 0.25s;
+            transition: all 0.25s;
+            z-index: 2;
+        }
+
+        .filterDiv input {
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+            height: auto !important;
+            line-height: inherit !important;
+            text-align: right;
+        }
+
+        .filterDiv .aui-list .aui-list-item:active {
+            background-color: #fff !important;
+        }
+
+        .arrow.active {
+            -webkit-transform: rotate(180deg);
+            transform: rotate(180deg);
+        }
+
+        .filterDiv .aui-content {
+            width: 100%
+        }
+
+        .filterDiv .aui-list-item-inner {
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #262626;
+        }
+
+        .aui-list .aui-list-item-text {
+            width: 100%;
+        }
+
+        .filterDiv .aui-list .aui-list-item-inner {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .filterDiv .aui-list .aui-list-item {
+            background-image: none;
+        }
+
+        .selectTime {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .selectTime span {
+            float: right;
+            color: #333333;
+            font-weight: 900;
+        }
+
+        .close {
+            float: right;
+            width: 16px;
+            height: 16px;
+            background: url(../../image/message_frame/close2.png);
+            background-size: 16px 16px;
+            background-position: center center;
+            background-repeat: no-repeat;
+            -webkit-transition: 200ms;
+            transition: 200ms;
+        }
+
+        .filterDiv .aui-list .aui-list-item-right,
+        .aui-list-item-title-row em {
+            margin-right: 15% !important;
+            max-width: 100% !important;
+        }
+
+        .aui-list-item-arrow:before {
+            border-color: #A2A2A2 !important;
+        }
+
+        .aui-list-item-arrow.change:before {
+            border-color: #A2A2A2 !important;
+            right: 0.6rem !important;
+            margin-top: -0.3rem !important;
+        }
+
+        .aui-list:after {
+            border: none !important;
+        }
+
+        .shade {
+            background: rgba(0, 0, 0, 0.4);
+            position: absolute;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .aui-list-buttons {
+            padding-left: 0 !important;
+            padding: 0.55rem 1.85rem !important;
+            display: flex !important;
+        }
+
+        .filterDiv button {
+            border-radius: 4.4vw;
+            justify-content: center;
+            height: 1.65rem;
+            line-height: 1.65rem;
+            width: 37.33vw;
+            display: flex;
+            font-size: var(--fontsize75);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0.08rem;
+            outline: none;
+        }
+
+        .sureBtn {
+            background: #4f79e8 !important;
+            color: #fff;
+        }
+
+        .cancelBtn {
+            background: #fff;
+            color: #4f79e8;
+        }
+
+        .cancelBtn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            border: 1px solid #4f79e8;
+            border-radius: 2.5rem !important;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            width: 200%;
+            height: 200%;
+            -webkit-transform: scale(0.5);
+            transform: scale(0.5);
+            -webkit-transform-origin: left top;
+            transform-origin: left top;
+            pointer-events: none;
+        }
+
+        #menuReturn {
+            overflow-y: hidden;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #menuReturn .iconRight {
+            display: inline-block;
+        }
+
+        .name {
+            width: calc(100% - 0.8rem - 0.5rem) !important;
+        }
+
+        .hasJunior .name {
+            border-right: solid 0.03rem #e6e6e6;
+        }
+
+        .aui-card-list {
+            margin-bottom: 0;
+            /*border: none;
+        background-size: 100% 1px;
+        background-repeat: no-repeat;
+        background-position: top;
+        background-image: linear-gradient(0, #dddddd, #dddddd 50%, transparent 50%);
+        background-image: -webkit-linear-gradient(90deg, #dddddd, #dddddd 50%, transparent 50%);*/
+        }
+
+        .aui-card-list-header,
+        .aui-media-list .aui-list-item-inner {
+            font-size: var(--fontsize75);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #333333;
+            display: flex;
+            justify-content: flex-start !important;
+            align-items: center;
+        }
+
+        .aui-media-list .aui-list-item-inner {
+            padding-right: 0 !important;
+        }
+
+        .aui-radio {
+            margin-right: 0.5rem;
+            width: 0.8rem;
+            height: 0.8rem;
+        }
+
+        .aui-radio:checked,
+        .aui-radio.aui-checked,
+        .aui-checkbox:checked,
+        .aui-checkbox.aui-checked {
+            background-color: #4f79e8;
+            border: solid 1px #4f79e8;
+        }
+
+        .aui-radio:checked:before,
+        .aui-radio.aui-checked:before,
+        .aui-checkbox:checked:before,
+        .aui-checkbox.aui-checked:before,
+        .aui-radio:checked:after,
+        .aui-radio.aui-checked:after,
+        .aui-checkbox:checked:after,
+        .aui-checkbox.aui-checked:after {
+            width: 0.4rem;
+            height: 0.24rem;
+            margin-left: -0.2125rem;
+            margin-top: -0.2125rem;
+            z-index: 0;
+        }
+
+        .junior {
+            display: flex;
+            align-items: center;
+        }
+
+        .junior span {
+            color: #aaaaaa;
+            font-size: var(--fontsize65);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+        }
+
+        .superior {
+            color: #4f79e8;
+        }
+
+        li {
+            -webkit-tap-highlight-color: rgba(255, 0, 0, 0);
+        }
+
+        .junior .juniorImg {
+            width: 0.78rem;
+            height: 0.7rem;
+            background: url(../../../image/message_frame/junior_pre.png);
+            background-size: 100%;
+            background-position: center center;
+            background-repeat: no-repeat;
+            margin-right: 0.23rem;
+        }
+
+        .junior.active span {
+            color: #4f79e8 !important;
+        }
+
+        .junior.active .juniorImg {
+            width: 0.78rem;
+            height: 0.7rem;
+            background: url(../../../image/message_frame/junior.png);
+            background-size: 100%;
+            background-position: center center;
+            background-repeat: no-repeat;
+            margin-right: 0.23rem;
+        }
+
+        .menuList {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+        }
+
+        .aui-list {
+            background-image: none;
+        }
+        /*.filterDiv .aui-list {
+        background-image: linear-gradient(0, #dddddd, #dddddd 50%, transparent 50%);
+    }*/
+
+        .menuList .aui-list .aui-list-item-inner,
+        .aui-list .aui-list-item {
+            min-height: 0;
+            padding-left: 0.75rem;
+        }
+
+        .menuList .hasJunior .aui-list-item-inner,
+        .menuList .hasJunior.aui-list-item {
+            padding-right: 4.03rem;
+            padding-left: 0;
+        }
+
+        .menuList .noJunior .aui-list-item-inner,
+        .menuList .noJunior.aui-list-item {
+            padding-right: 0;
+            padding-left: 0;
+        }
+
+        .menuList .noJunior .aui-media-list-item-inner {
+            padding-right: 0.75rem;
+        }
+
+        .menuList .aui-list .aui-list-item:active {
+            background-color: transparent;
+        }
+
+        .menuList .aui-media-list-item-inner:active {
+            background-color: #f5f5f5;
+        }
+
+        .menuList .aui-media-list-item-inner {
+            padding: 0.78rem 0 0.78rem 0.75rem;
+        }
+
+        .menuList .aui-media-list .aui-list-item-inner {
+            padding: 0;
+        }
+
+        .aui-list .aui-list-item-text {
+            display: -webkit-box;
+            font-size: var(--fontsize75) !important;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            -webkit-box-orient: horizontal;
+            -webkit-box-pack: center;
+        }
+
+        .aui-list .aui-list-item-right,
+        .aui-list-item-title-row em {
+            margin-left: 0;
+            position: absolute;
+            right: 0.75rem;
+            top: 0;
+            height: 100%;
+        }
+
+        .interval {
+            width: 100vw;
+            height: 0.6rem;
+            background-color: #f0f0f0;
+        }
+
+        .flex-con .aui-card-list-header:active {
+            background-color: #f5f5f5;
+        }
+
+        #footer {
+            background-color: #f0f0f0;
+            padding: 0.63rem 1.88rem;
+        }
+
+        .sureOrgBtn {
+            background: #A2BCFF;
+            color: #fff;
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0.08rem;
+            height: 2.2rem;
+            line-height: inherit;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5rem;
+        }
+
+        .sureOrgBtn:active {
+            color: #fff !important;
+            background-color: #A2BCFF !important;
+        }
+
+        .sureOrgBtn.active {
+            background: #4f79e8;
+            color: #fff;
+        }
+
+        .sureOrgBtn.active:active {
+            color: #212121 !important;
+            background-color: #bdbdbd !important;
+        }
+
+        .selectAllCard,
+        .menuReturn {
+            border: none;
+            background-size: 100% 1px;
+            background-repeat: no-repeat;
+            background-position: top;
+            background-image: linear-gradient(0, #dddddd, #dddddd 50%, transparent 50%);
+            background-image: -webkit-linear-gradient(90deg, #dddddd, #dddddd 50%, transparent 50%);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrap" class="flex-wrap flex-vertical">
+        <header class="aui-bar aui-bar-nav" id="header">
+            <div class="aui-pull-left aui-btn" tapmode data-action="back">
+                <span class="aui-iconfont aui-icon-left"></span>
+            </div>
+            <div class="aui-title">角色权限</div>
+        </header>
+
+        <div class="aui-card-list menuReturn" style="display:none">
+            <div class="aui-card-list-header" id="menuReturn">
+                <!-- <span id=" + 'span' + contactData.menuId + " data-param='" + data + "' tapmode data-action='return'>联系人</span> -->
+            </div>
+        </div>
+
+
+        <div class="flex-con">
+            <section id="menuSec">
+                <!-- <div class='interval'></div>
+                <div class="aui-content menuList">
+                    <ul class="aui-list aui-media-list hasJunior">
+                        <li class="aui-list-item aui-list-item-middle">
+                            <div class="aui-media-list-item-inner" id="{{value.menuId}}" tapmode>
+                                <div class="aui-list-item-inner">
+                                    <div class="aui-radio"></div>
+                                    <div class="aui-list-item-inner orgOrName">部门
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="aui-list-item-right junior active" tapmode>
+                                <div class="juniorImg"></div>
+                                <span>下级</span>
+                            </div>
+                        </li>
+                        <li class="aui-list-item aui-list-item-middle">
+                            <div class="aui-media-list-item-inner" id="{{value.menuId}}" tapmode>
+                                <div class="aui-list-item-inner">
+                                    <div class="aui-radio"></div>
+                                    <div class="aui-list-item-inner orgOrName">部门
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="aui-list-item-right junior active" tapmode>
+                                <div class="juniorImg"></div>
+                                <span>下级</span>
+                            </div>
+                        </li>
+                        <li class="aui-list-item aui-list-item-middle">
+                            <div class="aui-media-list-item-inner" id="{{value.menuId}}" tapmode>
+                                <div class="aui-list-item-inner">
+                                    <div class="aui-radio"></div>
+                                    <div class="aui-list-item-inner orgOrName">部门
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="aui-list-item-right junior active" tapmode>
+                                <div class="juniorImg"></div>
+                                <span>下级</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div> -->
+            </section>
+        </div>
+
+        <div id="footer">
+            <div class="aui-btn sureOrgBtn active" tapmode data-action="sure">
+                确定
+            </div>
+        </div>
+
+    </div>
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/diy/public.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/diy/template.js"></script>
+<script type="text/template" id="hasJuniorList">
+    <div class="aui-card-list selectAllCard">
+        <div class="aui-card-list-header" tapmode data-action="selectAll">
+            <div class="aui-radio"></div>全选
+        </div>
+    </div>
+    <div class='interval'></div>
+    <div class="aui-content menuList">
+        <ul class="aui-list aui-media-list">
+            {{each child value i}} {{if value.child.length != 0}}
+            <li class="aui-list-item aui-list-item-middle hasJunior">
+                <div class="aui-media-list-item-inner" id="{{value.menuId}}" tapmode data-param="{{value}}" data-param2="{{items}}">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-radio"></div>
+                        <div class="aui-list-item-inner name">{{value.name}} {{if value.selectedCount!=0}}（<span class="countNum">{{value.selectedCount}}/{{value.childCount}}</span>） {{else }}（<span class="countNum">{{value.childCount}}</span>） {{/if}}
+                        </div>
+                    </div>
+                </div>
+                <div class="aui-list-item-right junior active" tapmode data-param="{{value}}">
+                    <div class="juniorImg"></div>
+                    <span>下级</span>
+                </div>
+            </li>
+            {{else}}
+            <li class="aui-list-item aui-list-item-middle noJunior">
+                <div class="aui-media-list-item-inner" id="{{value.menuId}}" tapmode data-param="{{value}}" data-param2="{{items}}">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-radio"></div>
+                        <div class="aui-list-item-inner name">{{value.name}}
+                        </div>
+                    </div>
+                </div>
+            </li>
+            {{/if}} {{/each}}
+        </ul>
+    </div>
+</script>
+<script type="text/template" id="searchList">
+    <div class="aui-content menuList">
+        <ul class="aui-list aui-media-list">
+            {{each items value i}}
+            <li class="aui-list-item aui-list-item-middle noJunior searchResult">
+                <div class="aui-media-list-item-inner" id="{{value.menuId}}" tapmode data-param="{{value}}" data-param2="{{items}}">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-radio"></div>
+                        <div class="aui-list-item-inner name">{{value.name}}
+                        </div>
+                    </div>
+                </div>
+            </li>
+            {{/each}}
+        </ul>
+    </div>
+</script>
+<script type="text/javascript">
+    var nature = null;
+    apiready = function() {
+        api.addEventListener({
+            name: 'changedFontSize'
+        }, function(ret, err) {
+            if (ret) {
+                changeFontSize();
+            }
+        });
+        api.parseTapmode();
+        var header = $api.byId('header');
+        // 实现沉浸式状态栏效果
+        $api.fixStatusBar(header);
+        var mySearch = $api.byId('searchMyMessage');
+        var myFilter = $api.byId('myMessageFilter');
+        // 实现沉浸式状态栏效果
+        $api.fixStatusBar(header);
+        var footer = $api.byId('footer');
+        var search = $api.byId('searchOrgList');
+        var filter = $api.byId('orgListFilter');
+        // 实现沉浸式状态栏效果
+        $api.fixStatusBar(header);
+        // $api.fixTabBar(footer);
+        // 计算header和tab元素的高度
+        headerH = $api.offset(header).h;
+        roleId = api.pageParam.roleId;
+        roleData = api.pageParam.roleData;
+        from = api.pageParam.from;
+        type = api.pageParam.type;
+        if (from == 'roleAddOrUpdate') {
+            selectedmenuIds = api.pageParam.menuIds;
+            if (type == 'update') {
+                roleId = roleData.id;
+                hasReturned = api.pageParam.hasReturned;
+                if (!hasReturned) {
+                    getRoleMenus();
+                } else {
+                    getMenuList();
+                }
+            } else {
+                getMenuList();
+            }
+        }
+        if (from == 'roleList') {
+            getRoleMenus();
+        }
+        fnReady();
+        // selectedMenu = api.pageParam.selectedMenu;
+        // from = api.pageParam.from;
+        // if (selectedMenu.length != 0) {
+        //     $('.sureOrgBtn').addClass('active');
+        // } else {
+        //     $('.sureOrgBtn').removeClass('active');
+        // }
+
+        // api.addEventListener({
+        //     name: 'setOrgSelectNature'
+        // }, function(ret, err) {
+        //     if (ret) {
+        //         nature = ret.value.nature;
+        //         $('#orgNature').val(ret.value.natureName);
+        //         if ($('#arrow').hasClass('active')) {
+        //             $('#shade').hide();
+        //             $('#orgListFilter').css('top', '' + topHide + ' !important');
+        //             $('#arrow').removeClass('active');
+        //         }
+        //         if (nature != null || Filter != "") {
+        //             getSearchResultList();
+        //         } else {
+        //             getMenuList();
+        //         }
+        //     }
+        // });
+    };
+
+    var actionList = {
+        'back': function() {
+            if (from == 'roleAddOrUpdate') {
+                api.sendEvent({
+                    name: 'returnToAdd',
+                    extra: {
+                        menuIds: selectedmenuIds
+                    }
+                });
+            }
+            api.closeWin();
+        },
+        'sure': function() {
+            // console.log(JSON.stringify(selectedmenuIds));
+            if (from == 'roleList') {
+                var updateData = {
+                    menuIds: selectedmenuIds,
+                    id: roleId
+                };
+                fnPost('services/app/Role/UpdateRoleMenus', {
+                    body: JSON.stringify(updateData)
+                }, 'application/json', true, true, function(ret, err) {
+                    if (ret) {
+                        if (ret.success) {
+                            api.toast({
+                                msg: '修改成功！',
+                                duration: 2000,
+                                location: 'top'
+                            });
+                            setTimeout(function() {
+                                api.closeToWin({
+                                    name: 'roleList'
+                                });
+                            }, 300);
+                        }
+                    }
+                })
+            } else if (from == 'roleAddOrUpdate') {
+                roleData.menuIds = selectedmenuIds;
+                if (type == 'update') {
+                    fnPost('services/app/Role/UpdateRole', {
+                        body: JSON.stringify(roleData)
+                    }, 'application/json', true, true, function(ret, err) {
+                        if (ret) {
+                            if (ret.success) {
+                                api.toast({
+                                    msg: '修改成功！',
+                                    duration: 2000,
+                                    location: 'top'
+                                });
+                                api.sendEvent({
+                                    name: 'refreshRoleList',
+                                    extra: {}
+                                });
+                                setTimeout(function() {
+                                    api.closeToWin({
+                                        name: 'roleList'
+                                    });
+                                }, 300);
+                            }
+                        }
+                    })
+                } else if (type == 'add') {
+                    fnPost('services/app/Role/InsertRole', {
+                        body: JSON.stringify(roleData)
+                    }, 'application/json', true, false, function(ret, err) {
+                        if (ret) {
+                            if (ret.success) {
+                                api.toast({
+                                    msg: '新增成功！',
+                                    duration: 2000,
+                                    location: 'top'
+                                });
+                                api.sendEvent({
+                                    name: 'refreshRoleList',
+                                    extra: {}
+                                });
+                                setTimeout(function() {
+                                    api.closeToWin({
+                                        name: 'roleList'
+                                    });
+                                }, 300);
+                            }
+                        }
+                    })
+                }
+            }
+
+        },
+        'selectAll': function() {
+            $(this).find('.aui-radio').toggleClass('aui-checked');
+            var liList = $('.menuList .aui-media-list-item-inner');
+            if ($(this).find('.aui-radio').hasClass('aui-checked')) {
+                $('.menuList .aui-radio').addClass('aui-checked');
+                $('.menuList .junior').removeClass('active');
+            } else {
+                $('.menuList .aui-radio').removeClass('aui-checked');
+                $('.menuList .junior').addClass('active');
+            }
+            for (var i = 0; i < liList.length; i++) {
+                var li = $(liList[i]);
+                var data = JSON.parse(li.attr('data-param'));
+                var data2 = JSON.parse(li.attr('data-param2'));
+                if ($(this).find('.aui-radio').hasClass('aui-checked')) {
+                    var selectData = {
+                        id: data.menuId,
+                        coding: data.coding
+                    };
+                    selectedmenuIds.push(selectData);
+                    if (data.child.length != 0) {
+                        for (var o = 0; o < allMenus.length; o++) {
+                            if (allMenus[o].hasOwnProperty('o' + data.menuId)) {
+                                selectedMenu.push(allMenus[o]);
+                                var selectData = {
+                                    id: allMenus[o].menuId,
+                                    coding: allMenus[o].coding
+                                }
+                                selectedmenuIds.push(selectData);
+                            }
+                            if (allMenus[o].menuId == data.menuId) {
+                                selectedMenu.push(allMenus[o]);
+                            }
+                        };
+                        dgSelect(data.child);
+                        data2.selectedCount += data.childCount;
+                        data.selectedCount = data.childCount;
+                        li.find('.countNum').html(data.childCount + '/' + data.childCount);
+                    } else {
+                        for (var e = 0; e < allMenus.length; e++) {
+                            if (allMenus[e].menuId == data.menuId) {
+                                selectedMenu.push(allMenus[e]);
+                            }
+                        };
+                        data.selectedCount = 1;
+                        data2.selectedCount += data.selectedCount;
+                    }
+
+                } else {
+                    var idIndex;
+                    idIndex = selectedmenuIds.findIndex(function(p) {
+                        return p.id == data.menuId;
+                    });
+                    selectedmenuIds.splice(idIndex, 1);
+                    var index;
+                    if (data.child.length != 0) {
+                        data2.selectedCount -= data.childCount;
+                        data.selectedCount = 0;
+                        dgClear(data.child);
+                        li.find('.countNum').html(data.childCount);
+                        var testData = selectedMenu;
+                        for (var j = 0; j < testData.length; j++) {
+                            if (testData[j].hasOwnProperty('o' + data.menuId)) {
+                                selectedMenu.splice(j, 1);
+                                var idIndex;
+                                idIndex = selectedmenuIds.findIndex(function(p) {
+                                    return p.id == testData[j].menuId;
+                                });
+                                if (idIndex != -1) {
+                                    selectedmenuIds.splice(idIndex, 1);
+                                }
+                                j--;
+                            }
+                        }
+                    } else {
+                        data.selectedCount = 0;
+                        data2.selectedCount -= 1;
+                        index = selectedMenu.findIndex(function(p) {
+                            return p.menuId == data.menuId;
+                        });
+                        selectedMenu.splice(index, 1);
+                    }
+                }
+                for (var k = 0; k < data2.child.length; k++) {
+                    if (data2.child[k].menuId == data.menuId) {
+                        data2.child[k] = data;
+                    }
+                }
+                $('.aui-media-list-item-inner').attr('data-param2', JSON.stringify(data2));
+                li.attr('data-param', JSON.stringify(data));
+                li.next().attr('data-param', JSON.stringify(data));
+                $('#span' + data2.menuId + '').attr('data-param', JSON.stringify(data2));
+            };
+            selectedMenu = unique(selectedMenu);
+        },
+        'return': function() {
+            if ($(this).hasClass('superior')) {
+                api.showProgress({
+                    title: '加载中',
+                    modal: false
+                });
+                var that = this;
+                setTimeout(function() {
+                    api.hideProgress();
+                    var spanList = $('#menuReturn span');
+                    for (var i = spanList.length - 1; i > -1; i--) {
+                        if (i != 0) {
+                            var pdata = JSON.parse($(spanList[i - 1]).attr('data-param'));
+                            var kidData = JSON.parse($(spanList[i]).attr('data-param'));
+                            // var num = 0;
+                            // for (var j = 0; j < pdata.child.length; j++) {
+                            //     if (pdata.child[j].menuId == kidData.menuId) {
+                            //         pdata.child[j] = kidData;
+                            //     }
+                            // }
+                            // for (var j = 0; j < pdata.child.length; j++) {
+                            //     num += pdata.child[j].selectedCount;
+                            // }
+                            // pdata.selectedCount = num;
+                            dgSelectMenu([pdata]);
+                            // dgSelectMenu([kidData]);
+                            $(spanList[i - 1]).attr('data-param', JSON.stringify(pdata));
+                        }
+                    }
+                    var data = JSON.parse($(that).attr('data-param'));
+                    var list = {
+                        child: data.child,
+                        items: data
+                    };
+                    $(that).nextAll().remove();
+                    var ele = document.getElementById('menuReturn');
+                    ele.scrollLeft = ele.scrollWidth;
+                    if (data.menuId == 0) {
+                        $('#menuReturn').parent().hide();
+                    } else {
+                        $(that).removeClass('superior');
+                    }
+                    var str = template('hasJuniorList', list);
+                    $('#menuSec').html(str);
+                    for (var i = 0; i < data.child.length; i++) {
+                        if (data.child[i].selectedCount == data.child[i].childCount && data.child[i].childCount != 0) {
+                            $('#' + data.child[i].menuId + '').find('.aui-radio').addClass('aui-checked');
+                            $('#' + data.child[i].menuId + '').next().removeClass('active');
+                            $('#' + data.child[i].menuId + '').find('.countNum').html(data.child[i].childCount + '/' + data.child[i].childCount);
+                        } else if (data.child[i].childCount == 0) {
+                            for (var j = 0; j < selectedMenu.length; j++) {
+                                if (data.child[i].menuId == selectedMenu[j].menuId) {
+                                    $('#' + data.child[i].menuId + '').find('.aui-radio').addClass('aui-checked');
+                                }
+                            }
+                        }
+                    };
+                    var radioList = $('.menuList .aui-radio');
+                    var num = 0;
+                    for (var i = 0; i < radioList.length; i++) {
+                        if ($(radioList[i]).hasClass('aui-checked')) {
+                            num++;
+                        }
+                    }
+                    if (num == radioList.length) {
+                        $('.aui-card-list-header').find('.aui-radio').addClass('aui-checked');
+                    }
+                    if (data.child.length == 0) {
+                        $('.hasJunior').remove();
+                    }
+                    operationDom();
+                    api.parseTapmode();
+                    selectMenu();
+                    selectJunior();
+                }, 300);
+            }
+        }
+    }
+
+    var selectedmenuIds = [];
+
+    // function dgSelect(data) {
+    //     for (var i = 0; i < data.length; i++) {
+    //         var id = data[i].menuId
+    //         var sNum = 0;
+    //         for (var c = 0; c < selectMenu.length; c++) {
+    //             if (selectedMenu[c].hasOwnProperty(id)) {
+    //                 sNum++
+    //             }
+    //         }
+    //         data[i].selectedCount = sNum;
+    //         dgSelect(data[i].child);
+    //     }
+    // }
+
+    function dgSelectParent(id) {
+        for (var i = 0; i < allMenus.length; i++) {
+            if (allMenus[i].menuId == id) {
+                var selectData = {
+                    id: allMenus[i].menuId,
+                    coding: allMenus[i].coding
+                }
+                selectedmenuIds.push(selectData);
+                selectedMenu.push(allMenus[i]);
+                dgSelectParent(allMenus[i].parentId);
+            }
+        }
+    }
+
+    function dgClearParent(id) {
+        for (var i = 0; i < allMenus.length; i++) {
+            if (allMenus[i].menuId == id) {
+                var index1;
+                var index2;
+                index1 = selectedmenuIds.findIndex(function(p) {
+                    return p.id == allMenus[i].menuId;
+                });
+                index2 = selectedMenu.findIndex(function(p) {
+                    return p.menuId == allMenus[i].menuId;
+                });
+                selectedmenuIds.splice(index1, 1);
+                selectedMenu.splice(index2, 1);
+                dgClearParent(allMenus[i].parentId);
+            }
+        }
+    }
+
+    var touchEvent;
+    var selectedMenu = [];
+
+    //选择菜单权限
+    function selectMenu() {
+        $('.menuList .aui-media-list-item-inner').on('touchstart', function(e) {
+            e.preventDefault;
+        });
+
+        $('.menuList .aui-media-list-item-inner').on('touchmove', function(e) {
+            touchEvent = true;
+        });
+
+        $('.menuList .aui-media-list-item-inner').on('touchend', function(e) {
+            if (!touchEvent) {
+                $(this).find('.aui-radio').toggleClass('aui-checked');
+                var data = JSON.parse($(this).attr('data-param'));
+                var data2 = JSON.parse($(this).attr('data-param2'));
+                if ($(this).find('.aui-radio').hasClass('aui-checked')) {
+                    $(this).next().removeClass('active');
+                    var selectData = {
+                        id: data.menuId,
+                        coding: data.coding
+                    }
+                    selectedmenuIds.push(selectData);
+                    dgSelectParent(data.parentId);
+                    if (data.child.length != 0) {
+                        for (var i = 0; i < allMenus.length; i++) {
+                            if (allMenus[i].hasOwnProperty('o' + data.menuId)) {
+                                selectedMenu.push(allMenus[i]);
+                                var selectData = {
+                                    id: allMenus[i].menuId,
+                                    coding: allMenus[i].coding
+                                }
+                                selectedmenuIds.push(selectData);
+                            }
+                            if (allMenus[i].menuId == data.menuId) {
+                                selectedMenu.push(allMenus[i]);
+                            }
+                        };
+                        dgSelect(data.child);
+                        data2.selectedCount = data2.selectedCount + data.childCount + 1;
+                        data.selectedCount = data.childCount;
+                        $(this).find('.countNum').html(data.childCount + '/' + data.childCount);
+                    } else {
+                        for (var i = 0; i < allMenus.length; i++) {
+                            if (allMenus[i].menuId == data.menuId) {
+                                selectedMenu.push(allMenus[i]);
+                            }
+                        };
+                        data.selectedCount = 1;
+                        data2.selectedCount += data.selectedCount;
+                    }
+                    // selectedMenu.push(data.menuId);
+                } else {
+                    $(this).next().addClass('active');
+                    var idIndex;
+                    idIndex = selectedmenuIds.findIndex(function(p) {
+                        return p.id == data.menuId;
+                    });
+                    selectedmenuIds.splice(idIndex, 1);
+                    dgClearParent(data.parentId);
+                    var index;
+                    if (data.child.length != 0) {
+                        data2.selectedCount = data2.selectedCount - data.childCount - 1;
+                        data.selectedCount = 0;
+                        dgClear(data.child);
+                        $(this).find('.countNum').html(data.childCount);
+                        for (var i = 0; i < selectedMenu.length; i++) {
+                            if (selectedMenu[i].menuId == data.menuId) {
+                                selectedMenu.splice(i, 1);
+                            }
+                        }
+                        var testData = selectedMenu;
+                        for (var i = 0; i < testData.length; i++) {
+                            if (testData[i].hasOwnProperty('o' + data.menuId)) {
+                                var idIndex;
+                                idIndex = selectedmenuIds.findIndex(function(p) {
+                                    return p.id == testData[i].menuId;
+                                });
+                                selectedmenuIds.splice(idIndex, 1);
+                                selectedMenu.splice(i, 1);
+                                i--;
+                            }
+                        }
+                    } else {
+                        data.selectedCount = 0;
+                        data2.selectedCount -= 1;
+                        index = selectedMenu.findIndex(function(p) {
+                            return p.menuId == data.menuId;
+                        });
+                        selectedMenu.splice(index, 1);
+                    }
+                }
+                dgSelectMenu([data]);
+                dgSelectMenu([data2]);
+                var radioArr = $('.menuList .aui-radio');
+                var checkedNum = 0;
+                for (var i = 0; i < radioArr.length; i++) {
+                    if ($(radioArr[i]).hasClass('aui-checked')) {
+                        checkedNum++;
+                    }
+                }
+                for (var i = 0; i < data2.child.length; i++) {
+                    if (data2.child[i].menuId == data.menuId) {
+                        data2.child[i] = data;
+                    }
+                }
+                if (checkedNum == radioArr.length) {
+                    $('.aui-card-list-header').find('.aui-radio').addClass('aui-checked');
+                } else {
+                    $('.aui-card-list-header').find('.aui-radio').removeClass('aui-checked');
+                }
+                $('.aui-media-list-item-inner').attr('data-param2', JSON.stringify(data2));
+                $(this).attr('data-param', JSON.stringify(data));
+                // console.log(JSON.stringify(data2));
+                $(this).next().attr('data-param', JSON.stringify(data));
+                $('#span' + data2.menuId + '').attr('data-param', JSON.stringify(data2));
+                selectedMenu = unique(selectedMenu);
+                selectedmenuIds = reduce(selectedmenuIds);
+                // if (selectedMenu.length != 0) {
+                //     $('.sureOrgBtn').addClass('active');
+                // } else {
+                //     $('.sureOrgBtn').removeClass('active');
+                // }
+                // console.log(JSON.stringify(selectedmenuIds));
+                // console.log(JSON.stringify(selectedMenu));
+            }
+            touchEvent = false;
+        });
+    }
+
+    //已选带父级组织机构的去重
+    function unique(songs) {
+        var result = {};
+        var finalResult = [];
+        for (var i = 0; i < songs.length; i++) {
+            result[songs[i].menuId] = songs[i];
+        }
+        for (item in result) {
+            finalResult.push(result[item]);
+        }
+        return finalResult;
+    }
+
+    function reduce(songs) {
+        var result = {};
+        var finalResult = [];
+        for (var i = 0; i < songs.length; i++) {
+            result[songs[i].id] = songs[i];
+        }
+        for (item in result) {
+            finalResult.push(result[item]);
+        }
+        return finalResult;
+    }
+
+    var isClick = true;
+
+    //选择下级
+    function selectJunior() {
+        $('.junior').on('touchstart', function(e) {
+            e.preventDefault;
+        });
+
+        $('.junior').on('touchmove', function(e) {
+            touchEvent = true;
+        });
+
+        $('.junior').on('touchend', function(e) {
+            if (!touchEvent) {
+                if ($(this).hasClass('active')) {
+                    if (isClick) {
+                        isClick = false;
+                        api.showProgress({
+                            title: '加载中',
+                            modal: false
+                        })
+                        var that = this;
+                        setTimeout(function() {
+                            api.hideProgress();
+                            var data = JSON.parse($(that).attr('data-param'));
+                            // console.log($(that).attr('data-param'));
+                            var list = {
+                                child: data.child,
+                                items: data
+                            };
+                            var str = template('hasJuniorList', list);
+                            $('#menuSec').html(str);
+                            $('#menuReturn').parent().show();
+                            var html = $('#menuReturn').html();
+                            html = html.replaceAll('<span', '<span class="superior"');
+                            html += "<div class='iconRight'>></div><span id=" + 'span' + data.menuId + " data-param=' " + JSON.stringify(data) + "' tapmode data-action='return'>" + data.name + "</span>";
+                            $('#menuReturn').html(html);
+                            var ele = document.getElementById('menuReturn');
+                            ele.scrollLeft = ele.scrollWidth;
+                            operationDom();
+                            api.parseTapmode();
+                            selectMenu();
+                            selectJunior();
+                            // console.log(JSON.stringify(data.child));
+                            for (var i = 0; i < data.child.length; i++) {
+                                if (data.child[i].selectedCount == data.child[i].childCount && data.child[i].childCount != 0) {
+                                    $('#' + data.child[i].menuId + '').find('.aui-radio').addClass('aui-checked');
+                                    $('#' + data.child[i].menuId + '').next().removeClass('active');
+                                    $('#' + data.child[i].menuId + '').find('.countNum').html(data.child[i].childCount + '/' + data.child[i].childCount);
+                                } else if (data.child[i].childCount == 0) {
+                                    for (var j = 0; j < selectedMenu.length; j++) {
+                                        if (data.child[i].menuId == selectedMenu[j].menuId) {
+                                            $('#' + data.child[i].menuId + '').find('.aui-radio').addClass('aui-checked');
+                                        }
+                                    }
+                                }
+                            };
+                            var radioList = $('.menuList .aui-radio');
+                            var num = 0;
+                            for (var i = 0; i < radioList.length; i++) {
+                                if ($(radioList[i]).hasClass('aui-checked')) {
+                                    num++;
+                                }
+                            }
+                            if (num == radioList.length) {
+                                $('.aui-card-list-header').find('.aui-radio').addClass('aui-checked');
+                            }
+                        }, 300);
+                        setTimeout(function() {
+                            isClick = true;
+                        }, 1000);
+                    }
+                }
+
+            }
+            touchEvent = false;
+        });
+    }
+
+    var allMenus = [];
+    //递归整理成带父级的组织机构
+    function getMenuWithParent(data, tempData) {
+        for (var index = 0; index < data.length; index++) {
+            var item = data[index];
+            if (item.parentId != 0) {
+                tempData['o' + item.parentId] = item.parentId;
+            }
+            var menu = {
+                menuId: item.menuId,
+                name: item.name,
+                child: item.child,
+                childCount: item.childCount,
+                selectedCount: item.selectedCount,
+                parentId: item.parentId,
+                coding: item.coding
+            }
+            if (item.parentId != 0) {
+                $.extend(menu, tempData);
+            }
+            allMenus.push(menu);
+            if (item.child && item.child.length > 0) {
+                getMenuWithParent(item.child, tempData);
+            } else {
+                delete tempData['o' + item.parentId];
+            }
+            if (index == data.length - 1 && item.parentId != 0) {
+                delete tempData['o' + item.parentId];
+            }
+        }
+    }
+
+    function dg(data) {
+        for (var index = 0; index < data.length; index++) {
+            var item = data[index];
+            item['selectedCount'] = 0;
+            dg(item.child);
+        }
+    }
+
+    function dgClear(data) {
+        for (var index = 0; index < data.length; index++) {
+            var item = data[index];
+            item.selectedCount = 0;
+            dgClear(item.child);
+        }
+    }
+
+    function dgSelect(data) {
+        for (var index = 0; index < data.length; index++) {
+            var item = data[index];
+            if (item.childCount != 0) {
+                item.selectedCount = item.childCount;
+            } else {
+                item.selectedCount = 1;
+            }
+            dgSelect(item.child);
+        }
+    }
+
+    function dgSelectMenu(data) {
+        for (var i = 0; i < data.length; i++) {
+            var id = 'o' + data[i].menuId
+            var sNum = 0;
+            for (var c = 0; c < selectedMenu.length; c++) {
+                if (selectedMenu[c].hasOwnProperty(id)) {
+                    sNum++
+                }
+            }
+            data[i].selectedCount = sNum;
+            dgSelectMenu(data[i].child);
+        }
+    }
+
+    function setSelect() {
+        for (var i = 0; i < selectedmenuIds.length; i++) {
+            for (var j = 0; j < allMenus.length; j++) {
+                if (allMenus[j].menuId == selectedmenuIds[i].id) {
+                    selectedMenu.push(allMenus[j]);
+                }
+            }
+        }
+        selectedMenu = unique(selectedMenu);
+    }
+
+    function setIdsSelect() {
+        for (var i = 0; i < codingData.length; i++) {
+            for (var j = 0; j < allMenus.length; j++) {
+                if (allMenus[j].coding == codingData[i]) {
+                    var data = {
+                        id: allMenus[j].menuId,
+                        coding: allMenus[j].coding
+                    }
+                    selectedmenuIds.push(data);
+                }
+            }
+        }
+        selectedmenuIds = reduce(selectedmenuIds);
+        // console.log(JSON.stringify(selectedmenuIds));
+    }
+
+    var codingData = []
+
+    function getRoleMenus() {
+        fnGet('services/app/Role/GetRoleMenus?Id=' + roleId + '', {}, false, function(ret, err) {
+            if (ret) {
+                if (ret.success) {
+                    codingData = ret.result.menuCodings;
+                    getMenuList();
+                }
+            }
+        })
+    }
+
+    var baseData;
+
+    function getMenuList() {
+        allMenus = [];
+        var url = 'services/app/AppMenu/GetCurrentTenantMenuTree';
+        fnGet(url, {}, false, function(ret, err) {
+            if (ret) {
+                if (ret.success) {
+                    if (ret.result.length != 0) {
+                        $('#menuSec').show();
+                        var menuData = ret.result;
+                        baseData = {
+                            child: menuData,
+                            name: '顶层',
+                            menuId: 0
+                        };
+                        dg(menuData);
+                        getMenuWithParent(menuData, {});
+                        if (from == 'roleList') {
+                            setIdsSelect();
+                            setSelect();
+                        } else if (from == 'roleAddOrUpdate') {
+                            if (type == 'update' && !hasReturned) {
+                                setIdsSelect();
+                            }
+                            setSelect();
+                        }
+                        dgSelectMenu([baseData]);
+                        var list = {
+                            child: baseData.child,
+                            items: baseData
+                        };
+                        var str = template('hasJuniorList', list);
+                        $('#menuSec').html(str);
+                        for (var i = 0; i < baseData.child.length; i++) {
+                            if (baseData.child[i].selectedCount == baseData.child[i].childCount && baseData.child[i].childCount != 0) {
+                                $('#' + baseData.child[i].menuId + '').find('.aui-radio').addClass('aui-checked');
+                                $('#' + baseData.child[i].menuId + '').next().removeClass('active');
+                                $('#' + baseData.child[i].menuId + '').find('.countNum').html(baseData.child[i].childCount + '/' + baseData.child[i].childCount);
+                            } else if (baseData.child[i].childCount == 0) {
+                                for (var j = 0; j < selectedMenu.length; j++) {
+                                    if (baseData.child[i].menuId == selectedMenu[j].menuId) {
+                                        $('#' + baseData.child[i].menuId + '').find('.aui-radio').addClass('aui-checked');
+                                    }
+                                }
+                            }
+                        };
+                        var radioList = $('.menuList .aui-radio');
+                        var num = 0;
+                        for (var i = 0; i < radioList.length; i++) {
+                            if ($(radioList[i]).hasClass('aui-checked')) {
+                                num++;
+                            }
+                        }
+                        if (num == radioList.length) {
+                            $('.aui-card-list-header').find('.aui-radio').addClass('aui-checked');
+                        }
+                        selectMenu();
+                        selectJunior();
+                        var data = JSON.stringify(baseData);
+                        $('#menuReturn').html("<span class='superior' id=" + 'span' + baseData.menuId + " data-param='" + data + "' tapmode data-action='return'>" + baseData.name + "</span>");
+                        operationDom();
+                        api.parseTapmode();
+                    } else {
+                        $('#menuSec').hide();
+                    }
+                } else {
+                    $('#menuSec').hide();
+                }
+            }
+
+        })
+    }
+</script>
+
+</html>

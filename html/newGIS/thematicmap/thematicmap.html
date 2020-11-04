@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>专题地图</title>
+    <link rel="stylesheet" href="../../../css/api.css">
+    <link rel="stylesheet" href="../../../css/aui.css">
+    <link rel="stylesheet" href="../css/ol.css">
+    <link rel="stylesheet" href="../css/pointpipeinfo.css">
+    <link rel="stylesheet" href="../css/thematicIcon.css">
+    <style rel="stylesheet">
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            overflow-y: hidden;
+        }
+
+        .flex-box {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            overflow-y: hidden;
+        }
+
+        header.aui-bar-nav {
+            background: #fff;
+            font-size: 0.8rem;
+            font-family: PingFangSC-Semibold, PingFang SC;
+            font-weight: 600;
+            color: #333;
+            position: absolute;
+            background: transparent;
+        }
+
+        header.aui-bar-nav .aui-btn .aui-iconfont {
+            color: #333;
+            width: 1.2rem;
+            height: 1.2rem;
+            font-weight: bold;
+            border: none;
+        }
+
+        header .aui-icon-left:before {
+            content: url('../image/closeWin.png');
+            width: 1.2rem;
+            height: 1.2rem;
+        }
+        /*其他类*/
+
+        .otherThematic_box {
+            display: flex;
+            flex-direction: row;
+            position: absolute;
+            top: 3rem;
+            width: 95vw;
+            height: 3rem;
+            line-height: 3rem;
+            z-index: 1005;
+            margin-top: 0.5rem;
+            overflow: hidden;
+            overflow-x: scroll!important;
+            left: 0.5rem;
+        }
+
+        .otherThematic_box_guanwang {
+            top: 5rem;
+        }
+
+        .otherThematic_box .btns {
+            flex-shrink: 0;
+            width: 3.5rem;
+            height: 1.85rem;
+            line-height: 1.85rem;
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0rem 0.2rem 0.4rem 0rem rgba(0, 0, 0, 0.08), 0rem 0rem 0.05rem 0rem rgba(0, 0, 0, 0.08);
+            font-size: 0.6rem;
+            color: #0A2463;
+            border-radius: 8rem;
+            border: none;
+            margin: 0.5rem;
+            text-align: center;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .btns.btns_active {
+            color: #fff;
+            background: rgba(111, 126, 246, 1);
+            box-shadow: 0rem 0.2rem 0.4rem 0rem rgba(0, 0, 0, 0.08), 0rem 0rem 0.05rem 0rem rgba(0, 0, 0, 0.08);
+        }
+        /*tab切换*/
+
+        .aui-tab {
+            width:95vw;
+            height: 2rem;
+            line-height: 2rem;
+            padding-left: 1.3rem;
+            background: #F0F1FF;
+            position: absolute;
+            top: 3.5rem;
+            left: 0.8rem;
+            overflow: hidden!important;
+            display: none;
+        }
+
+        .aui-tab-item {
+            width: 2rem;
+            height: 2rem;
+            line-height: 2rem;
+            color: #0A2463;
+            font-size: 0.6rem;
+            margin-right: 1rem;
+        }
+
+        .aui-tab-item:first-child {
+            margin-right: 1.6rem;
+        }
+
+        .aui-tab-item.aui-active {
+            font-size: 0.8rem;
+            color: #0A2463;
+            border-bottom: 2px solid #0A2463;
+            font-weight: 600;
+        }
+
+        .map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .guanjing,
+        .guancai,
+        .guanwang {
+            display: none;
+        }
+
+        .m_t_1rem {
+            margin-top: 0.3rem!important;
+        }
+
+
+
+    </style>
+
+</head>
+
+<body class="flex-box" id='flex-box'>
+    <!--  地图 -->
+    <div class="map" id="map"></div>
+    <header class="aui-bar aui-bar-nav" id='header'>
+        <div class="aui-pull-left aui-btn" onclick="closeWin()" tapmode>
+            <span class="aui-iconfont aui-icon-left"></span>
+        </div>
+        <div class="aui-title"></div>
+    </header>
+    <div class="aui-tab" id="tab">
+        <div class="aui-tab-item aui-active aui-pull-left">管点</div>
+        <div class="aui-tab-item aui-pull-left">管线</div>
+    </div>
+    <div class="otherThematic_box guanjing">
+        <div class="btns btns_active" tapmode onclick="lineChangeThematic(this,true,null,null)">全部</div>
+        <div class="btns" tapmode onclick="lineChangeThematic(this,false,0,200)">0-200</div>
+        <div class="btns" tapmode onclick="lineChangeThematic(this,false,201,400)">200-400</div>
+        <div class="btns" tapmode onclick="lineChangeThematic(this,false,401,600)">400-600</div>
+        <div class="btns" tapmode onclick="lineChangeThematic(this,false,601,800)">600-800</div>
+        <div class="btns" tapmode onclick="lineChangeThematic(this,false,801,1000)">800-1000</div>
+        <div class="btns" tapmode onclick="lineChangeThematic(this,false,1001,1200)">1000-1200</div>
+        <div class="btns" tapmode onclick="lineChangeThematic(this,false,1201,1400)">1200-1400</div>
+        <div class="btns" tapmode onclick="lineChangeThematic(this,false,1400,1600)">1400-1600</div>
+    </div>
+    <div class="otherThematic_box guancai">
+        <div class="btns btns_active" tapmode onclick="changeThematic(this,true)">全部</div>
+        <div class="btns" tapmode onclick="changeThematic(this,'qiumozhutie')">球墨铸铁</div>
+        <div class="btns" tapmode onclick="changeThematic(this,'zhutie')">铸铁</div>
+        <div class="btns" tapmode onclick="changeThematic(this,'prc')">PRC</div>
+        <div class="btns" tapmode onclick="changeThematic(this,'pe')">PE</div>
+        <div class="btns" tapmode onclick="changeThematic(this,'pvc')">PVC</div>
+        <div class="btns" tapmode onclick="changeThematic(this,'tong')">砼</div>
+        <div class="btns" tapmode onclick="changeThematic(this,'gang')">钢</div>
+        <div class="btns" tapmode onclick="changeThematic(this,'boligang')">玻璃钢</div>
+    </div>
+
+    <div class="otherThematic_box otherThematic_box_guanwang guanwang">
+        <div class="btns btns_active" tapmode onclick="pipeNetworkChangeThematic(this,'all')">全部</div>
+        <div class="btns" tapmode onclick="pipeNetworkChangeThematic(this,1)">现有</div>
+        <div class="btns" tapmode onclick="pipeNetworkChangeThematic(this,2)">规划</div>
+        <div class="btns" tapmode onclick="pipeNetworkChangeThematic(this,3)">废弃</div>
+        <div class="btns" tapmode onclick="pipeNetworkChangeThematic(this,4)">在建</div>
+    </div>
+    <div class="icon_box">
+        <ul class='guanjingIcon'>
+            <li><span class="color1"></span> 0-200</li>
+            <li><span class="color2"></span>200-400</li>
+            <li><span class="color3"></span>400-600</li>
+            <li><span class="color4"></span>600-800</li>
+            <li><span class="color5"></span>800-1000</li>
+            <li><span class="color6"></span>1000-1200</li>
+            <li><span class="color7"></span>1200-1400</li>
+            <li><span class="color8"></span>1400-1600</li>
+          </ul>
+        <ul class='guancaiIcon'>
+            <li><span class="color1"></span>球墨铸铁</li>
+            <li><span class="color2"></span>铸铁</li>
+            <li><span class="color3"></span>PRC</li>
+            <li><span class="color4"></span>PE</li>
+            <li><span class="color5"></span>PVC</li>
+            <li><span class="color6"></span>砼</li>
+            <li><span class="color7"></span>钢</li>
+            <li><span class="color8"></span>玻璃钢</li>
+        </ul>
+        <ul class='guanwangPointIcon'>
+            <li><span class="pointicon1"></span>现有</li>
+            <li><span class="pointicon2"></span>规划</li>
+            <li><span class="pointicon3"></span>废弃</li>
+            <li><span class="pointicon4"></span>在建</li>
+        </ul>
+        <ul class='guanwangPipeIcon'>
+            <li><span class="pipeline1"></span>现有</li>
+            <li><span class="pipeline2"></span>规划</li>
+            <li><span class="pipeline3"></span>废弃</li>
+            <li><span class="pipeline4"></span>在建</li>
+        </ul>
+    </div>
+
+
+    <!-- 管点。管线信息框 -->
+    <div class="point_pipe_mask" tapmode onclick="hidePointOrPipeInfo()">
+    </div>
+    <div class="point_pipe_box">
+    </div>
+
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/aui-tab.js"></script>
+<script type="text/javascript" src="../../../script/template.js"></script>
+
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/ol-debug.js"></script>
+<script type="text/javascript" src="../script/base64.js"></script>
+<!-- 初始化地图 -->
+<script type="text/javascript" src="../script/initmap.js"></script>
+<!-- 专题图的所有图标js ,必须在addordeletelayer。js 前面-->
+<script type="text/javascript" src="../script/thematicIcon.js"></script>
+<!-- 添加图层js,管点管线等操作  -->
+<script type="text/javascript" src="../script/addordeletelayer.js"></script>
+
+<!-- 管点信息模板 -->
+<script type="text/template" id='pointInfoDemo'>
+    <div class="aui-row m_t_1rem">
+        <div class="aui-col-xs-12 aui-text-left">管点编号: <span>{{pointnumbe}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"> <span class='dot'></span> 经度: <span>{{lon}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>纬度: <span>{{lat}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>设备类型: <span>{{pointtype}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>高程: <span>{{elevation}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>埋深: <span>{{deep}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>埋设日期: <span>{{buildtime}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>型号: <span>{{unittype}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-12 aui-text-left"><span class='dot'></span>所属道路: <span>{{location}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-12 aui-text-left"><span class='dot'></span>材料厂商: <span>{{firm}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-12 aui-text-left"><span class='dot'></span>所属单位: <span>{{buildunit}}</span></div>
+    </div>
+</script>
+
+<!-- 管线信息模板 -->
+<script type="text/template" id='pipeInfoDemo'>
+    <div class="aui-row m_t_1rem">
+        <div class="aui-col-xs-12 aui-text-left">管线编号: <span>{{linenumber}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>起始编号: <span>{{fromnumber}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>终端编号: <span>{{tonumber}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>起始高程: <span>{{fromelevat}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>终端高程: <span>{{toelevat}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>起始埋深: <span>{{fromdeep}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>终端埋深: <span>{{todeep}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>管线管长: <span>{{length}}&nbsp;&nbsp;米</span></div>
+        {{if stateClass == 1}}
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>状态类别: <span>现有</span></div>
+        {{else if stateClass == 2}}
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>状态类别: <span>废弃</span></div>
+        {{else if stateClass == 3}}
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>状态类别: <span>在建</span></div>
+        {{else}}
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>状态类别: <span>规划</span></div>
+       {{/if}}
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>埋设日期: <span>{{buildtime}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>管线管径: <span>{{unittype}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>管线管材: <span>{{materename}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>埋设类型: <span>{{BuriedType}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>所属单位: <span>{{buildunit}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>所属道路: <span>{{location}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-12 aui-text-left"><span class='dot'></span>材料厂商: <span>{{firm}}</span></div>
+    </div>
+</script>
+<script type="text/javascript">
+    apiready = function() {
+            api.setWinAttr({
+                bounces: false
+            });
+            // 初始化，包括沉浸式等
+            initWindow();
+            // 初始化地图
+            initMap();
+            loadDelayTHMS(function(){
+             initData();
+            });
+
+            initTab();
+        }
+        // 关闭页面，并删除地图层
+    function closeWin() {
+        api.closeWin();
+        removeAddLayer('thematiclayer', 18)
+    }
+    // 初始化页面数据（加载相关专题地图）
+    var pipeNetworkdata = {
+            type: 'point',
+            all: true,
+            value: null
+        }
+        //  初始化数据
+    function initData() {
+        var name = api.pageParam.name;
+        var type = api.pageParam.type;
+        var thematicName = api.pageParam.thematicName;
+        $('.aui-title').text(thematicName + '专题图');
+          $('.icon_box').show();
+        switch (name) {
+            case 'guanjing':
+                $('.guanjing').css({
+                    "display": "flex"
+                });
+                $('.guanjingIcon').show();
+                var data = {
+                    min: null,
+                    max: null,
+                    all: true
+                }
+                calibreRenderingthematicMap(data);
+                break;
+            case 'guancai':
+                $('.guancai').css({
+                    "display": "flex"
+                });
+                $('.guancaiIcon').show();
+                pipeRenderingthematicMap(true);
+                break;
+            case 'guanwang':
+                $('.aui-tab ').show();
+                $('.guanwang').css({
+                    "display": "flex"
+                });
+                $('.aui-tab').show();
+                $('.guanwangPointIcon').show();
+                pipeNetworkRenderingthematicMap(pipeNetworkdata);
+                break;
+        }
+    }
+    // 初始化tab切换
+    function initTab() {
+        var tab = new auiTab({
+            element: document.getElementById("tab"),
+        }, function(ret) {
+            if (ret) {
+                $('.point_pipe_box').hide();
+                removeAddLayer('thematiclayer', 18);
+                hidePointOrPipeInfo(); //清除选中效果
+                $('.guanwang').children().removeClass('btns_active');
+                $('.guanwang div:first-child').addClass('btns_active');
+                pipeNetworkdata = {
+                    type: null,
+                    all: true,
+                    value: null
+                }
+                if (ret.index == 1) {
+                    $('.guanwang').show();
+                    $('.icon_box').show();
+                    $('.guanwangPointIcon').show();
+                    $('.guanwangPipeIcon').hide();
+                    pipeNetworkdata.type = 'point';
+                    pipeNetworkRenderingthematicMap(pipeNetworkdata);
+                } else {
+                    $('.icon_box').show();
+                    $('.guanwangPointIcon').hide();
+                    $('.guanwangPipeIcon').show();
+                    $('.guanwang').show();
+                    pipeNetworkdata.type = 'pipeline';
+                    pipeNetworkRenderingthematicMap(pipeNetworkdata)
+                }
+            }
+        });
+
+    }
+    // 管径切换
+    function lineChangeThematic(that, all, min, max) {
+        if (!($(that).hasClass('btns_active'))) {
+            $(that).addClass('btns_active');
+            $(that).siblings().removeClass('btns_active');
+        }
+        var data = {
+            min: null,
+            max: null,
+            all: true
+        }
+        $('.point_pipe_box').hide();
+        removeAddLayer('thematiclayer', 18);
+        if (all) {
+          $('.icon_box').show();
+          $('.guanjingIcon').show();
+            calibreRenderingthematicMap(data);
+        } else {
+            $('.icon_box').hide();
+            $('.icon_box ul').hide();
+            data.min = min;
+            data.max = max;
+            data.all = false;
+            calibreRenderingthematicMap(data);
+        }
+
+    }
+    //  管材切换
+    function changeThematic(that, name) {
+        if (!($(that).hasClass('btns_active'))) {
+            $(that).addClass('btns_active');
+            $(that).siblings().removeClass('btns_active');
+        }
+        $('.point_pipe_box').hide();
+        removeAddLayer('thematiclayer', 18);
+        if(name == true){
+          $('.icon_box').show();
+          $('.guancaiIcon').show();
+        }else {
+          $('.icon_box').hide();
+          $('.icon_box ul').hide();
+        }
+        pipeRenderingthematicMap(name)
+    }
+    //  管网切换
+    function pipeNetworkChangeThematic(that, value) {
+        removeAddLayer('thematiclayer', 18);
+        if (!($(that).hasClass('btns_active'))) {
+            $(that).addClass('btns_active');
+            $(that).siblings().removeClass('btns_active');
+        }
+        $('.point_pipe_box').hide();
+        if (value != 'all') {
+            pipeNetworkdata.all = false;
+            pipeNetworkdata.value = value;
+        } else {
+            pipeNetworkdata.all = true;
+            pipeNetworkdata.value = null;
+        }
+        if(pipeNetworkdata.type =='point' && pipeNetworkdata.all){
+          $('.icon_box').show();
+          $('.guanwangPointIcon').show();
+        }else if(pipeNetworkdata.type =='pointline' && pipeNetworkdata.all){
+          $('.icon_box').show();
+          $('.guanwangPipeIcon').show();
+        } else {
+          $('.icon_box').hide();
+          $('.icon_box ul').hide();
+        }
+        pipeNetworkRenderingthematicMap(pipeNetworkdata);
+    }
+
+</script>
+
+</html>

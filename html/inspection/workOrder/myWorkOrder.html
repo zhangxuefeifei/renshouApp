@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>我的工单</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/aui1.css" />
+    <style type='text/css'>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #f5f5f5;
+        }
+
+        .aui-bar-nav {
+            top: 0;
+            z-index: 3;
+            background-color: #fff;
+            color: #333333;
+            font-size: var(--fontsize9);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            border: none;
+            background-size: 100% 1px;
+            background-repeat: no-repeat;
+            background-position: bottom;
+            background-image: linear-gradient(0, #dddddd, #dddddd 50%, transparent 50%);
+            background-image: -webkit-linear-gradient(90deg, #dddddd, #dddddd 50%, transparent 50%);
+        }
+
+        .aui-bar-nav .aui-btn .aui-iconfont {
+            color: #333333;
+            font-weight: 900;
+        }
+
+        .flex-con {
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #header {
+            position: fixed;
+            z-index: 98;
+        }
+        /*tab定位不动*/
+        #tab{
+              position: fixed;
+              width: 100%;
+              z-index: 999;
+        }
+        #tab .aui-tab-item.aui-active {
+            color: #4f79e7;
+            border-bottom: 2px solid #4f79e7;
+        }
+
+          /*ta内容里面的样式*/
+        #tab-content {
+            position: relative;
+            overflow: auto;
+        }
+        #tab-content .aui-list {
+            background: #f5f5f5;
+            /* background-position: top; */
+            background-image: none;
+        }
+
+        #tab-content .aui-list .aui-list-item {
+            /* background-position: top; */
+            background-image: none;
+        }
+
+        #tab-content .aui-list .aui-list-item-media {
+            width: 4rem;
+        }
+
+        #tab-content .aui-list .aui-list-item {
+            width: 17rem;
+            margin: 0.75rem auto;
+            background-color: #fff;
+            border: solid 1px #e6e6e6;
+            border-radius: 0.3rem;
+        }
+
+        #tab-content .aui-list-item-media img {
+            width: 3rem;
+            height: 3rem;
+            margin: 0 auto;
+        }
+
+        #tab-content .aui-list-item-right {
+            position: absolute;
+            right: 0rem;
+            top: 0.1rem;
+            width: 2.58rem;
+            height: 0.83rem;
+            background-image: url('../../../image/inspection/orange.png');
+            background-size: 2.58rem 0.83rem;
+            text-align: center;
+            color: #fff;
+            font-size: 0.6rem
+        }
+
+        #tab-content #tab2 .aui-list-item-right {
+            position: absolute;
+            right: 0rem;
+            top: 0.1rem;
+            width: 2.58rem;
+            height: 0.83rem;
+            background-image: url('../../../image/inspection/red.png');
+            background-size: 2.58rem 0.83rem;
+            text-align: center;
+            color: #fff;
+            font-size: 0.6rem
+        }
+
+        #tab-content #tab3 .aui-list-item-right {
+            position: absolute;
+            right: 0rem;
+            top: 0.1rem;
+            width: 2.58rem;
+            height: 0.83rem;
+            background-image: url('../../../image/inspection/green.png');
+            background-size: 2.58rem 0.83rem;
+            text-align: center;
+            color: #fff;
+            font-size: 0.6rem
+        }
+
+        #tab-content .aui-list-item .aui-row {
+            margin-left: -0.7rem;
+            height: 2.5rem;
+            line-height: 2.5rem;
+            border-top: 1px dotted #e6e6e6;
+        }
+
+        #tab-content .aui-list-item .aui-row button {
+            margin: 0.4rem 0.6rem;
+            width: 3rem;
+            height: 1.5rem;
+            border-radius: 0.2rem;
+            border: solid 1px #4f79e7;
+            background: #fff;
+            color: #4f79e7;
+        }
+
+        .spanTime {
+            color: #999;
+        }
+        .aui-font-size-13{
+          font-size: 0.65rem !important;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav" id="header">
+        <div class="aui-pull-left aui-btn" data-action='back'>
+            <span class="aui-iconfont aui-icon-left"></span>
+        </div>
+        <div class="aui-title">我的工单</div>
+    </header>
+    <div class="aui-tab" id="tab">
+        <div class="aui-tab-item aui-font-size-16 tapmode aui-active tab1" WorkOrderStatus='1'>进行中</div>
+        <div class="aui-tab-item aui-font-size-16 tapmode tab2" WorkOrderStatus='0'><div></div>待接收</div>
+        <div class="aui-tab-item aui-font-size-16 tapmode tab3" WorkOrderStatus='2'>已完成</div>
+    </div>
+    <section id="tab-content">
+      <!-- <ul class="aui-list aui-media-list aui-hide" id="tab1">
+
+          <li class="aui-list-item open-win" win='./WorkOrderDetails' param='2'>
+              <div class="aui-media-list-item-inner">
+                  <div class="aui-list-item-media">
+                      <img src="../../../image/inspection/myOrder.png">
+                  </div>
+                  <div class="aui-list-item-inner">
+                      <div class="aui-list-item-text aui-padded-t-10">
+                          <div class="aui-list-item-title aui-font-size-16">工单类型:&nbsp;{{value.workOrderTypeName}}</div>
+                          <div class="aui-list-item-right">{{value.workOrderStatusString}}</div>
+                      </div>
+                      <div class="aui-list-item-title aui-font-size-13 ">
+                          提交时间:<span class="spanTime">&nbsp;{{value.submitWorkOrderTime}}</span>
+                      </div>
+
+                      <div class="aui-list-item-title aui-font-size-14 ">
+                          完成时间:<span class="spanTime">&nbsp;{{value.endTime}}</span>
+                      </div>
+
+                  </div>
+              </div>
+
+          </li>
+
+      </ul> -->
+    </section>
+
+
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/diy/public.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/aui-tab.js"></script>
+<script type="text/javascript" src="../../../script/moment.js"></script>
+<script type="text/javascript" src="../../../script/template.js"></script>
+<script type="text/template" id='dataList'>
+   {{if type == 2}}
+    <ul class="aui-list aui-media-list aui-show" id="tab1">
+        {{each list value i}}
+        <li class="aui-list-item open-win" win='./WorkOrderDetails' param='{{value}}'>
+            <div class="aui-media-list-item-inner">
+                <div class="aui-list-item-media">
+                    <img src="../../../image/inspection/myOrder.png">
+                </div>
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-text aui-padded-t-10">
+                        <div class="aui-list-item-title aui-font-size-16">工单类型:&nbsp;{{value.workOrderTypeName}}</div>
+                        <div class="aui-list-item-right">{{value.workOrderStatusString}}</div>
+                    </div>
+                    <div class="aui-list-item-title aui-font-size-13 ">
+                        提交时间:<span class="spanTime">&nbsp;{{value.submitWorkOrderTime}}</span>
+                    </div>
+                    {{if value.workOrderStatusString == '已完成'}}
+                    <div class="aui-list-item-title aui-font-size-13">
+                        完成时间:<span class="spanTime">&nbsp;{{value.endTime}}</span>
+                    </div>
+                    {{ else }}
+                    <div class="aui-list-item-title aui-font-size-13">
+                        关闭时间:<span class="spanTime">&nbsp;{{value.endTime}}</span>
+                    </div>
+                    {{/if}}
+                </div>
+            </div>
+        </li>
+      {{/each}}
+    </ul>
+    {{ else }}
+    <ul class="aui-list aui-media-list aui-show" id="tab1">
+        {{each list value i}}
+        <li class="aui-list-item" >
+            <div class="aui-media-list-item-inner open-win" win='./WorkOrderDetails' param='{{value}}'>
+                <div class="aui-list-item-media">
+                    <img src="../../../image/inspection/myOrder.png">
+                </div>
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-text aui-padded-t-10">
+                        <div class="aui-list-item-title aui-font-size-16">工单类型:&nbsp;{{value.workOrderTypeName}}</div>
+                        <div class="aui-list-item-right">{{value.workOrderStatusString}}</div>
+                    </div>
+                    <div class="aui-list-item-title aui-font-size-13 ">
+                        提交时间:<span class="spanTime">&nbsp;{{value.submitWorkOrderTime}}</span>
+                    </div>
+                </div>
+            </div>
+              {{if type == 0}}
+            <div class="aui-row">
+                <button class='aui-pull-right' type="button" name="button" param='{{value}}' data-action='JobReceipt'>接收</button>
+            </div>
+            {{/if}}
+        </li>
+      {{/each}}
+    </ul>
+    {{/if}}
+</script>
+<script type="text/javascript">
+  var PageIndex = 1;
+  // 判断是否还有数据
+  var Istansfar = 1;
+  // 工单类型
+  var WorkOrderStatus=1;
+    apiready = function() {
+        api.addEventListener({
+            name: 'changedFontSize'
+        }, function(ret, err) {
+            if (ret) {
+                changeFontSize();
+            }
+        });
+        api.parseTapmode();
+        var header = $api.byId('header');
+        // 实现沉浸式状态栏效果
+        $api.fixStatusBar(header);
+        var headerH = $api.offset(header).h;
+        var tabItemH = $api.offset($api.byId('tab')).h;
+        $api.css($api.byId('tab'), 'top:' + (headerH) + 'px;');
+        $api.css($api.byId('tab-content'), 'top:' + (headerH+tabItemH) + 'px;');
+        fnReady();
+        //工单列表
+        GetWorkOrderPagedList(WorkOrderStatus);
+
+        // 监听滚动到底部加载数据
+        api.addEventListener({
+            name: 'srcollbottom'
+        }, function(ret, err){
+            if( ret ){
+              PageIndex++;
+              GetWorkOrderPagedList(WorkOrderStatus);
+            }
+        });
+
+        // 监听接收
+        api.addEventListener({
+            name: 'receiveOrder'
+        }, function(ret, err){
+            if( ret ){
+              $('.tab1').siblings().removeClass('aui-active');
+              $('.tab1').addClass('aui-active');
+             WorkOrderStatus = 1;
+             PageIndex = 1;
+             Istansfar = 1;
+             GetWorkOrderPagedList(WorkOrderStatus);
+            }
+        });
+
+        // 监听完成和关闭
+        api.addEventListener({
+            name: 'FinishAndClose'
+        }, function(ret, err){
+            if( ret ){
+              $('.tab3').siblings().removeClass('aui-active');
+              $('.tab3').addClass('aui-active');
+             WorkOrderStatus = 2;
+             PageIndex = 1;
+             Istansfar = 1;
+             GetWorkOrderPagedList(WorkOrderStatus);
+            }
+        });
+
+
+
+    };
+
+     var tab = new auiTab({
+         element: document.getElementById("tab"),
+         index: 1,
+         repeatClick: false
+     }, function(ret) {
+         if (ret) {
+
+             if ($('#tab' + ret.index).hasClass('aui-show')) {
+                 $('#tab' + ret.index).siblings().removeClass('aui-show').addClass('aui-hide');
+
+             } else {
+                 $('#tab' + ret.index).removeClass('aui-hide').addClass('aui-show');
+                 $('#tab' + ret.index).siblings().removeClass('aui-show').addClass('aui-hide');
+             }
+             PageIndex =1;
+             Istansfar = 1;
+             WorkOrderStatus=$('.tab'+ret.index).attr('WorkOrderStatus');
+             GetWorkOrderPagedList(WorkOrderStatus);
+
+         }
+
+     });
+  //  }
+
+
+  //  工单列表
+   function GetWorkOrderPagedList(type){
+     if(PageIndex == 1){
+         $('#tab-content').html('');
+     }
+      if(Istansfar == 1){
+        var url = 'services/GISInspection/WorkOrder/GetAppWorkOrderPagedList?WorkOrderStatus=' + type +'&PageIndex=' + PageIndex + '&MaxResultCount=10';
+        fnGet(url, {}, false, function(ret, err) {
+            if (ret) {
+                if (ret.success && ret.result.items.length != 0) {
+                     Istansfar =1;
+                     var items = ret.result.items;
+                    for(i in items){
+                      items[i].submitWorkOrderTime=items[i].submitWorkOrderTime?moment(items[i].submitWorkOrderTime).format('YYYY-MM-DD HH:mm'):'';
+                      items[i].endTime =items[i].endTime?moment(items[i].endTime).format('YYYY-MM-DD HH:mm'):'';
+                      items[i].type = type;
+                    }
+                    var datas = {
+                        type:type,
+                        list:items,
+                    };
+                    var str = template('dataList', datas);
+                    $('#tab-content').append(str);
+                    operationDom();
+                    fnReadyOpenWin();
+                    Srcoll();
+                } else {
+                    api.toast({
+                        msg: '没有更多的数据了',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    Istansfar = 0;
+                    PageIndex--;
+                }
+            }
+            api.hideProgress();
+        });
+       } else {
+           api.toast({
+            msg: '没有更多的数据了',
+            duration: 2000,
+            location: 'bottom'
+          });
+      }
+   }
+
+       var actionList = {
+        'back': function() {
+            api.closeWin();
+        },
+        'JobReceipt':function(){
+          var paramDatas = $(this).attr('param');
+          paramDatas = JSON.parse(paramDatas);
+          var body = {
+            body:JSON.stringify({
+
+            })
+          };
+          fnPost('services/GISInspection/WorkOrder/AcceptWorkOrder?id='+paramDatas.id, body, 'application/json', true, false, function(ret, err) {
+              if (ret) {
+                  if (ret.success) {
+                      api.toast({
+                          msg: '接收成功',
+                          duration: 2000,
+                          location: 'top'
+                      });
+                      api.sendEvent({
+                          name: 'receiveOrder',
+                      });
+                  } else {
+                      api.toast({
+                          msg: '接收失败',
+                          duration: 2000,
+                          location: 'top'
+                      });
+                  }
+              }
+              api.hideProgress();
+          });
+
+        }
+    }
+    var touchY = 0;
+    var longClick =0;
+    var timeOutEvent;
+    function Srcoll(){
+      $('#tab-content').on({
+       touchstart: function(e){
+           longClick=0;
+           timeOutEvent = setTimeout(function(){
+               //此处为长按事件-----在此显示遮罩层及删除按钮
+               longClick=1;//假如长按，则设置为1
+           },500);
+           var touch = e.touches[0];
+           touchY = touch.clientY;
+       },
+       touchmove: function(e){
+         var e = e || window.event;
+           clearTimeout(timeOutEvent);
+           timeOutEvent = 0;
+           var touch = e.touches[0]
+           if(Math.abs(touch.clientY - touchY) < 10){
+               e.preventDefault();
+           }
+       },
+       touchend: function(e){
+           clearTimeout(timeOutEvent);
+           if(timeOutEvent!=0 && self.longClick==0){//点击
+              //此处为点击事件----在此处添加跳转详情页
+           }
+           return true;
+       }
+      });
+    }
+
+
+</script>
+
+</html>

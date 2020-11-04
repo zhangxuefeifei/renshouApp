@@ -1,0 +1,1446 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>选择组织机构页面</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/aui1.css" />
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #FFF;
+        }
+
+        #wrap {
+            height: 100%;
+        }
+
+        .aui-bar-nav {
+            top: 0;
+            z-index: 3;
+            background-color: #fff;
+            color: #333333;
+            font-size: var(--fontsize9);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            border: none;
+            background-size: 100% 1px;
+            background-repeat: no-repeat;
+            background-position: bottom;
+            background-image: linear-gradient(0, #dddddd, #dddddd 50%, transparent 50%);
+            background-image: -webkit-linear-gradient(90deg, #dddddd, #dddddd 50%, transparent 50%);
+        }
+
+        .aui-bar-nav .aui-btn .aui-iconfont {
+            color: #333333;
+            font-weight: 900;
+        }
+
+        .flex-con {
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .border-t:before,
+        .border-b:after {
+            border-color: #F1F1F1;
+        }
+
+        .aui-searchbar {
+            background-color: #fff !important;
+            padding: 0.55rem 0.78rem;
+            width: auto;
+            height: auto;
+            color: #212121;
+            z-index: 3;
+        }
+
+        .aui-searchbar span {
+            font-size: var(--fontsize75);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #333333;
+        }
+
+        .aui-searchbar .arrow {
+            width: 0.8rem;
+            height: 0.8rem;
+            background: url(../../../image/main_frame/orgDownArrow.png);
+            background-size: 0.7rem 0.38rem;
+            background-position: center center;
+            background-repeat: no-repeat;
+            -webkit-transition: 200ms;
+            transition: 200ms;
+        }
+
+        .aui-searchbar-input input {
+            height: 1rem;
+            line-height: 1rem;
+        }
+
+        .aui-searchbar-input {
+            height: 1.6rem;
+            background-color: #f0f0f0;
+            border-radius: 0.8rem;
+            line-height: 1.6rem;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+            display: flex;
+            align-items: center;
+        }
+
+        .aui-searchbar-clear-btn {
+            background-color: #999999;
+            position: initial;
+            width: 0.8rem;
+            height: 0.8rem;
+        }
+
+        .aui-searchbar-clear-btn .aui-iconfont {
+            color: #FFF !important;
+            top: -5px;
+            font-size: var(--fontsize5);
+        }
+
+        .aui-media-list .aui-list-item {
+            display: flex;
+            padding-left: 0.78rem;
+        }
+
+        .aui-media-list-item-inner {
+            width: 100vw;
+        }
+
+        .aui-list .aui-list-item-inner {
+            padding-right: 0.78rem;
+            padding-top: 0.75rem;
+            padding-bottom: 0.75rem;
+        }
+
+        .aui-list .aui-list-item-title {
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #333333;
+            width: 40vw;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+        }
+
+        .aui-list .aui-list-item-text {
+            font-size: var(--fontsize7);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+        }
+
+        .aui-list .aui-list-item-right {
+            font-size: var(--fontsize65);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+            margin-left: 0;
+        }
+
+        .sendUser span {
+            width: calc(100% - 0.5rem)
+        }
+
+        .aui-dot {
+            width: 0.5rem !important;
+            height: 0.5rem !important;
+            border-radius: 50% !important;
+            position: initial;
+            z-index: 1;
+        }
+
+        .aui-tab button {
+            background-color: #FFF;
+            outline: none;
+            box-sizing: content-box;
+            border-radius: 0;
+        }
+
+        .aui-radio:checked,
+        .aui-radio.aui-checked,
+        .aui-checkbox:checked,
+        .aui-checkbox.aui-checked {
+            background-color: #4f79e8;
+            border: solid 1px #4f79e8;
+        }
+
+        .filterDiv {
+            position: absolute;
+            width: 100%;
+            top: -2000px;
+            -webkit-transition: all 0.25s;
+            transition: all 0.25s;
+            z-index: 2;
+        }
+
+        .filterDiv input {
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+            height: auto !important;
+            line-height: inherit !important;
+            text-align: right;
+        }
+
+        .filterDiv .aui-list .aui-list-item:active {
+            background-color: #fff !important;
+        }
+
+        .arrow.active {
+            -webkit-transform: rotate(180deg);
+            transform: rotate(180deg);
+        }
+
+        .filterDiv .aui-content {
+            width: 100%
+        }
+
+        .filterDiv .aui-list-item-inner {
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #262626;
+        }
+
+        .aui-list .aui-list-item-text {
+            width: 100%;
+        }
+
+        .filterDiv .aui-list .aui-list-item-inner {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .filterDiv .aui-list .aui-list-item {
+            background-image: none;
+        }
+
+        .selectTime {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .selectTime span {
+            float: right;
+            color: #333333;
+            font-weight: 900;
+        }
+
+        .close {
+            float: right;
+            width: 16px;
+            height: 16px;
+            background: url(../../../image/message_frame/close2.png);
+            background-size: 16px 16px;
+            background-position: center center;
+            background-repeat: no-repeat;
+            -webkit-transition: 200ms;
+            transition: 200ms;
+        }
+
+        .filterDiv .aui-list .aui-list-item-right,
+        .aui-list-item-title-row em {
+            margin-right: 15% !important;
+            max-width: 100% !important;
+        }
+
+        .aui-list-item-arrow:before {
+            border-color: #A2A2A2 !important;
+        }
+
+        .aui-list-item-arrow.change:before {
+            border-color: #A2A2A2 !important;
+            right: 0.6rem !important;
+            margin-top: -0.3rem !important;
+        }
+
+        .aui-list:after {
+            border: none !important;
+        }
+
+        .shade {
+            background: rgba(0, 0, 0, 0.4);
+            position: absolute;
+            width: 100%;
+            z-index: 1;
+        }
+
+        .aui-list-buttons {
+            padding-left: 0 !important;
+            padding: 0.55rem 1.85rem !important;
+            display: flex !important;
+        }
+
+        .filterDiv button {
+            border-radius: 4.4vw;
+            justify-content: center;
+            height: 1.65rem;
+            line-height: 1.65rem;
+            width: 37.33vw;
+            display: flex;
+            font-size: var(--fontsize75);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0.08rem;
+            outline: none;
+        }
+
+        .sureBtn {
+            background: #4f79e8 !important;
+            color: #fff;
+        }
+
+        .cancelBtn {
+            background: #fff;
+            color: #4f79e8;
+        }
+
+        .cancelBtn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            border: 1px solid #4f79e8;
+            border-radius: 2.5rem !important;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            width: 200%;
+            height: 200%;
+            -webkit-transform: scale(0.5);
+            transform: scale(0.5);
+            -webkit-transform-origin: left top;
+            transform-origin: left top;
+            pointer-events: none;
+        }
+
+        #orgReturn {
+            overflow-y: hidden;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        #orgReturn .iconRight {
+            display: inline-block;
+        }
+
+        .orgName {
+            width: calc(100% - 0.8rem - 0.5rem) !important;
+        }
+
+        .hasJunior .orgName {
+            border-right: solid 0.03rem #e6e6e6;
+        }
+
+        .aui-card-list {
+            margin-bottom: 0;
+            /*border: none;
+        background-size: 100% 1px;
+        background-repeat: no-repeat;
+        background-position: top;
+        background-image: linear-gradient(0, #dddddd, #dddddd 50%, transparent 50%);
+        background-image: -webkit-linear-gradient(90deg, #dddddd, #dddddd 50%, transparent 50%);*/
+        }
+
+        .flex-con .aui-card-list-header,
+        .flex-con .aui-media-list .aui-list-item-inner,
+        #orgReturn {
+            font-size: var(--fontsize75);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #333333;
+            display: flex;
+            justify-content: flex-start !important;
+            align-items: center;
+        }
+
+        .flex-con .aui-media-list .aui-list-item-inner {
+            padding-right: 0 !important;
+        }
+
+        .aui-radio {
+            margin-right: 0.5rem;
+            width: 0.8rem;
+            height: 0.8rem;
+        }
+
+        .aui-radio:checked,
+        .aui-radio.aui-checked,
+        .aui-checkbox:checked,
+        .aui-checkbox.aui-checked {
+            background-color: #4f79e8;
+            border: solid 1px #4f79e8;
+        }
+
+        .aui-radio:checked:before,
+        .aui-radio.aui-checked:before,
+        .aui-checkbox:checked:before,
+        .aui-checkbox.aui-checked:before,
+        .aui-radio:checked:after,
+        .aui-radio.aui-checked:after,
+        .aui-checkbox:checked:after,
+        .aui-checkbox.aui-checked:after {
+            width: 0.4rem;
+            height: 0.24rem;
+            margin-left: -0.2125rem;
+            margin-top: -0.2125rem;
+            z-index: 0;
+        }
+
+        .junior {
+            display: flex;
+            align-items: center;
+        }
+
+        .junior span {
+            color: #aaaaaa;
+            font-size: var(--fontsize65);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+        }
+
+        .superior {
+            color: #4f79e8;
+        }
+
+        li {
+            -webkit-tap-highlight-color: rgba(255, 0, 0, 0);
+        }
+
+        .junior .juniorImg {
+            width: 0.78rem;
+            height: 0.7rem;
+            background: url(../../../image/message_frame/junior_pre.png);
+            background-size: 100%;
+            background-position: center center;
+            background-repeat: no-repeat;
+            margin-right: 0.23rem;
+        }
+
+        .junior.active span {
+            color: #4f79e8 !important;
+        }
+
+        .junior.active .juniorImg {
+            width: 0.78rem;
+            height: 0.7rem;
+            background: url(../../../image/message_frame/junior.png);
+            background-size: 100%;
+            background-position: center center;
+            background-repeat: no-repeat;
+            margin-right: 0.23rem;
+        }
+
+        .contactList {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+        }
+
+        .aui-list {
+            background-image: none;
+        }
+        /*.filterDiv .aui-list {
+        background-image: linear-gradient(0, #dddddd, #dddddd 50%, transparent 50%);
+    }*/
+
+        .contactList .aui-list .aui-list-item-inner,
+        .aui-list .aui-list-item {
+            min-height: 0;
+            padding-left: 0.75rem;
+        }
+
+        .contactList .hasJunior .aui-list-item-inner,
+        .contactList .hasJunior.aui-list-item {
+            padding-right: 4.03rem;
+            padding-left: 0;
+        }
+
+        .contactList .noJunior .aui-list-item-inner,
+        .contactList .noJunior.aui-list-item {
+            padding-right: 0;
+            padding-left: 0;
+        }
+
+        .contactList .noJunior .aui-media-list-item-inner {
+            padding-right: 0.75rem;
+        }
+
+        .contactList .aui-list .aui-list-item:active {
+            background-color: transparent;
+        }
+
+        .contactList .aui-media-list-item-inner:active {
+            background-color: #f5f5f5;
+        }
+
+        .contactList .aui-media-list-item-inner {
+            padding: 0.78rem 0 0.78rem 0.75rem;
+        }
+
+        .contactList .aui-media-list .aui-list-item-inner {
+            padding: 0;
+        }
+
+        .aui-list .aui-list-item-text {
+            display: -webkit-box;
+            font-size: var(--fontsize75) !important;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            -webkit-box-orient: horizontal;
+            -webkit-box-pack: center;
+        }
+
+        .flex-con .aui-list .aui-list-item-right,
+        .flex-con .aui-list-item-title-row em {
+            margin-left: 0;
+            position: absolute;
+            right: 0.75rem;
+            top: 0;
+            height: 100%;
+        }
+
+        .interval {
+            width: 100vw;
+            height: 0.6rem;
+            background-color: #f0f0f0;
+        }
+
+        .flex-con .aui-card-list-header:active {
+            background-color: #f5f5f5;
+        }
+
+        #footer {
+            background-color: #f0f0f0;
+            padding: 0.63rem 1.88rem;
+        }
+
+        .sureOrgBtn {
+            background: #A2BCFF;
+            color: #fff;
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0.08rem;
+            height: 2.2rem;
+            line-height: inherit;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5rem;
+        }
+
+        .sureOrgBtn:active {
+            color: #fff !important;
+            background-color: #A2BCFF !important;
+        }
+
+        .sureOrgBtn.active {
+            background: #4f79e8;
+            color: #fff;
+        }
+
+        .sureOrgBtn.active:active {
+            color: #212121 !important;
+            background-color: #bdbdbd !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrap" class="flex-wrap flex-vertical">
+        <header class="aui-bar aui-bar-nav aui-border-b" id="header">
+            <div class="aui-pull-left aui-btn" tapmode data-action="back">
+                <span class="aui-iconfont aui-icon-left"></span>
+            </div>
+            <div class="aui-title">选择组织机构</div>
+        </header>
+
+        <div class="arrow active" style="display:none">
+        </div>
+        <div class="delete_active" style="display:none">
+        </div>
+        <div class="update_active" style="display:none">
+        </div>
+
+        <div class="aui-searchbar aui-border-b" id="searchOrgList">
+            <span tapmode onclick="showFilter()">筛选</span>
+            <div class="arrow" id="arrow" tapmode onclick="showFilter()"></div>
+            <div class="aui-searchbar-input aui-border-radius">
+
+                <i class="aui-iconfont aui-icon-search"></i>
+                <input type="search" placeholder="请输入关键词搜索" id="searchInput">
+                <div class="aui-searchbar-clear-btn">
+                    <i class="aui-iconfont aui-icon-close"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="filterDiv" id="orgListFilter">
+            <div class="aui-content">
+                <ul class="aui-list aui-media-list">
+                    <li class="aui-list-item aui-list-item-middle">
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-inner">
+                                <div class="aui-col-xs-4">机构性质：</div>
+                                <div class="aui-col-xs-7"><input tapmode data-action="openNatureSelect" placeholder="请选择" type="text" name="input_date" id="orgNature" readonly="readonly" /></div>
+                                <div class="aui-col-xs-1">
+                                    <div class="selectTime" id="selectArrow" tapmode data-action="openNatureSelect">
+                                        <span class="aui-iconfont aui-icon-right"></span>
+                                    </div>
+                                    <div class="aui-list-item-right close" style="display:none" tapmode data-action="clearNature">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="shade" id="shade" style="display:none">
+
+        </div>
+
+        <div class="aui-card-list" style="display:none">
+            <div class="aui-card-list-header" id="orgReturn">
+                <!-- <span id=" + 'span' + contactData.id + " data-param='" + data + "' tapmode data-action='return'>联系人</span> -->
+            </div>
+        </div>
+
+
+        <div class="flex-con">
+            <section id="orgSec">
+                <!-- <div class='interval'></div>
+                <div class="aui-content contactList">
+                    <ul class="aui-list aui-media-list hasJunior">
+                        <li class="aui-list-item aui-list-item-middle">
+                            <div class="aui-media-list-item-inner" id="{{value.id}}" tapmode>
+                                <div class="aui-list-item-inner">
+                                    <div class="aui-radio"></div>
+                                    <div class="aui-list-item-inner orgOrName">部门
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="aui-list-item-right junior active" tapmode>
+                                <div class="juniorImg"></div>
+                                <span>下级</span>
+                            </div>
+                        </li>
+                        <li class="aui-list-item aui-list-item-middle">
+                            <div class="aui-media-list-item-inner" id="{{value.id}}" tapmode>
+                                <div class="aui-list-item-inner">
+                                    <div class="aui-radio"></div>
+                                    <div class="aui-list-item-inner orgOrName">部门
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="aui-list-item-right junior active" tapmode>
+                                <div class="juniorImg"></div>
+                                <span>下级</span>
+                            </div>
+                        </li>
+                        <li class="aui-list-item aui-list-item-middle">
+                            <div class="aui-media-list-item-inner" id="{{value.id}}" tapmode>
+                                <div class="aui-list-item-inner">
+                                    <div class="aui-radio"></div>
+                                    <div class="aui-list-item-inner orgOrName">部门
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="aui-list-item-right junior active" tapmode>
+                                <div class="juniorImg"></div>
+                                <span>下级</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div> -->
+            </section>
+        </div>
+
+        <div id="footer">
+            <div class="aui-btn sureOrgBtn" tapmode data-action="sure">
+                确定
+            </div>
+        </div>
+
+    </div>
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/diy/public.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/diy/template.js"></script>
+<script type="text/template" id="hasJuniorList">
+    <div class='interval'></div>
+    <div class="aui-content contactList">
+        <ul class="aui-list aui-media-list">
+            {{each child value i}} {{if value.child.length != 0}}
+            <li class="aui-list-item aui-list-item-middle hasJunior">
+                <div class="aui-media-list-item-inner" id="{{value.id}}" tapmode data-param="{{value}}" data-param2="{{items}}">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-radio"></div>
+                        <div class="aui-list-item-inner orgName">{{value.orgName}}{{if value.selectedCount != 0}}<span class="countNum">（{{value.selectedCount}}/{{value.count}}）</span>{{/if}}
+                        </div>
+                    </div>
+                </div>
+                <div class="aui-list-item-right junior active" tapmode data-param="{{value}}">
+                    <div class="juniorImg"></div>
+                    <span>下级</span>
+                </div>
+            </li>
+            {{else}}
+            <li class="aui-list-item aui-list-item-middle noJunior">
+                <div class="aui-media-list-item-inner" id="{{value.id}}" tapmode data-param="{{value}}" data-param2="{{items}}">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-radio"></div>
+                        <div class="aui-list-item-inner orgName">{{value.orgName}}
+                        </div>
+                    </div>
+                </div>
+            </li>
+            {{/if}} {{/each}}
+        </ul>
+    </div>
+</script>
+<script type="text/template" id="searchList">
+    <div class="aui-content contactList">
+        <ul class="aui-list aui-media-list">
+            {{each items value i}}
+            <li class="aui-list-item aui-list-item-middle noJunior searchResult">
+                <div class="aui-media-list-item-inner" id="{{value.id}}" tapmode data-param="{{value}}" data-param2="{{items}}">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-radio"></div>
+                        <div class="aui-list-item-inner orgName">{{value.orgName}}
+                        </div>
+                    </div>
+                </div>
+            </li>
+            {{/each}}
+        </ul>
+    </div>
+</script>
+<script type="text/javascript">
+    document.body.addEventListener('touchstart', function() {});
+    var nature = null;
+    apiready = function() {
+        api.addEventListener({
+            name: 'changedFontSize'
+        }, function(ret, err) {
+            if (ret) {
+                changeFontSize();
+            }
+        });
+        api.parseTapmode();
+        var header = $api.byId('header');
+        // 实现沉浸式状态栏效果
+        $api.fixStatusBar(header);
+        var mySearch = $api.byId('searchMyMessage');
+        var myFilter = $api.byId('myMessageFilter');
+        // 实现沉浸式状态栏效果
+        $api.fixStatusBar(header);
+        var footer = $api.byId('footer');
+        var search = $api.byId('searchOrgList');
+        var filter = $api.byId('orgListFilter');
+        // 实现沉浸式状态栏效果
+        $api.fixStatusBar(header);
+        // $api.fixTabBar(footer);
+        // 计算header和tab元素的高度
+        headerH = $api.offset(header).h;
+        searchH = $api.offset(search).h;
+        filterH = $api.offset(filter).h;
+        topH = headerH + searchH;
+        topHide = topH - filterH + 'px';
+        topActive = topH + 'px';
+        $('.filterDiv').css('top', '' + topHide + '');
+        $('.shade').css('height', 'calc( 100% - ' + topActive + ' )');
+        $('.shade').css('top', '' + topActive + '');
+        fnReady();
+        transOrgId = api.pageParam.orgId;
+        from = api.pageParam.from;
+        if (selectedOrg.length != 0) {
+            $('.sureOrgBtn').addClass('active');
+        } else {
+            $('.sureOrgBtn').removeClass('active');
+        }
+        getOrgList();
+        api.addEventListener({
+            name: 'setOrgSelectNature'
+        }, function(ret, err) {
+            if (ret) {
+                nature = ret.value.nature;
+                $('#orgNature').val(ret.value.natureName);
+                $('#selectArrow').hide();
+                $('.close').show();
+                if ($('#arrow').hasClass('active')) {
+                    $('#shade').hide();
+                    $('#orgListFilter').css('top', '' + topHide + ' !important');
+                    $('#arrow').removeClass('active');
+                }
+                if (nature != null || Filter != "") {
+                    getSearchResultList();
+                } else {
+                    getOrgList();
+                }
+            }
+        });
+    };
+
+    var actionList = {
+        'back': function() {
+            api.closeWin();
+        },
+        'sure': function() {
+            if ($(this).hasClass('active')) {
+                if (from == "orgAddOrUpdate") {
+                    api.sendEvent({
+                        name: 'setOrgParent',
+                        extra: {
+                            selectedOrg: selectedOrg[0],
+                        }
+                    });
+                } else if (from == 'roleList') {
+                    api.sendEvent({
+                        name: 'setRoleOrg',
+                        extra: {
+                            selectedOrg: selectedOrg[0],
+                        }
+                    });
+                } else if (from == 'roleAddOrUpdate') {
+                    api.sendEvent({
+                        name: 'setRoleAddOrUpdateOrg',
+                        extra: {
+                            selectedOrg: selectedOrg[0],
+                        }
+                    });
+                } else if (from == 'contact') {
+                    api.sendEvent({
+                        name: 'contactOrg',
+                        extra: {
+                            selectedOrg: selectedOrg[0],
+                        }
+                    });
+                } else if (from == 'addContact') {
+                    api.sendEvent({
+                        name: 'addContactOrg',
+                        extra: {
+                            selectedOrg: selectedOrg[0],
+                        }
+                    });
+                } else if (from == 'UserList') {
+                    api.sendEvent({
+                        name: 'UserListOrg',
+                        extra: {
+                            selectedOrg: selectedOrg[0],
+                        }
+                    });
+                } else if (from == 'addUser') {
+                    api.sendEvent({
+                        name: 'addUserOrg',
+                        extra: {
+                            selectedOrg: selectedOrg[0],
+                        }
+                    });
+                }
+                api.closeWin({});
+            }
+        },
+        'clearNature': function() {
+            $('#orgNature').val('');
+            $('#selectArrow').show();
+            $('.close').hide();
+            nature = null;
+            if (nature != null || Filter != "") {
+                getSearchResultList();
+            } else {
+                getOrgList();
+            }
+        },
+        'openNatureSelect': function() {
+            var activeOne = $('#orgNature').val();
+            api.openFrame({
+                name: 'orgNature_frm',
+                url: './orgNature_frm.html',
+                rect: {
+                    x: 0,
+                    y: 0,
+                    w: 'auto',
+                    h: 'auto'
+                },
+                pageParam: {
+                    from: 'orgSelect',
+                    activeOne: activeOne
+                },
+                bounces: false,
+                bgColor: 'rgba(0,0,0,0.38)',
+            });
+        },
+        'return': function() {
+            if ($(this).hasClass('superior')) {
+                api.showProgress({
+                    title: '加载中',
+                    modal: false
+                });
+                var that = this;
+                setTimeout(function() {
+                    api.hideProgress();
+                    var spanList = $('#orgReturn span');
+                    for (var i = spanList.length - 1; i > -1; i--) {
+                        if (i != 0) {
+                            var pdata = JSON.parse($(spanList[i - 1]).attr('data-param'));
+                            var kidData = JSON.parse($(spanList[i]).attr('data-param'));
+                            for (var j = 0; j < pdata.child.length; j++) {
+                                if (pdata.child[j].id == kidData.id) {
+                                    pdata.child[j] = kidData;
+                                    if (kidData.selectedCount == 1) {
+                                        pdata.selectedCount = 1;
+                                    }
+                                } else {
+                                    if (kidData.selectedCount == 1) {
+                                        pdata.child[j].selectedCount = 0;
+                                        dgClear(pdata.child[j].child);
+                                    }
+                                }
+                            }
+                            $(spanList[i - 1]).attr('data-param', JSON.stringify(pdata));
+                        }
+                    }
+                    var spanList = $('#orgReturn span');
+                    // console.log($(spanList[0]).attr('data-param'));
+                    var data = JSON.parse($(that).attr('data-param'));
+                    var list = {
+                        child: data.child,
+                        items: data
+                    };
+                    $(that).nextAll().remove();
+                    var ele = document.getElementById('orgReturn');
+                    ele.scrollLeft = ele.scrollWidth;
+                    if (data.id == 0) {
+                        $('#orgReturn').parent().hide();
+                    } else {
+                        $(that).removeClass('superior');
+                    }
+                    var str = template('hasJuniorList', list);
+                    $('#orgSec').html(str);
+                    for (var i = 0; i < data.child.length; i++) {
+                        for (var j = 0; j < selectedOrg.length; j++) {
+                            if (data.child[i].id == selectedOrg[j].id) {
+                                $('#' + data.child[i].id + '').find('.aui-radio').addClass('aui-checked');
+                            }
+                        }
+                    };
+                    if (data.child.length == 0) {
+                        $('.hasJunior').remove();
+                    }
+                    operationDom();
+                    api.parseTapmode();
+                    selectOrg();
+                    selectJunior();
+                }, 300);
+            }
+        }
+    }
+
+    //搜索条设置
+    var searchBar = document.querySelector("#searchOrgList");
+    var searchBarInput = document.querySelector("#searchOrgList input");
+    var searchBarClearBtn = document.querySelector("#searchOrgList .aui-searchbar-clear-btn");
+    if (searchBar) {
+        searchBarInput.oninput = function() {
+            if (this.value.length) {
+                searchBarClearBtn.style.display = 'block';
+            } else {
+                searchBarClearBtn.style.display = 'none';
+            }
+        }
+    }
+    searchBarClearBtn.onclick = function() {
+        this.style.display = 'none';
+        searchBarInput.value = '';
+        Filter = "";
+        if (Filter != "" || nature != null) {
+            getSearchResultList();
+        } else {
+            getOrgList();
+        }
+    }
+
+    var Filter = "";
+    //站内消息关键词搜索
+    // $('#searchInput').on('input', function(e) {
+    //     if (isCloseShow) {
+    //         $('#orgList .aui-radio').fadeOut(100);
+    //         $('.close').hide();
+    //     }
+    //     Filter = $(this).val();
+    //     getOrgListList(false, 1);
+    // })
+
+    var flag = false;
+    $('#searchInput').on({
+        'compositionstart': function() {
+            flag = true;
+        },
+        'compositionend': function() {
+            flag = false;
+            if (!flag) {
+                Filter = $(this).val();
+                if (Filter != "" || nature != null) {
+                    getSearchResultList();
+                } else {
+                    getOrgList();
+                }
+            }
+        },
+        'input propertychange': function() {
+            if (!flag) {
+                Filter = $(this).val();
+                if (Filter != "" || nature != null) {
+                    getSearchResultList();
+                } else {
+                    getOrgList();
+                }
+            }
+        }
+    });
+
+    function getSearchResultList() {
+        $('#orgSec').html("");
+        $('#orgReturn').parent().hide();
+        api.showProgress({
+            title: '加载中',
+            modal: false
+        })
+        setTimeout(function() {
+            api.hideProgress();
+            var listData = [];
+            var parentData = [];
+            for (var i = 0; i < allOrgs.length; i++) {
+                if (allOrgs[i].orgName.indexOf(Filter) != -1) {
+                    if (nature != null) {
+                        if (allOrgs[i].nature == nature) {
+                            listData.push(allOrgs[i]);
+                        }
+                    } else {
+                        listData.push(allOrgs[i]);
+                    }
+                }
+            }
+            var list = {
+                items: listData
+            }
+            var str = template('searchList', list);
+            $('#orgSec').html(str);
+            for (var i = 0; i < listData.length; i++) {
+                for (var j = 0; j < selectedOrg.length; j++) {
+                    if (listData[i].id == selectedOrg[j].id) {
+                        $('#' + listData[i].id + '').find('.aui-radio').addClass('aui-checked')
+                    }
+                }
+            }
+            selectSearchOrg();
+            operationDom();
+            api.parseTapmode();
+        }, 100);
+    }
+
+    //向下滑动显示筛选
+    function showFilter() {
+        $('#arrow').toggleClass('active');
+        if ($('#arrow').hasClass('active')) {
+            $('#orgListFilter').css('top', '' + topActive + ' !important');
+            $('#shade').show();
+        } else {
+            $('#shade').hide();
+            $('#orgListFilter').css('top', '' + topHide + ' !important');
+        }
+    }
+
+    //点击遮罩层隐藏筛选
+    $('.shade').on('touchstart', function() {
+        if ($('#arrow').hasClass('active')) {
+            $('#shade').hide();
+            $('#orgListFilter').css('top', '' + topHide + ' !important');
+            $('#arrow').removeClass('active');
+        }
+    })
+
+
+    var selectedOrgIds = [];
+
+    var touchEvent;
+    var selectedOrg = [];
+
+    //选择筛选出的组织机构
+    function selectSearchOrg() {
+        $('.contactList .searchResult .aui-media-list-item-inner').on('touchstart', function(e) {
+            e.preventDefault;
+        });
+
+        $('.contactList .searchResult .aui-media-list-item-inner').on('touchmove', function(e) {
+            touchEvent = true;
+        });
+
+        $('.contactList .searchResult .aui-media-list-item-inner').on('touchend', function(e) {
+            if (!touchEvent) {
+                $(this).find('.aui-radio').toggleClass('aui-checked');
+                var preList = $(this).parent().prevAll();
+                for (var i = 0; i < preList.length; i++) {
+                    $(preList[i]).find('.aui-radio').removeClass('aui-checked');
+                    $(preList[i]).children().next().addClass('active');
+                }
+                var nextList = $(this).parent().nextAll();
+                for (var i = 0; i < nextList.length; i++) {
+                    $(nextList[i]).find('.aui-radio').removeClass('aui-checked');
+                    $(nextList[i]).children().next().addClass('active');
+                }
+                selectedOrg = [];
+                var data = JSON.parse($(this).attr('data-param'));
+                if ($(this).find('.aui-radio').hasClass('aui-checked')) {
+                    for (var i = 0; i < allOrgs.length; i++) {
+                        if (allOrgs[i].id == data.id) {
+                            selectedOrg.push(allOrgs[i]);
+                        }
+                    };
+                } else {
+                    var index;
+                    index = selectedOrg.findIndex(function(p) {
+                        return p.id == data.id;
+                    });
+                    selectedOrg.splice(index, 1);
+                }
+                if (selectedOrg.length != 0) {
+                    $('.sureOrgBtn').addClass('active');
+                } else {
+                    $('.sureOrgBtn').removeClass('active');
+                }
+                // console.log(JSON.stringify(selectedOrg));
+                // console.log(JSON.stringify(selectedOrgIds));
+            }
+            touchEvent = false;
+        });
+    }
+
+    //选择组织机构
+    function selectOrg() {
+        $('.contactList .aui-media-list-item-inner').on('touchstart', function(e) {
+            e.preventDefault;
+        });
+
+        $('.contactList .aui-media-list-item-inner').on('touchmove', function(e) {
+            touchEvent = true;
+        });
+
+        $('.contactList .aui-media-list-item-inner').on('touchend', function(e) {
+            if (!touchEvent) {
+                $(this).find('.aui-radio').toggleClass('aui-checked');
+                var preList = $(this).parent().prevAll();
+                for (var i = 0; i < preList.length; i++) {
+                    var preData = JSON.parse($(preList[i]).children().attr('data-param'));
+                    preData.selectedCount = 0;
+                    dgClear(preData.child);
+                    $(preList[i]).children().next().attr('data-param', JSON.stringify(preData));
+                    $(preList[i]).children().attr('data-param', JSON.stringify(preData));
+                    var itemData = JSON.parse($(preList[i]).children().attr('data-param2'));
+                    itemData.selectedCount = 0;
+                    dgClear(itemData.child);
+                    $(preList[i]).children().attr('data-param2', JSON.stringify(itemData));
+                    $(preList[i]).find('.aui-radio').removeClass('aui-checked');
+                    $(preList[i]).find('.countNum').remove();
+                    $(preList[i]).children().next().addClass('active');
+                }
+                var nextList = $(this).parent().nextAll();
+                for (var i = 0; i < nextList.length; i++) {
+                    var nextData = JSON.parse($(nextList[i]).children().attr('data-param'));
+                    nextData.selectedCount = 0;
+                    dgClear(nextData.child);
+                    $(nextList[i]).children().next().attr('data-param', JSON.stringify(nextData));
+                    $(nextList[i]).children().attr('data-param', JSON.stringify(nextData));
+                    var itemData = JSON.parse($(nextList[i]).children().attr('data-param2'));
+                    itemData.selectedCount = 0;
+                    dgClear(itemData.child);
+                    $(nextList[i]).children().attr('data-param2', JSON.stringify(itemData));
+                    $(nextList[i]).find('.countNum').remove();
+                    $(nextList[i]).find('.aui-radio').removeClass('aui-checked');
+                    $(nextList[i]).children().next().addClass('active');
+                }
+                selectedOrg = [];
+                var data = JSON.parse($(this).attr('data-param'));
+                var data2 = JSON.parse($(this).attr('data-param2'));
+                data2.selectedCount = 0;
+                dgClear(data2.child);
+                if ($(this).find('.aui-radio').hasClass('aui-checked')) {
+                    for (var i = 0; i < allOrgs.length; i++) {
+                        if (allOrgs[i].id == data.id) {
+                            selectedOrg.push(allOrgs[i]);
+                        }
+                    };
+                    $(this).find('.countNum').remove();
+                    data.selectedCount = 0;
+                    if (data.child.length == 0) {
+                        data.selectedCount = 1;
+                    }
+                    data2.selectedCount = 1;
+                } else {
+                    var index;
+                    data.selectedCount = 0;
+                    data2.selectedCount = 0;
+                    index = selectedOrg.findIndex(function(p) {
+                        return p.id == data.id;
+                    });
+                    selectedOrg.splice(index, 1);
+                }
+                for (var i = 0; i < data2.child.length; i++) {
+                    if (data2.child[i].id == data.id) {
+                        data2.child[i] = data;
+                    }
+                }
+                $('.aui-media-list-item-inner').attr('data-param2', JSON.stringify(data2));
+                $(this).attr('data-param', JSON.stringify(data));
+                // console.log(JSON.stringify(data2));
+                $(this).next().attr('data-param', JSON.stringify(data));
+                $('#span' + data2.id + '').attr('data-param', JSON.stringify(data2));
+                // console.log(JSON.stringify(selectedOrg));
+                if (selectedOrg.length != 0) {
+                    $('.sureOrgBtn').addClass('active');
+                } else {
+                    $('.sureOrgBtn').removeClass('active');
+                }
+                // console.log(JSON.stringify(selectedOrgIds));
+                // console.log(JSON.stringify(selectedOrg));
+            }
+            touchEvent = false;
+        });
+    }
+
+    //已选带父级组织机构的去重
+    function unique(songs) {
+        var result = {};
+        var finalResult = [];
+        for (var i = 0; i < songs.length; i++) {
+            result[songs[i].id] = songs[i];
+        }
+        for (item in result) {
+            finalResult.push(result[item]);
+        }
+        return finalResult;
+    }
+
+    function reduce(arr) {
+        var newArr = [];
+        for (var i in arr) {
+            if (newArr.indexOf(arr[i]) == -1) {
+                newArr.push(arr[i])
+            }
+        }
+        return newArr;
+    }
+
+    var isClick = true;
+    //选择下级
+    function selectJunior() {
+        $('.junior').on('touchstart', function(e) {
+            e.preventDefault;
+        });
+
+        $('.junior').on('touchmove', function(e) {
+            touchEvent = true;
+        });
+
+        $('.junior').on('touchend', function(e) {
+            if (!touchEvent) {
+                if ($(this).hasClass('active')) {
+                    if (isClick) {
+                        isClick = false;
+                        api.showProgress({
+                            title: '加载中',
+                            modal: false
+                        })
+                        var that = this;
+                        setTimeout(function() {
+                            api.hideProgress();
+                            var data = JSON.parse($(that).attr('data-param'));
+                            // console.log($(that).attr('data-param'));
+                            var list = {
+                                child: data.child,
+                                items: data
+                            };
+                            var str = template('hasJuniorList', list);
+                            $('#orgSec').html(str);
+                            $('#orgReturn').parent().show();
+                            var html = $('#orgReturn').html();
+                            html = html.replaceAll('<span', '<span class="superior"');
+                            html += "<div class='iconRight'>></div><span id=" + 'span' + data.id + " data-param=' " + JSON.stringify(data) + "' tapmode data-action='return'>" + data.orgName + "</span>";
+                            $('#orgReturn').html(html);
+                            var ele = document.getElementById('orgReturn');
+                            ele.scrollLeft = ele.scrollWidth;
+                            operationDom();
+                            api.parseTapmode();
+                            selectOrg();
+                            selectJunior();
+                            // console.log(JSON.stringify(data.child));
+                            for (var i = 0; i < data.child.length; i++) {
+                                for (var j = 0; j < selectedOrg.length; j++) {
+                                    if (data.child[i].id == selectedOrg[j].id) {
+                                        $('#' + data.child[i].id + '').find('.aui-radio').addClass('aui-checked');
+                                    }
+                                }
+                            };
+                        }, 300);
+                        setTimeout(function() {
+                            isClick = true;
+                        }, 1000);
+                    }
+                }
+            }
+            touchEvent = false;
+        });
+    }
+
+    var allOrgs = [];
+    //递归整理成带父级的组织机构
+    function getOrgWithParent(data, tempData) {
+        for (var index = 0; index < data.length; index++) {
+            var item = data[index];
+            if (item.parentId != 0) {
+                tempData['o' + item.parentId] = item.parentId;
+            }
+            var org = {
+                id: item.id,
+                orgName: item.orgName,
+                count: item.count,
+                selectedCount: item.selectedCount,
+                parentId: item.parentId
+            }
+            $.extend(org, tempData);
+            allOrgs.push(org);
+            if (item.child && item.child.length > 0) {
+                getOrgWithParent(item.child, tempData);
+            } else {
+                delete tempData['o' + item.parentId];
+            }
+            // if (index == data.length - 1 && item.parentId != 0) {
+            //     delete tempData['o' + item.parentId];
+            // }
+        }
+    }
+
+    function dg(data) {
+        for (var index = 0; index < data.length; index++) {
+            var item = data[index];
+            item['selectedCount'] = 0;
+            dg(item.child);
+        }
+    }
+
+    function dgClear(data) {
+        for (var index = 0; index < data.length; index++) {
+            var item = data[index];
+            item.selectedCount = 0;
+            dgClear(item.child);
+        }
+    }
+
+    function dgSelect(data, id) {
+        for (var index = 0; index < data.length; index++) {
+            var item = data[index];
+            if (item.id == id) {
+                item.selectedCount = 1;
+            }
+            dgSelect(item.child, id);
+        }
+    }
+
+    var baseData;
+
+    function getOrgList() {
+        allOrgs = [];
+        var url = 'services/app/Orgagency/GetOrgagencyForCurrentUser';
+        fnGet(url, {}, false, function(ret, err) {
+            if (ret) {
+                if (ret.success) {
+                    if (ret.result != null) {
+                        $('#orgSec').show();
+                        var orgData = [];
+                        orgData.push(ret.result.currentUserOrgagency);
+                        baseData = {
+                            child: orgData,
+                            orgName: '顶层',
+                            id: 0
+                        };
+                        dg(orgData);
+                        getOrgWithParent(orgData, {});
+                        for (var i = 0; i < allOrgs.length; i++) {
+                            if (allOrgs[i].id == transOrgId) {
+                                selectedOrg.push(allOrgs[i]);
+                                $('.sureOrgBtn').addClass('active');
+                                var arr = Object.keys(allOrgs[i]);
+                                for (var j = 0; j < arr.length; j++) {
+                                    if (arr[j].indexOf("o") != -1) {
+                                        var parentId = parseInt(arr[j].substring(1));
+                                        dgSelect([baseData], parentId);
+                                    }
+                                }
+                            }
+                        }
+                        var list = {
+                            child: baseData.child,
+                            items: baseData
+                        };
+                        var str = template('hasJuniorList', list);
+                        $('#orgSec').html(str);
+                        for (var i = 0; i < baseData.child.length; i++) {
+                            for (var j = 0; j < selectedOrg.length; j++) {
+                                if (baseData.child[i].id == selectedOrg[j].id) {
+                                    $('#' + baseData.child[i].id + '').find('.aui-radio').addClass('aui-checked');
+                                }
+                            }
+                        };
+                        selectOrg();
+                        selectJunior();
+                        var data = JSON.stringify(baseData);
+                        $('#orgReturn').html("<span class='superior' id=" + 'span' + baseData.id + " data-param='" + data + "' tapmode data-action='return'>" + baseData.orgName + "</span>");
+                        operationDom();
+                        api.parseTapmode();
+                    } else {
+                        $('#orgSec').hide();
+                    }
+                } else {
+                    $('#orgSec').hide();
+                }
+            }
+
+        })
+    }
+</script>
+
+</html>

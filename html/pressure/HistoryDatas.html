@@ -1,0 +1,382 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>历史数据echarts页面</title>
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <script type="text/javascript" src="../../script/echarts.min.js"></script>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #FFF;
+        }
+
+        .aui-bar-nav {
+            top: 0;
+            z-index: 1;
+            background-color: #fff;
+            color: #333333;
+            font-size: 1rem;
+            font-weight: 600;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+        }
+
+        .aui-bar-nav .aui-btn .aui-iconfont {
+            color: #333333;
+            font-weight: 900;
+        }
+
+        .flex-con {
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+            display: flex;
+            flex-direction: column;
+        }
+        /*tab 样式*/
+
+        .aui-tab {
+            /*border-bottom: 1px solid #eee;*/
+            width: 100%;
+            height: 2.2rem;
+            box-shadow: 0px 3px 4px 0px rgba(35, 153, 245, 0.15);
+        }
+
+        .aui-tab .aui-tab-item {
+            font-size: 0.75rem;
+            font-family: PingFangSC-Medium;
+            font-weight: 500;
+            height: 2rem;
+            line-height: 2rem;
+            color: rgba(51, 51, 51, 1);
+            /* margin-bottom: 0.3rem; */
+        }
+
+        .aui-tab-item.aui-active {
+            color: rgba(75, 119, 190, 1);
+            border-bottom: none;
+            /*border-bottom: 2px solid rgba(75, 119, 190, 1);*/
+        }
+        /*.aui-tab-item.aui-active::after{
+          content: '';
+          width: 50%;
+          margin: 0 auto;
+          color: rgba(75, 119, 190, 1);
+          border-bottom: 2px solid rgba(75, 119, 190, 1);
+        }*/
+
+        .aui-tab-item p {
+            width: 2rem;
+            border-bottom: 2px solid rgba(75, 119, 190, 1);
+            margin: 0 auto;
+            height: 0.1rem;
+            border-radius: 0.1rem;
+        }
+
+        .content {
+            flex: 1;
+        }
+
+        .noData {
+            width: 100%;
+            height: 60vh;
+            line-height: 53vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--fontsize7);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0vw;
+            color: #0c9ff4;
+            text-align: cnt;
+            text-align: center;
+        }
+
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrap" class="flex-wrap flex-vertical" v-cloak>
+        <header class="aui-bar aui-bar-nav" id="header">
+            <div class="aui-pull-left aui-btn" @click="back">
+                <span class="aui-iconfont aui-icon-left"></span>
+            </div>
+            <div class="aui-title">历史数据</div>
+        </header>
+
+        <div class="flex-con">
+            <div class="aui-tab" id="tab">
+                <div class="aui-tab-item tab1" :class="{'aui-active':activeTab ==1}" @click="activeTab=1">今日数据
+                    <p :class="[{'aui-show':activeTab ==1},{'aui-hide':activeTab !=1}]"></p>
+                </div>
+                <div class="aui-tab-item tab2" :class="{'aui-active':activeTab ==2}" @click="activeTab=2">
+                    <div></div>7天数据
+                    <p :class="[{'aui-show':activeTab ==2},{'aui-hide':activeTab !=2}]"></p>
+                </div>
+                <div class="aui-tab-item tab3" :class="{'aui-active':activeTab ==3}" @click="activeTab=3">
+                    <div></div>30天数据
+                    <p :class="[{'aui-show':activeTab ==3},{'aui-hide':activeTab !=3}]"></p>
+                </div>
+            </div>
+            <div class="content">
+                <div class='aui-show' id="tab1">
+                    <div id="line" ref="dom" style="width:360px;height: 60vh;" :class="{'aui-hide':echartsData.length==0}"></div>
+                    <div class="noData" :class="{'aui-hide':echartsData.length>0}">
+                        暂无数据！
+                    </div>
+                </div>
+                <!-- <div class='aui-hide' id="tab2">
+                    <div id="Sevendays" style="width:360px;height: 60vh;"></div>
+                    <div class="noData aui-hide">
+                        暂无数据！
+                    </div>
+                </div>
+                <div class='aui-hide' id="tab3">
+                    <div id="moredays" style="width:360px;height: 60vh;"></div>
+                    <div class="noData aui-hide">
+                        暂无数据！
+                    </div>
+                </div> -->
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/remote.js"></script>
+<script type="text/javascript" src="../../script/moment.js"></script>
+<script type="text/javascript" src="../../script/vue/fastclick.min.js"></script>
+<script type="text/javascript" src="../../script/vue/vue.min.js"></script>
+<script type="text/javascript">
+    var DatasId;
+    var GetScadaDominUrl;
+    apiready = function() {
+        api.parseTapmode();
+        api.setWinAttr({
+            slidBackEnabled: false
+        });
+        var header = $api.byId('header');
+        // 实现沉浸式状态栏效果
+        $api.fixStatusBar(header);
+        DatasId = api.pageParam.id;
+        GetScadaDominUrl = $api.getStorage('GetScadaDomin');
+        fnIntVue(); //初始化vue实例
+        Origami.fastclick(document.body) //消除vue的ios端点击延迟
+
+    };
+
+    function fnIntVue() {
+        window.MainVue = new Vue({
+            el: "#wrap",
+            data: {
+                activeTab: 1,
+                echartsData: [],
+                echartsDom: null
+            },
+            methods: {
+                back() {
+                    api.closeWin({});
+                },
+                getEacharts() {
+                    api.showProgress({
+                        title: '加载中',
+                        modal: false
+                    });
+                    var MyCanvas;
+                    var data = [];
+                    if (this.activeTab == 1) {
+                        var Begin = new Date(new Date(new Date().toLocaleDateString()).getTime()); // 当天0点
+                        var End = new Date(new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000 - 1); // 当天23:59
+                        Begin = moment(Begin).format('YYYY-MM-DD HH:mm:ss');
+                        End = moment(End).format('YYYY-MM-DD HH:mm:ss');
+                    } else if (this.activeTab == 2) {
+                        var Begin = moment().subtract(6, 'days').startOf('day'); // 7天前0点
+                        var End = new Date(new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000 - 1); // 当天23:59
+                        Begin = moment(Begin).format('YYYY-MM-DD HH:mm:ss');
+                        End = moment(End).format('YYYY-MM-DD HH:mm:ss');
+                    } else if (this.activeTab == 3) {
+                        var Begin = moment().subtract(29, 'days').startOf('day'); // 30天前0点
+                        var End = new Date(new Date(new Date().toLocaleDateString()).getTime() + 24 * 60 * 60 * 1000 - 1); // 当天23:59
+                        Begin = moment(Begin).format('YYYY-MM-DD HH:mm:ss');
+                        End = moment(End).format('YYYY-MM-DD HH:mm:ss');
+                    }
+                    api.ajax({
+                        url: '' + GetScadaDominUrl + 'api/gis/post',
+                        method: 'post',
+                        timeout: 60,
+                        dataType: 'json',
+                        returnAll: false,
+                        tag: "echartAjax",
+                        headers: {
+                            'Content-Type': 'application/json;charset=utf-8'
+                        },
+                        data: {
+                            body: {
+                                "Id": DatasId,
+                                "Begin": Begin,
+                                "End": End,
+                                "Interval": "10"
+                            }
+                        }
+                    }, function(ret, err) {
+                        if (ret) {
+                            if (ret.Success && ret.Data.length != 0) {
+                                var result = ret.Data[0].Record;
+                                for (var i = 0; i < result.length; i++) {
+                                    var time = moment(result[i].Time).format('YYYY-MM-DD HH:mm:ss');
+                                    var array = [time, result[i].Value];
+                                    data.push(array);
+                                }
+                                MainVue.echartsData = data;
+                            } else {
+                                MainVue.echartsData = [];
+                            }
+                            // MainVue.setOption(this.echartsData);
+                        }
+                        // console.log(JSON.stringify(ret))
+                        api.hideProgress();
+                    });
+                },
+                setOption(data) {
+                    this.echartsDom.clear();
+                    var option = {
+                        tooltip: {
+                            trigger: 'axis',
+                            position: ['40%', '30%'],
+                            // position: function(pt) {
+                            //     return [pt[0], '5%'];
+                            // }
+                        },
+                        grid: {
+                            top: '10%',
+                            left: '3%',
+                            right: '5%',
+                            bottom: '3%',
+                            height: '80%',
+                            containLabel: true
+                        },
+                        xAxis: {
+                            type: 'time',
+                            boundaryGap: false,
+                            axisLine: {
+                                show: false
+                            },
+                            axisTick: {
+                                show: false
+                            },
+                            splitLine: {
+                                show: false
+                            }
+                        },
+                        yAxis: {
+                            name: '(MPa)',
+                            type: 'value',
+                            axisLine: {
+                                show: false
+                            },
+                            axisTick: {
+                                show: false
+                            },
+                            splitLine: {
+                                lineStyle: {
+                                    // 使用深浅的间隔色
+                                    color: '#E9EFF3'
+                                }
+                            },
+                            // boundaryGap: [0, '100%']
+                        },
+                        dataZoom: [{
+                            start: 0,
+                            end: 100,
+                            handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+                            handleSize: '70%',
+                            handleStyle: {
+                                color: '#fff',
+                                shadowBlur: 3,
+                                shadowColor: 'rgba(0, 0, 0, 0.6)',
+                                shadowOffsetX: 2,
+                                shadowOffsetY: 2
+                            }
+                        }],
+                        series: [{
+                            name: '数据为',
+                            type: 'line',
+                            smooth: true,
+                            symbol: 'none',
+                            sampling: 'average',
+                            itemStyle: {
+                                normal: {
+                                    color: 'rgb(75,119,190)'
+                                }
+                            },
+                            areaStyle: {
+                                normal: {
+                                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                                        offset: 0,
+                                        color: 'rgb(173,203,248)'
+                                    }, {
+                                        offset: 1,
+                                        color: 'rgb(242,245,249)'
+                                    }])
+                                }
+                            },
+                            data: data,
+                        }]
+                    };
+                    this.echartsDom.setOption(option);
+                },
+                init() {
+                    this.echartsDom = echarts.init(this.$refs.dom);
+                    this.getEacharts();
+                }
+            },
+            mounted: function() {
+                setTimeout(function() {
+                    MainVue.$nextTick(function() {
+                        MainVue.init();
+                    });
+                }, 300);
+            },
+            watch: {
+                activeTab: {
+                    handler: function(newVal, oldVal) {
+                        api.cancelAjax({
+                            tag: 'echartAjax'
+                        });
+                        if (newVal != oldVal) {
+                            this.getEacharts();
+                        }
+                    },
+                    deep: true
+                },
+                echartsData: {
+                    handler: function(newVal, oldVal) {
+                        if (this.echartsDom) {
+                            if (newVal != oldVal) {
+                                this.setOption(newVal);
+                            } else {
+                                this.setOption(oldVal);
+                            }
+                        } else {
+                            this.init();
+                        }
+                    },
+                    deep: true
+                },
+            }
+        })
+    }
+</script>
+
+</html>

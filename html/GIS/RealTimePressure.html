@@ -1,0 +1,262 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>GIS页面</title>
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/dialog.css" />
+    <link rel="stylesheet" type="text/css" href="../../script/gis/openlayers/ol.css" />
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #FFF;
+        }
+
+        .aui-bar-nav {
+            top: 0;
+            z-index: 1;
+            background-color: #fff;
+            color: #333333;
+            font-size: 1rem;
+            font-weight: 600;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+        }
+
+        .aui-bar-nav .aui-btn .aui-iconfont {
+            color: #333333;
+            font-weight: 900;
+        }
+
+        .flex-con {
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 0.7rem 4vw;
+        }
+
+        .aui-list,
+        .aui-list .aui-list-item {
+            background-image: none;
+        }
+
+        .aui-list .aui-list-item {
+            padding: 0.8rem;
+        }
+
+        .aui-card-list {
+            width: 92vw;
+            border: 1px solid rgba(238, 238, 238, 1);
+            box-shadow: 0rem 0rem 1rem 0rem rgba(210, 210, 210, 0.77);
+            border-radius: 0.3rem
+        }
+
+        .aui-card-list-content,
+        .aui-card-list-content-padded {
+            padding: 0;
+        }
+
+        .aui-list {
+            border-radius: 0.3rem
+        }
+
+        .aui-media-list-item-inner:first-child {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: rgba(51, 51, 51, 1);
+        }
+
+        .dot {
+            width: 0.25rem;
+            height: 0.25rem;
+            background: rgba(75, 119, 190, 1);
+            border-radius: 50%;
+            margin-right: 0.25rem;
+            margin-bottom: 0.1rem;
+        }
+
+        .Text {
+            display: flex;
+            align-items: baseline;
+        }
+
+        .text1 {
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: rgba(102, 102, 102, 1);
+        }
+
+        .text2 {
+            font-size: 1rem;
+            font-weight: 500;
+            color: rgba(75, 119, 190, 1);
+            margin-right: 0.03rem;
+        }
+
+        .text3 {
+            font-size: 0.6rem;
+            font-weight: 500;
+            color: rgba(153, 153, 153, 1);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrap" class="flex-wrap flex-vertical">
+        <header class="aui-bar aui-bar-nav" id="header">
+            <div class="aui-pull-left aui-btn" tapmode data-action="back">
+                <span class="aui-iconfont aui-icon-left"></span>
+            </div>
+            <div class="aui-title">实时压力</div>
+        </header>
+
+        <div class="flex-con" id="presureList">
+            <!-- <div class="aui-card-list">
+                <div class="aui-card-list-content-padded">
+                    <ul class="aui-list aui-media-list">
+                        <li class="aui-list-item aui-list-item-middle" tapmode data-action="history">
+                            <div class="aui-media-list-item-inner">
+                                <span class="dot"></span>*********************采集点
+                            </div>
+                            <div class="aui-media-list-item-inner">
+                                <div class="Text">
+                                    <span class="text1"><span class="dot"></span>实时压力：</span>
+                                    <span class="text2">0.45</span>
+                                    <span class="text3">Mpa</span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="aui-card-list">
+                <div class="aui-card-list-content-padded">
+                    <ul class="aui-list aui-media-list">
+                        <li class="aui-list-item aui-list-item-middle" tapmode data-action="history">
+                            <div class="aui-media-list-item-inner">
+                                <span class="dot"></span>*********************采集点
+                            </div>
+                            <div class="aui-media-list-item-inner">
+                                <div class="Text">
+                                    <span class="text1"><span class="dot"></span>实时压力：</span>
+                                    <span class="text2">0.45</span>
+                                    <span class="text3">Mpa</span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div> -->
+        </div>
+
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/diy/public.js"></script>
+<script type="text/javascript" src="../../script/remote.js"></script>
+<script type="text/javascript" src="../../script/zepto.js"></script>
+<script type="text/javascript" src="../../script/moment.js"></script>
+<script type="text/javascript" src="../../script/aui-dialog.js"></script>
+<script type="text/javascript" src="../../script/diy/template.js"></script>
+<script type="text/template" id="presureListTpl">
+    {{each items value i}}
+    <div class="aui-card-list">
+        <div class="aui-card-list-content-padded">
+            <ul class="aui-list aui-media-list">
+                <li class="aui-list-item aui-list-item-middle" data-param="{{value}}" tapmode data-action="history">
+                    <div class="aui-media-list-item-inner">
+                        <span class="dot"></span>{{value.Name}}
+                    </div>
+                    <div class="aui-media-list-item-inner">
+                        <div class="Text">
+                            <span class="text1"><span class="dot"></span>实时压力：</span>
+                            <span class="text2">{{value.Value}}</span>
+                            <span class="text3">Mpa</span>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    {{/each}}
+</script>
+<script type="text/javascript">
+var GetScadaDominUrl;
+    apiready = function() {
+        api.parseTapmode();
+        var header = $api.byId('header');
+        // 实现沉浸式状态栏效果
+        $api.fixStatusBar(header);
+        headerH = $api.offset(header).h;
+        fnReady();
+        setTimeout(function() {
+            getPressureList();
+        }, 300);
+        GetScadaDominUrl = $api.getStorage('GetScadaDomin');
+    };
+
+    var actionList = {
+        'back': function() {
+            api.closeWin();
+        },
+        'history': function() {
+            var data = JSON.parse($(this).attr('data-param'));
+            api.openWin({
+                name: 'HistoryDatas',
+                url: './HistoryDatas.html',
+                pageParam: {
+                    id: data.Id
+                }
+            });
+        }
+    }
+
+    function getPressureList() {
+        api.showProgress({
+            title: '加载中',
+            modal: false
+        });
+        api.ajax({
+            url: ''+GetScadaDominUrl+'api/gis/get',
+            method: 'get',
+        }, function(ret, err) {
+            api.hideProgress();
+            if (ret) {
+                var data = ret.Data;
+                var infoData = [];
+                for (var i = 0; i < data.length; i++) {
+                    var name = data[i].Name;
+                    if (data[i].Devices.length != 0 && data[i].Devices != undefined) {
+                        var deData = data[i].Devices;
+                        for (var j = 0; j < deData.length; j++) {
+                            if (deData[j].Infos.length != 0 && deData[j].Infos != undefined) {
+                                var inData = deData[j].Infos;
+                                for (var k = 0; k < inData.length; k++) {
+                                    inData[k].Name = name + '-' + inData[k].Name;
+                                    infoData.push(inData[k]);
+                                }
+                            }
+                        }
+                    }
+                }
+                var list = {
+                    items: infoData
+                };
+                var str = template('presureListTpl', list);
+                $('#presureList').html(str);
+                operationDom();
+                api.parseTapmode();
+            }
+        });
+    }
+</script>
+
+</html>

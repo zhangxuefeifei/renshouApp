@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>地图标注列表</title>
+    <link rel="stylesheet" href="../../../css/api.css">
+    <link rel="stylesheet" href="../../../css/aui.css">
+    <link rel="stylesheet" href="../css/dialogAlert.css">
+    <link rel="stylesheet" href="../css/ol.css">
+    <style rel="stylesheet">
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            overflow-y: hidden;
+            background: #fff;
+        }
+
+        .flex-box {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            overflow-y: hidden;
+        }
+
+        header.aui-bar-nav {
+            background: #fff;
+            font-size: 0.8rem;
+            font-family: PingFangSC-Semibold, PingFang SC;
+            font-weight: 600;
+            color: #333;
+        }
+
+        header.aui-bar-nav .aui-btn .aui-iconfont {
+            color: #333;
+            width: 1.2rem;
+            height: 1.2rem;
+            font-weight: bold;
+            border: none;
+        }
+
+        header .aui-icon-left:before {
+            content: url('../image/closeWin.png');
+            width: 1.2rem;
+            height: 1.2rem;
+        }
+        /*搜索结果*/
+
+        .search_content {
+            width: 100%;
+            height: 82vh;
+            font-size: 0.7rem;
+            background: #fff;
+            margin: 0 auto;
+            padding-top: 0.3rem;
+            overflow: hidden;
+            overflow-y: scroll;
+            -webkit-overflow-scrolling: touch;
+            position: relative;
+            border-bottom: 6px solid #F6F6F6;
+            padding-bottom: 1rem;
+        }
+
+        .search_content .aui-row-content {
+            width: 16.25rem;
+            height: auto;
+            margin: 0 auto;
+            margin-top: 1.75rem;
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0rem 0.3rem 0.5rem 0rem rgba(227, 227, 227, 0.68);
+            border-radius: 0.3rem 0.6rem 0.6rem 0.6rem;
+            /*border: 0.05rem solid rgba(250, 250, 250, 1);*/
+            position: relative;
+        }
+
+        .search_content .aui-row-other {
+            width: 16.25rem;
+            height: 4rem;
+            margin: 0 auto;
+        }
+
+        .aui-row-other div[class*="aui-col-xs-"] {
+            height: 1.5rem;
+            line-height: 1.5rem;
+        }
+
+        .aui-row-other div[class="aui-col-xs-1"] {
+            height: 100%;
+        }
+        /*列表内容框*/
+
+        .btn_box {
+            position: absolute;
+            top: -1.5rem;
+            right: 0rem;
+        }
+
+        .edit_btn {
+            float: left;
+            border: none;
+            width: 2rem;
+            height: 1.9rem;
+            background: url('../image/edit.png');
+            background-size: 100% 100%;
+        }
+
+        .delete_btn {
+            float: left;
+            border: none;
+            width: 1.9rem;
+            height: 1.9rem;
+            background: url('../image/delete.png');
+            background-size: 100% 100%;
+        }
+
+        .page_box {
+            width: 100%;
+            position: absolute;
+            bottom: 0rem;
+            font-size: 0.7rem;
+            color: #333;
+            height: 2.65rem;
+            background: #fff;
+            padding-top: 0.5rem;
+        }
+
+        .page_box .aui-iconfont {
+            font-weight: bold;
+        }
+
+        .not_next {
+            color: #eee!important;
+        }
+    </style>
+
+</head>
+
+<body class="flex-box" id='flex-box'>
+    <header class="aui-bar aui-bar-nav" id='header'>
+        <div class="aui-pull-left aui-btn" onclick="closeWin()" tapmode>
+            <span class="aui-iconfont aui-icon-left"></span>
+        </div>
+        <div class="aui-title">标注列表</div>
+    </header>
+    <!-- 搜索到的内容 -->
+    <div class="search_content aui-margin-t-10">
+
+
+    </div>
+    <div class="page_box">
+        <div class="row">
+            <div class="aui-col-xs-4 aui-text-right" tapmode onclick="Pages('pre')">
+                <i class="aui-iconfont aui-icon-left not_next"></i>
+            </div>
+            <div class="aui-col-xs-4 aui-text-center"><span id='currentPage'>1</span>/<span id='allPages'></span></div>
+            <div class="aui-col-xs-4 aui-text-left" tapmode onclick="Pages('next')">
+                <i class="aui-iconfont aui-icon-right"></i>
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/template.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/template" id='pointDemo'>
+    {{ if labelList.length > 0}} {{each labelList value i}}
+    <div class="aui-row-content aui-padded-l-15">
+        <div class="aui-pull-left btn_box">
+            <div params='{{value}}' class="edit_btn" tapmode onclick="UpdateLabel(this)"></div>
+            <div params='{{value}}' class="delete_btn" tapmode onclick="deleteLabel(this)"></div>
+        </div>
+        <div class="aui-row-other aui-padded-t-10">
+            <div class="aui-col-xs-12">标注信息: <span>{{value.remarks}}</span></div>
+            <div class="aui-col-xs-6">经度: <span>{{value.x}}</span></div>
+            <div class="aui-col-xs-6">纬度: <span>{{value.y}}</span></div>
+        </div>
+
+    </div>
+    {{/each}} {{else}}
+    <div class="aui-row aui-text-center no-data">
+        <span class='clear_search'>暂无数据!</span>
+    </div>
+    {{/if}}
+</script>
+<script type="text/javascript">
+    var PageIndex = 1;
+    apiready = function() {
+            // 页面初始化，沉浸式等
+            initWindow();
+            // console.log(JSON.parse(api.pageParam.data));
+            // 初始化页面数据。默认显示管点数据
+            loadDelayTHMS(function(){
+              getLabel();
+            })
+
+            api.addEventListener({
+                name: 'UpdateLabelSuccess'
+            }, function(ret, err) {
+                if (ret) {
+                    // PageIndex = 1;
+                    getLabel();
+                }
+            });
+            api.addEventListener({
+                name: 'keyback'
+            }, function(ret, err) {
+              if(ret && ret.keyCode == 4){
+                closeWin();
+              }
+
+            });
+
+        }
+        // 关闭窗口，并重新加载图标
+    function closeWin() {
+        api.closeWin();
+        api.sendEvent({
+            name: 'updatePageLabel',
+            extra: {
+                from: 'list',
+            }
+        });
+
+    }
+    // 数据列表请求
+    function getLabel() {
+        fnGet(`services/SNTGIS/LabelManage/GetLabel?PageIndex=${PageIndex}&MaxResultCount=10`, null, false, function(ret, err) {
+            if (ret && ret.success) {
+                var result = ret.result;
+                //  初始化页码 common.js
+                if(result.labelList.length > 0){
+                initPages(result.labelList, result.pageCount, result.resuiltCount, PageIndex);
+                }
+                $('.search_content').html('');
+                var str = template('pointDemo', result);
+                $('.search_content').append(str);
+            }
+            api.hideProgress();
+        })
+    }
+    //  页码
+    function Pages(type) {
+        changePages(type, PageIndex, function(index) {
+            PageIndex = index;
+            getLabel();
+        }); //type 前一页或者后一页，PageIndex当前页数，initListDatas 请求数据方法名
+    }
+
+    function UpdateLabel(that) {
+        var params = JSON.parse($(that).attr('params'));
+        api.openFrame({
+            name: 'addnewmark_frm',
+            url: './addnewmark_frm.html',
+            pageParam: {
+                lon: params.x,
+                lat: params.y,
+                type: 'update',
+                id: params.id,
+                remarks: params.remarks
+            },
+            bounces: false,
+            bgColor: 'rgba(0,0,0,0.4)',
+        });
+    }
+
+
+    function deleteLabel(that) {
+        var params = JSON.parse($(that).attr('params'));
+        dialogAlert({
+            title: '提示',
+            content: '确认删除吗?',
+            buttons: ['确定', '取消'],
+        }, function(ret) {
+            if (ret.buttonIndex == 1) {
+                fnGet(`services/SNTGIS/LabelManage/DeleteLabel?id=${params.id}`, null, true, function(ret, err) {
+                    if (ret && ret.success) {
+                        api.toast({
+                            msg: '删除成功!',
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                        PageIndex = 1;
+                        getLabel();
+                    } else {
+                        api.toast({
+                            msg: '删除失败!',
+                            duration: 2000,
+                            location: 'bottom'
+                        });
+                    }
+                });
+
+            }
+        });
+    }
+</script>
+
+</html>

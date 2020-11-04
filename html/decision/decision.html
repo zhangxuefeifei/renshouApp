@@ -1,0 +1,185 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>数据决策系统首页页面</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui1.css" />
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #FFF;
+            -webkit-box-orient: vertical;
+            -webkit-flex-flow: column;
+            flex-flow: column;
+            display: flex;
+            overflow-x: hidden;
+        }
+
+        .aui-bar-nav {
+            top: 0;
+            z-index: 1;
+            background-color: #0c9ff4;
+            color: #FFF;
+            font-size: var(--fontsize9);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+        }
+
+        .aui-bar-nav .aui-btn .aui-iconfont {
+            color: #FFF;
+            font-weight: 900;
+        }
+
+        section {
+            width: 100%;
+            padding: 3.2vw;
+            padding-right: 0;
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            -o-box-sizing: border-box;
+            -ms-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        .menuIcon {
+            width: 45.2vw;
+            height: 45.2vw;
+            padding: 3.2vw;
+            border-radius: 0.13rem;
+            font-size: var(--fontsize7);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #ffffff;
+            margin-bottom: 3.2vw;
+            float: left;
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            -o-box-sizing: border-box;
+            -ms-box-sizing: border-box;
+            box-sizing: border-box;
+            background-size: 100%;
+        }
+
+        .menuIcon:active {
+            box-shadow: inset 0 0 1000px rgba(0, 0, 0, .5);
+        }
+
+        .menuIcon.menuLong {
+            height: 93.60vw;
+        }
+
+        .menuIcon span {
+            position: absolute;
+            top: 26vw;
+            left: 15.5vw;
+        }
+
+        .caiwu {
+            background-image: url('../../image/decision/caiwu.png');
+            background-size: 46.5vw 93.60vw;
+        }
+
+        .kefu {
+            background-image: url('../../image/decision/kefu.png');
+        }
+
+        .chaobiao {
+            background-image: url('../../image/decision/chaobiao.png');
+        }
+
+        .jingying {
+            background-image: url('../../image/decision/jingying.png');
+        }
+
+        .dangan {
+            background-image: url('../../image/decision/dangan.png');
+        }
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav" id="header">
+        <div class="aui-pull-left aui-btn" tapmode data-action='back'>
+            <span class="aui-iconfont aui-icon-left"></span>
+        </div>
+        <div class="aui-title">数据决策系统</div>
+    </header>
+
+    <section>
+
+        <div class="row">
+            <div class="aui-col-xs-6">
+                <div class="menuIcon kefu open-win" tapmode win='../decision/CustomerService/CustomerService'>
+                    客服中心日常统计
+                </div>
+            </div>
+            <div class="aui-col-xs-6">
+                <div class="menuIcon chaobiao open-win" tapmode win="meterReading/meterReading">
+                    抄表员考核统计
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="aui-col-xs-6">
+                <div class="menuIcon dangan open-win" tapmode win='../decision/FileCounts/FileCounts'>
+                    档案管理统计
+                </div>
+                <div class="menuIcon jingying open-win" tapmode win="orgYearStatistics/orgYearStatistics">
+                    公司经营管理统计
+                </div>
+            </div>
+            <div class="aui-col-xs-6">
+                <div class="menuIcon menuLong caiwu open-win" tapmode win="finance/finance">
+                    <span>财务统计</span>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/zepto.js"></script>
+<script type="text/javascript" src="../../script/diy/public.js"></script>
+<script type="text/javascript" src="../../script/aui-tab.js"></script>
+<script type="text/javascript">
+    document.body.addEventListener('touchstart', function() {});
+    apiready = function() {
+        api.addEventListener({
+            name: 'changedFontSize'
+        }, function(ret, err) {
+            if (ret) {
+                changeFontSize();
+            }
+        });
+        api.parseTapmode();
+        var header = $api.byId('header');
+        // 实现沉浸式状态栏效果
+        $api.fixStatusBar(header);
+        headerH = $api.offset(header).h;
+        fnReady();
+        fnReadyOpenWin();
+    };
+
+    var actionList = {
+        'back': function() {
+            api.closeWin();
+        },
+    }
+</script>
+
+</html>

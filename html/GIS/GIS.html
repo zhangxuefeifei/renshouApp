@@ -1,0 +1,3084 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>GIS页面</title>
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/dialog.css" />
+    <link rel="stylesheet" type="text/css" href="../../script/gis/openlayers/ol.css" />
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+        }
+
+        .aui-bar-nav {
+            top: 0;
+            z-index: 1;
+            background-color: #fff;
+            color: #333333;
+            font-size: var(--fontsize9);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            border-bottom: solid 0.03rem #e6e6e6;
+        }
+
+        .aui-bar-nav .aui-btn .aui-iconfont {
+            color: #333333;
+            font-weight: 900;
+        }
+
+        .flex-con {
+            overflow: auto;
+            /*-webkit-overflow-scrolling: touch;*/
+        }
+
+        .deviceList.aui-card-list {
+            position: absolute;
+            bottom: 2vw;
+            width: 96vw;
+            right: 2vw;
+            max-height: 65vw;
+            background-color: transparent;
+            margin-bottom: 0;
+            -webkit-box-orient: vertical;
+            -webkit-flex-flow: column;
+            flex-flow: column;
+            display: flex;
+            border: 1px solid transparent;
+            border-radius: 0.3rem;
+            box-shadow: 0rem 0rem 1rem 0rem rgba(210, 210, 210, 0.77);
+        }
+
+        .deviceList .close {
+            width: 1rem;
+            height: 1rem;
+            background-image: url('../../image/gis/close.png');
+            background-size: 100%;
+            position: absolute;
+            right: 0;
+            top: -0.25rem;
+            z-index: 1;
+        }
+
+        .deviceList .aui-card-list-user-name {
+            justify-content: flex-end;
+        }
+        /*.deviceList .aui-card-list-header.aui-card-list-user {
+            padding: 0;
+            height: 0.25rem;
+            min-height: 0.25rem;
+            background-color: transparent;
+        }*/
+
+        .deviceList .aui-card-list-content-padded {
+            border-radius: 0.3rem;
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            padding: 0;
+        }
+        /*-webkit-overflow-scrolling: touch; ios上会让z-index的无效*/
+
+        .deviceList .aui-list {
+            padding-left: 0.75rem;
+            border-radius: 0.3rem;
+        }
+
+        .deviceList .aui-list .aui-list-item {
+            padding-left: 0;
+            padding: 0.85rem 0.8rem;
+            font-size: 0.6rem;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #333333;
+        }
+
+        .deviceList .aui-list .aui-list-item.active {
+            background-color: #f5f5f5;
+        }
+
+        .deviceList .aui-media-list .aui-list-item-inner {
+            padding-left: 0.75rem;
+        }
+
+        .deviceList .aui-list,
+        .deviceList .aui-list .aui-list-item:last-child {
+            background-image: none;
+        }
+
+        .deviceList .aui-media-list-item-inner {
+            align-items: flex-start;
+        }
+
+        .deviceList .aui-col-xs-6 {
+            width: calc((100% - 0.5rem)/2);
+            margin-right: 0.25rem;
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+
+        .deviceList .textTitle1 {
+            flex: 0 0 2.8rem;
+            height: 0.9rem;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .deviceList .textTitle2 {
+            flex: 0 0 3.9rem;
+            height: 0.9rem;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .deviceList .dot {
+            width: 0.15rem;
+            height: 0.15rem;
+            margin-right: 0.25rem;
+            background: rgba(173, 58, 255, 1);
+            border-radius: 50%;
+            border: 1px solid rgba(173, 58, 255, 1);
+        }
+
+        .menu {
+            width: 4rem;
+            /*position: absolute;
+            top: 6.4rem;
+            right: 0.6rem;*/
+            z-index: 999;
+            text-align: center;
+        }
+
+        .menu button {
+            margin: 1px;
+            padding: 0;
+            color: #fff;
+            font-size: 0.8em;
+            text-decoration: none;
+            text-align: center;
+            width: 6.25em;
+            line-height: .4em;
+            background-color: rgba(0, 60, 136, .5);
+            border: none;
+            border-radius: 0.1rem;
+            padding: 0.3rem;
+        }
+
+        .menuBox {
+            position: fixed;
+            z-index: 999;
+            right: 0.5rem;
+        }
+        /*.menulist {
+            display: none;
+            border: 1px solid rgba(0, 60, 136, .5);
+            width: 4.1rem;
+            font-size: 0.7rem;
+            border-radius: 0.1rem;
+        }
+
+        .menulist li {
+            padding: 0.3rem;
+            border-bottom: 1px solid rgba(0, 60, 136, .5);
+        }*/
+
+        .menulist {
+            display: none;
+            width: 3.3rem;
+            background: linear-gradient(-5deg, rgba(98, 84, 255, 1), rgba(75, 120, 191, 1));
+            box-shadow: 0rem 0rem 1rem 0rem rgba(150, 150, 150, 0.77);
+            border-radius: 3rem;
+            /*padding-bottom: 0.5rem;*/
+        }
+
+        .menulist li {
+            text-align: center;
+            font-size: 0.7rem;
+            font-family: PingFangSC-Regular;
+            font-weight: 400;
+            color: rgba(255, 255, 255, 1);
+            padding: 0.55rem 0;
+        }
+
+        .menulist li:last-child {
+            border-bottom: none;
+        }
+
+        .Menu_ative {
+            display: block!important;
+        }
+
+        .content {
+            position: absolute;
+            bottom: 0.75rem;
+            width: 92vw;
+            /*min-height: 15.3rem;*/
+            background: #fff;
+            z-index: 99;
+            right: 4vw;
+            height: auto;
+            /*margin: 0.4rem 0.4rem 0.75rem 0.4rem;*/
+            background: rgba(255, 255, 255, 1);
+            border: 2px solid rgba(238, 238, 238, 1);
+            box-shadow: 3px 5px 21px 0px rgba(210, 210, 210, 0.77);
+            border-radius: 0.3rem;
+        }
+
+        .content ul {
+            border-radius: 0.3rem;
+            max-height: 22.5rem;
+            overflow-y: scroll;
+        }
+
+        .content .aui-row {
+            width: 100%;
+            line-height: 1rem;
+        }
+
+        .content .aui-row input {
+            /*border: 1px solid black;*/
+            height: 1rem;
+        }
+        /*.content .aui-list.aui-list-in .aui-list-item {
+            background-position: 0rem bottom;
+        }*/
+
+        .content .aui-list.aui-list-in .aui-list-item {
+            min-height: 2.45rem;
+        }
+
+        .content .aui-list-header {
+            height: 0.5rem;
+            background: #fff;
+            height: 1rem;
+            line-height: 2rem;
+            border-radius: 0.3rem 0.3rem 0 0;
+        }
+
+        .content .delete {
+            position: absolute;
+            top: -0.4rem;
+            right: 0rem;
+            width: 1rem;
+            height: 1rem;
+            background: url('../../image/gis/close.png');
+            background-size: 1rem 1rem;
+            z-index: 100;
+        }
+
+        .content .aui-row .aui-col-xs-6 button {
+            margin: 0.1rem;
+            padding: 0;
+            color: #fff;
+            font-size: 0.7rem;
+            text-decoration: none;
+            text-align: center;
+            width: 6rem;
+            height: 2rem;
+            line-height: .4rem;
+            border-radius: 0.3rem;
+            padding: 0.5rem;
+            font-family: PingFangSC-Medium;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 1);
+        }
+
+        .li_padding {
+            height: 3.6rem;
+            padding-left: 1rem!important;
+            background-image: none;
+        }
+
+        .li_padding .button1 {
+            background: #ccc;
+        }
+
+        .li_padding .button2 {
+            background: linear-gradient(-5deg, rgba(98, 84, 255, 1), rgba(75, 120, 191, 1));
+            box-shadow: 0px 7px 13px 0px rgba(150, 150, 150, 0.77);
+        }
+        /*.menulist li {
+            background: #fff;
+            color: black;
+        }*/
+
+        .menuActive {
+            text-decoration: none;
+            background-color: rgba(0, 60, 136, 0.7)!important;
+        }
+
+        .liActive {
+            text-decoration: none;
+            background-color: rgba(0, 60, 136, 0.7)!important;
+            color: #fff;
+        }
+
+        .menulist li:last-child.liActive {
+            text-decoration: none;
+            background-color: rgba(0, 60, 136, 0.7)!important;
+            color: #fff;
+            border-radius: 0 0 3rem 3rem;
+        }
+
+        .menulist li:first-child.liActive {
+            text-decoration: none;
+            background-color: rgba(0, 60, 136, 0.7)!important;
+            color: #fff;
+            border-radius: 3rem 3rem 0 0;
+        }
+
+        .last-control {
+            top: 3.5rem;
+            left: .5em;
+        }
+
+        .aui-col-xs-12 span {
+            height: 1.2rem;
+            color: #757575;
+            font-size: 0.7rem;
+        }
+
+        .textStyle {
+            height: 1.2rem;
+            text-align: justify;
+        }
+
+        .textStyle:after {
+            content: '.';
+            width: 100%;
+            display: inline-block;
+            overflow: hidden;
+            height: 0;
+        }
+
+        .textStyle1 {
+            height: 1.2rem;
+            text-align: justify;
+        }
+
+        .textStyle1:after {
+            content: '.';
+            width: 100%;
+            display: inline-block;
+            overflow: hidden;
+            height: 0;
+        }
+
+        .lineStyle {
+            text-align: left!important;
+        }
+        /*菜单图标*/
+
+        .caidan {
+            position: absolute;
+            top: 3.65rem;
+            right: 0.65rem;
+            width: 3.1rem;
+            height: 3.1rem;
+            background: url('../../image/gis/caidan.png');
+            background-size: 3.1rem 3.1rem;
+            z-index: 999;
+        }
+
+        .Quick {
+            position: absolute;
+            top: 4.8rem;
+            left: 0.33rem;
+            width: 2.2rem;
+            height: auto;
+            z-index: 100;
+        }
+
+        .Quick ul li {
+            list-style: none;
+        }
+
+        .Quick ul li:first-child {
+            width: 2.2rem;
+            height: 2.2rem;
+            background: url('../../image/gis/left.png');
+            background-size: 2.2rem 2.2rem;
+        }
+
+        .Quick ul li:nth-child(2) {
+            width: 2.2rem;
+            height: 2.2rem;
+            background: url('../../image/gis/right.png');
+            background-size: 2.2rem 2.2rem;
+        }
+
+        .Quick ul li:nth-child(3) {
+            width: 2.2rem;
+            height: 2.2rem;
+            background: url('../../image/gis/jia.png');
+            background-size: 2.2rem 2.2rem;
+        }
+
+        .Quick ul li:last-child {
+            width: 2.2rem;
+            height: 2.2rem;
+            background: url('../../image/gis/jianhao.png');
+            background-size: 2.2rem 2.2rem;
+        }
+
+        .dot {
+            float: left;
+            width: 0.15rem;
+            height: 0.15rem;
+            background: rgba(173, 58, 255, 1);
+            border-radius: 50%;
+            margin: 0.45rem;
+        }
+
+        .content .aui-col-xs-3 {
+            width: 30%;
+        }
+
+        .content .aui-col-xs-9 {
+            width: 70%;
+        }
+
+        .content .aui-col-xs-6 .aui-col-xs-5 {
+            width: 56%;
+        }
+
+        .content .aui-col-xs-6 .aui-col-xs-7 {
+            width: 44%;
+        }
+
+        .aui-list {
+            background-position: top;
+            background-image: none
+        }
+
+        .aui-list.aui-list-in .aui-list-item:last-child {
+            background-position: none;
+        }
+
+        .aui-list.aui-list-in .aui-list-item:last-child {
+            background-position: none;
+            background-image: none;
+            background-image: none;
+        }
+
+        .aui-list .aui-list-item-title {
+            font-size: 0.7rem;
+        }
+
+        .close1 {
+            width: 1rem;
+            height: 1rem;
+            background: url('../../image/gis/close1.png');
+            background-size: 1rem 1rem;
+            margin: 0 auto;
+        }
+
+        .aui-list .aui-list-item:active {
+            background-color: #fff;
+        }
+        /* 鹰眼控件 */
+
+        .ol-custom-overviewmap,
+        .ol-custom-overviewmap.ol-uncollapsible {
+            bottom: 135px;
+            left: 6px;
+            right: auto;
+            top: auto;
+            background-color: rgba(77, 117, 197, 1);
+            border-radius: 0.5rem 0.5rem 0.5rem 0.5rem;
+        }
+
+        .ol-custom-overviewmap:not(.ol-collapsed) button {
+            background-color: rgba(77, 117, 197, 1);
+            border-radius: 0.5rem 0.5rem 0.5rem 0.5rem;
+        }
+
+        .ol-custom-overviewmap .ol-overviewmap-box {
+            border: 2px solid blue;
+        }
+
+        .ol-custom-overviewmap:not(.ol-collapsed) {
+            border: 1px solid #fff;
+        }
+
+        .ol-custom-overviewmap .ol-overviewmap-map {
+            border: none;
+        }
+        /*测量控件*/
+
+        .measurementpanel {
+            position: absolute;
+            /*left: 35%;
+            top: 35%;*/
+            border: 1px;
+            border-color: #333;
+            background-color: #4d75c5;
+            color: #fff;
+            box-shadow: 0px 0px 2px #666;
+        }
+        /*.ol-overviewmap button{
+          width: 1.7rem;
+          height: 1.7rem;
+          text-align: center;
+        }*/
+        /*按钮*/
+
+        .buttonS {
+            width: 2.2rem;
+            position: absolute;
+            top: 11.2rem;
+            z-index: 99;
+            margin-left: 0.52rem;
+            background: #fff;
+            border: 0.1px solid rgba(238, 238, 238, 1);
+            box-shadow: 0rem 0rem 0rem 0rem rgba(210, 210, 210, 0.77);
+            border-radius: 0 0 0.5rem 0.5rem;
+        }
+
+        .jiahao,
+        .jianhao {
+            width: 2.2rem;
+            height: 2.2rem;
+            margin-bottom: 0.2rem;
+            margin-left: 0.06rem;
+        }
+
+        .jiahao {
+            background: url('../../image/gis/jia.png');
+            background-size: 2.2rem 2.2rem;
+        }
+
+        .jianhao {
+            background: url('../../image/gis/jianhao.png');
+            background-size: 2.2rem 2.2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrap" class="flex-wrap flex-vertical">
+        <header class="aui-bar aui-bar-nav aui-border-b" id="header" style="background:#4d75c5;color:white;">
+            <div class="aui-pull-left aui-btn" tapmode data-action="back">
+                <span class="aui-iconfont aui-icon-left" style="color:white;"></span>
+            </div>
+            <div class="aui-title">管网GIS系统</div>
+            <div class="aui-pull-right aui-btn" tapmode data-action="home">
+                <span class="aui-iconfont aui-icon-home" style="color:white;"></span>
+            </div>
+
+        </header>
+
+        <!-- 按钮 -->
+        <div class="buttonS">
+            <div class="jiahao" onclick="fangda();"></div>
+            <div class="jianhao" onclick="suoxiao();"></div>
+        </div>
+        <!-- 菜单 -->
+        <div class="caidan aui-show" tapmode data-action='OpenMenu'></div>
+        <div class='menuBox' id="menu">
+            <ul class="menulist">
+                <li>
+                    <div class="close1" tapmode data-action='closeMenu1'></div>
+                </li>
+                <!-- <li data-name='RangeMeasure' tapmode data-action='MenuItem'>距离测量</li>
+                <li data-name='AreaMeasure' tapmode data-action='MenuItem'>面积测量</li> -->
+                <!-- <li data-name='pipedate' tapmode data-action='MenuItem'>管网地图</li> -->
+                <li data-name='assistMeasure' tapmode data-action='MenuItem'>辅助测量</li>
+                <li data-name='information' tapmode data-action='MenuItem'>信息查询</li>
+                <li data-name='circumsearch' tapmode data-action='MenuItem'>周边查询</li>
+                <li data-name='location' tapmode data-action='MenuItem'>定位</li>
+                <li data-name='search' tapmode data-action='MenuItem'>范围查询</li>
+                <li class='aui-hide' data-name='add' tapmode data-action='MenuItem'>新增</li>
+                <li data-name='label' tapmode data-action='MenuItem'>标注管理</li>
+                <li data-name='monitoring' tapmode data-action='MenuItem'>监控分布</li>
+                <!-- <li data-name='elevation' tapmode data-action='MenuItem'>高程测量</li> -->
+                <!-- <li data-name='coordinatemeasurement' tapmode data-action='MenuItem'>坐标测量</li> -->
+                <!-- <li data-name='dataGather' tapmode data-action='MenuItem'>数据采集</li> -->
+                <li data-name='clear' tapmode data-action='MenuItem'>清除</li>
+            </ul>
+        </div>
+        <!-- 菜单结束 -->
+        <div class="content aui-hide">
+        </div>
+        <!-- 地图 -->
+        <div class="flex-con" id="map">
+            <div class='last-control ol-unselectable ol-control' id="viewdiv"></div>
+
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/diy/public.js"></script>
+<script type="text/javascript" src="../../script/remote.js"></script>
+<script type="text/javascript" src="../../script/zepto.js"></script>
+<script type="text/javascript" src="../../script/gis/openlayers/ol.js"></script>
+<script type="text/javascript" src="../../script/gis/supermap/iclient9-openlayers.js"></script>
+<script type="text/javascript" src="../../script/gis/map/map_config.js"></script>
+<script type="text/javascript" src="../../script/gis/map/init_map.js"></script>
+<script type="text/javascript" src="../../script/gis/map/linq.js"></script>
+<script type="text/javascript" src="../../script/moment.js"></script>
+<script type="text/javascript" src="../../script/aui-dialog.js"></script>
+<script type="text/javascript" src="../../script/diy/template.js"></script>
+<script type="text/template" id="menuList">
+    <div class="delete" tapmode data-action='closeMenu'></div>
+    <ul class="aui-list aui-list-in">
+        <li class="aui-list-header">
+        </li>
+        {{if type == 'RangeMeasure'}}
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-5">
+                        <div class="dot"></div> 测量距离:</div>
+                    <div class="aui-list-item-text aui-col-xs-7 aui-text-left">
+                        {{distance}}m
+                    </div>
+                </div>
+
+            </div>
+        </li>
+        {{/if}} {{if type == 'AreaMeasure'}}
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-5">
+                        <div class="dot"></div> 范围面积:</div>
+                    <div class="aui-list-item-text aui-col-xs-7 aui-text-left">
+                        {{distance}}㎡
+                    </div>
+                </div>
+            </div>
+        </li>
+
+        {{/if}} {{if type == 'elevation'}}
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-3">
+                        <div class="dot"></div> 高程值:</div>
+                    <div class="aui-list-item-text aui-col-xs-9 aui-text-left">
+                        {{elevation}}m
+                    </div>
+                </div>
+            </div>
+        </li>
+
+        {{/if}} {{if type == 'coordinatemeasurement'}}
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-3">
+                        <div class="dot"></div> 经度:</div>
+                    <div class="aui-list-item-text aui-col-xs-9 aui-text-left">
+                        {{x}}
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-3">
+                        <div class="dot"></div> 纬度:</div>
+                    <div class="aui-list-item-text aui-col-xs-9 aui-text-left">
+                        {{y}}
+                    </div>
+                </div>
+            </div>
+        </li>
+
+        {{/if}} {{if type == 'jiaodumeasurement'}}
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-4">
+                        <div class="dot"></div> 参照点经度:</div>
+                    <div class="aui-list-item-text aui-col-xs-8 aui-text-left" id="cankaodianx">
+                        {{x}}
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-4">
+                        <div class="dot"></div> 参照点纬度:</div>
+                    <div class="aui-list-item-text aui-col-xs-8 aui-text-left" id="cankaodiany">
+                        {{y}}
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-3 textStyle">
+                        <div class="dot"></div> 距离(米)
+                    </div>
+                    <div class="aui-list-item-text aui-col-xs-9">
+                        :<input type="text" placeholder="请输入距离" value='{{}}' id="distence" oninput="value=value.replace(/[^0-9.]/g,'')">
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-3 textStyle">
+                        <div class="dot"></div> 角度(度)
+                    </div>
+                    <div class="aui-list-item-text aui-col-xs-9 ">
+                        :<input type="text" placeholder="请输入角度" value='{{}}' id="jiaodu" oninput="value=value.replace(/[^0-9.]/g,'')">
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner" style="font-size:14px;color:blue;">
+                （备注：以当前定位点为基准，与目标定位点的水平夹角角度）
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-4">
+                        <div class="dot"></div> 定位点经度:</div>
+                    <div class="aui-list-item-text aui-col-xs-8 aui-text-left" id="calculatex">
+                        {{}}
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-4">
+                        <div class="dot"></div> 定位点纬度:</div>
+                    <div class="aui-list-item-text aui-col-xs-8 aui-text-left" id="calculatey">
+                        {{}}
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item li_padding">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-6 aui-text-center">
+                        <button class='button1' type="button" name="button" tapmode onclick="reset()">重置</button>
+                    </div>
+                    <div class="aui-list-item-title aui-col-xs-6 aui-text-center">
+                        <button class='button2' type="button" name="button" tapmode onclick="calculate()">计算</button>
+                    </div>
+
+                </div>
+            </div>
+        </li>
+
+        {{/if}} {{if type == 'location' && locationflag == 0}}
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-3">
+                        <div class="dot"></div> 经度:</div>
+                    <div class="aui-list-item-text aui-col-xs-9 aui-text-left">
+                        {{y}}
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-3">
+                        <div class="dot"></div> 纬度:</div>
+                    <div class="aui-list-item-text aui-col-xs-9 aui-text-left">
+                        {{x}}
+                    </div>
+                </div>
+            </div>
+        </li>
+        {{/if}} {{if type == 'location' && locationflag == 1}}
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-3">
+                        <div class="dot"></div> 经度:</div>
+                    <div class="aui-list-item-text aui-col-xs-9 aui-text-left">
+                        <div class="aui-list-item-input">
+                            <input type="text" placeholder="" class="lonvalue" oninput="value=value.replace(/[^0-9.]/g,'')">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-3">
+                        <div class="dot"></div> 纬度:</div>
+                    <div class="aui-list-item-text aui-col-xs-9 aui-text-left">
+                        <div class="aui-list-item-input">
+                            <input type="text" placeholder="" class="lngvalue" oninput="value=value.replace(/[^0-9.]/g,'')">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner aui-list-item-center aui-list-item-btn">
+                <div class="aui-btn aui-btn-info" onclick="moveto();"><span class="aui-iconfont aui-icon-location"></span>定位</div>
+            </div>
+        </li>
+
+
+        {{/if}} {{if type == 'add'}}
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-3 textStyle">
+                        <div class="dot"></div> 经度
+                    </div>
+                    <div class="aui-list-item-text aui-col-xs-9">
+                        :<input type="text" placeholder="请输入X坐标" value='{{y}}' id="lon">
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-3 textStyle">
+                        <div class="dot"></div> 纬度
+                    </div>
+                    <div class="aui-list-item-text aui-col-xs-9 ">
+                        :<input type="text" placeholder="请输入Y坐标" value='{{x}}' id="lat">
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-3 textStyle">
+                        <div class="dot"></div> 设备类型<span style="color:red">*</span>
+                    </div>
+                    <div class="aui-list-item-text aui-col-xs-9" tapmode data-action="openType">
+                        :<input type="text" placeholder="请选择" readonly="readonly" id="deviceType">
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-3 textStyle">
+                        <div class="dot"></div> 管点编号<span style="color:red">*</span>
+                    </div>
+                    <div class="aui-list-item-text aui-col-xs-9 ">
+                        :<input type="text" placeholder="请输入管道编号" id="pointNumber">
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-3 textStyle">
+                        <div class="dot"></div> 所属道路<span style="color:red">*</span>
+                    </div>
+                    <div class="aui-list-item-text aui-col-xs-9 ">
+                        :<input type="text" placeholder="请输入所属道路" id="road">
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-3 textStyle">
+                        <div class="dot"></div> 高&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;程<span style="color:red">*</span>
+                    </div>
+                    <div class="aui-list-item-text aui-col-xs-9">
+                        :<input type="text" placeholder="请输入高程" id="altitude">
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item li_padding">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-6 aui-text-center">
+                        <button class='button1' type="button" name="button" tapmode onclick="cancel()">取消</button>
+                    </div>
+                    <div class="aui-list-item-title aui-col-xs-6 aui-text-center">
+                        <button class='button2' type="button" name="button" tapmode onclick="sure()">确定</button>
+                    </div>
+
+                </div>
+            </div>
+        </li>
+
+        {{/if}} {{if type == 'label'}}
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-3 textStyle">
+                        <div class="dot"></div> 经度
+                    </div>
+                    <div class="aui-list-item-text aui-col-xs-9">
+                        :<input type="text" placeholder="请输入X坐标" value='{{y}}' id="lon">
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-3 textStyle">
+                        <div class="dot"></div> 纬度
+                    </div>
+                    <div class="aui-list-item-text aui-col-xs-9 ">
+                        :<input type="text" placeholder="请输入Y坐标" value='{{x}}' id="lat">
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-3 textStyle">
+                        <div class="dot"></div> 标注信息<span style="color:red">*</span>
+                    </div>
+                    <div class="aui-list-item-text aui-col-xs-9 ">
+                        :<input type="text" placeholder="请输入标注的信息" id="labeltext">
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item li_padding">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-6 aui-text-center">
+                        <button class='button1' type="button" name="button" tapmode onclick="cancel()">取消</button>
+                    </div>
+                    <div class="aui-list-item-title aui-col-xs-6 aui-text-center">
+                        <button class='button2' type="button" name="button" tapmode onclick="labelsure()">确定</button>
+                    </div>
+
+                </div>
+            </div>
+        </li>
+
+        {{/if}} {{if type == 'equipment'}}
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-3 textStyle">
+                        <div class="dot"></div> 经度
+                    </div>
+                    <div class="aui-list-item-text aui-col-xs-9 lineStyle">
+                        <p>:{{result.properties.SmX}}</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-3 textStyle">
+                        <div class="dot"></div> 纬度
+                    </div>
+                    <div class="aui-list-item-text aui-col-xs-9 lineStyle">
+                        <p>:{{result.properties.SmY}}</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-3 textStyle">
+                        <div class="dot"></div> 设备类型
+                    </div>
+                    <div class="aui-list-item-text aui-col-xs-9 lineStyle" tapmode data-action="openType">
+                        <p>:{{result.properties.devicename}}</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-3 textStyle">
+                        <div class="dot"></div> 管点编号
+                    </div>
+                    <div class="aui-list-item-text aui-col-xs-9 lineStyle">
+                        <p>:{{result.properties.mapno}}</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-3 textStyle">
+                        <div class="dot"></div> 所属道路
+                    </div>
+                    <div class="aui-list-item-text aui-col-xs-9 lineStyle ">
+                        <p>:{{result.properties.road}}</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-3 textStyle">
+                        <div class="dot"></div> 高&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;程
+                    </div>
+                    <div class="aui-list-item-text aui-col-xs-9 lineStyle ">
+                        <p>:{{result.properties.elevation}}</p>
+                    </div>
+                </div>
+            </div>
+        </li>
+        {{/if}} {{if type == 'piping'}}
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-6">
+                        <div class="aui-list-item-title aui-col-xs-5 textStyle">
+                            <div class="dot"></div> 起始编号</div>
+                        <div class="aui-list-item-text aui-col-xs-7 aui-text-left lineStyle">
+                            <p>:{{result.properties.fromno}}</p>
+                        </div>
+                    </div>
+                    <div class="aui-list-item-title aui-col-xs-6">
+                        <div class="aui-list-item-title aui-col-xs-5 textStyle">
+                            <div class="dot"></div> 终端编号</div>
+                        <div class="aui-list-item-text aui-col-xs-7 aui-text-left lineStyle">
+                            <p>:{{result.properties.tono}}</p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-6">
+                        <div class="aui-list-item-title aui-col-xs-5 textStyle">
+                            <div class="dot"></div> 编号</div>
+                        <div class="aui-list-item-text aui-col-xs-7 aui-text-left lineStyle">
+                            <p>:{{result.properties.mapno}}</p>
+                        </div>
+                    </div>
+                    <div class="aui-list-item-title aui-col-xs-6">
+                        <div class="aui-list-item-title aui-col-xs-5 textStyle">
+                            <div class="dot"></div> 管径</div>
+                        <div class="aui-list-item-text aui-col-xs-7 aui-text-left lineStyle">
+                            <p>:{{result.properties.diameter}}</p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-6">
+                        <div class="aui-list-item-title aui-col-xs-5 textStyle">
+                            <div class="dot"></div> 道路</div>
+                        <div class="aui-list-item-text aui-col-xs-7 aui-text-left lineStyle">
+                            <p>:{{result.properties.road}}</p>
+                        </div>
+                    </div>
+                    <div class="aui-list-item-title aui-col-xs-6">
+                        <div class="aui-list-item-title aui-col-xs-5 textStyle">
+                            <div class="dot"></div> 管材</div>
+                        <div class="aui-list-item-text aui-col-xs-7 aui-text-left lineStyle">
+                            <p>:{{result.properties.material}}</p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-6">
+                        <div class="aui-list-item-title aui-col-xs-5 textStyle">
+                            <div class="dot"></div> 起始高程</div>
+                        <div class="aui-list-item-text aui-col-xs-7 aui-text-left lineStyle">
+                            <p>:{{result.properties.fromelev}}</p>
+                        </div>
+                    </div>
+                    <div class="aui-list-item-title aui-col-xs-6">
+                        <div class="aui-list-item-title aui-col-xs-5 textStyle">
+                            <div class="dot"></div> 终端高程</div>
+                        <div class="aui-list-item-text aui-col-xs-7 aui-text-left lineStyle">
+                            <p>:{{result.properties.toelev}}</p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-6">
+                        <div class="aui-list-item-title aui-col-xs-5 textStyle">
+                            <div class="dot"></div> 起始埋深</div>
+                        <div class="aui-list-item-text aui-col-xs-7 aui-text-left lineStyle">
+                            <p>:{{result.properties.fromdeep}}</p>
+                        </div>
+                    </div>
+                    <div class="aui-list-item-title aui-col-xs-6">
+                        <div class="aui-list-item-title aui-col-xs-5 textStyle">
+                            <div class="dot"></div> 终端埋深</div>
+                        <div class="aui-list-item-text aui-col-xs-7 aui-text-left lineStyle">
+                            <p>:{{result.properties.todeep}}</p>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-12">
+                        <div class="dot"></div> 所属单位&nbsp;<span>:{{result.properties.unit}}</span>
+
+                    </div>
+                </div>
+
+            </div>
+        </li>
+
+        {{/if}} {{if type == 'dataGather'}}
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <ul class="aui-list aui-form-list">
+                        <li class="aui-list-item">
+                            <div class="aui-list-item-inner">
+                                <div class="aui-list-item-label">
+                                    任务名称：
+                                </div>
+                                <div class="aui-list-item-input">
+                                    <input type="text" placeholder="" class="taskname">
+                                </div>
+                            </div>
+                        </li>
+                        <li class="aui-list-item">
+                            <div class="aui-list-item-inner aui-list-item-center aui-list-item-btn">
+                                <div class="aui-btn aui-btn-info aui-margin-r-5" onclick="startCollect();">开始采集</div>
+                                <div class="aui-btn aui-btn-danger aui-margin-l-5" onclick="stopCollect();">停止</div>
+                            </div>
+                        </li>
+                    </ul>
+
+                </div>
+            </div>
+        </li>
+
+        {{/if}} {{if type == 'CollectionPoint'}}
+
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-12">
+                        <div class="dot"></div>{{result.title}}
+                    </div>
+                </div>
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-12">
+                        <div class="dot"></div> 经度<span>:{{result.lon}}</span>
+
+                    </div>
+                </div>
+
+            </div>
+        </li>
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-12">
+                        <div class="dot"></div> 纬度<span>:{{result.lat}}</span>
+
+                    </div>
+                </div>
+
+            </div>
+        </li>
+        {{each result.pressures value i}}
+        <li class="aui-list-item">
+            <div class="aui-list-item-inner">
+                <div class="aui-row">
+                    <div class="aui-list-item-title aui-col-xs-12">
+                        <div class="dot"></div> {{value.pressure}}<span>:{{value.pressureValue}}Mpa</span>
+
+                    </div>
+                </div>
+
+            </div>
+        </li>
+        {{/each}} {{/if}}
+    </ul>
+</script>
+<script type="text/template" id="deviceCardTpl">
+    <div class="aui-card-list deviceList">
+        <div class="close" tapmode data-action="closeCard"></div>
+        <div class="aui-card-list-content-padded">
+            <ul class="aui-list aui-media-list">
+                {{each items value i}}
+                <li class="aui-list-item aui-list-item-middle" data-param="{{value.properties}}" tapmode data-action="movelocation">
+                    <div class="aui-media-list-item-inner">
+                        <div class="aui-col-xs-6">
+                            <span class="textTitle1"><span class="dot"></span>经度：</span>{{value.properties.SmX}}
+                        </div>
+                        <div class="aui-col-xs-6">
+                            <span class="textTitle1"><span class="dot"></span>纬度：</span>{{value.properties.SmY}}
+                        </div>
+                    </div>
+                    <div class="aui-media-list-item-inner">
+                        <div class="aui-col-xs-6">
+                            <span class="textTitle2"><span class="dot"></span>设备类型：</span>{{value.properties.devicename}}
+                        </div>
+                        <div class="aui-col-xs-6">
+                            <span class="textTitle2"><span class="dot"></span>管点编号：</span>{{value.properties.mapno}}
+                        </div>
+                    </div>
+                    <div class="aui-media-list-item-inner">
+                        <div class="aui-col-xs-6">
+                            <span class="textTitle2"><span class="dot"></span>所属道路：</span>{{value.properties.road}}
+                        </div>
+                        <div class="aui-col-xs-6">
+                            <span class="textTitle1"><span class="dot"></span>高程：</span>{{value.properties.elevation}}
+                        </div>
+                    </div>
+                </li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+</script>
+<script type="text/template" id="pipeCardTpl">
+    <div class="aui-card-list deviceList">
+        <div class="close" tapmode data-action="closeCard"></div>
+        <div class="aui-card-list-content-padded">
+            <ul class="aui-list aui-media-list">
+                {{each items value i}}
+                <li class="aui-list-item aui-list-item-middle" data-param="{{value.properties}}" tapmode data-action="linemovelocation">
+                    <div class="aui-media-list-item-inner">
+                        <div class="aui-col-xs-6">
+                            <span class="textTitle1"><span class="dot"></span>编号：</span>{{value.properties.mapno}}
+                        </div>
+                        <div class="aui-col-xs-6">
+                            <span class="textTitle1"><span class="dot"></span>管径：</span>{{value.properties.diameter}}
+                        </div>
+                    </div>
+                    <div class="aui-media-list-item-inner">
+                        <div class="aui-col-xs-6">
+                            <span class="textTitle1"><span class="dot"></span>道路：</span>{{value.properties.road}}
+                        </div>
+                        <div class="aui-col-xs-6">
+                            <span class="textTitle1"><span class="dot"></span>管材：</span>{{value.properties.material}}
+                        </div>
+                    </div>
+                </li>
+                {{/each}}
+            </ul>
+        </div>
+    </div>
+</script>
+<script type="text/javascript">
+    var taskId; //任务id
+    var timer = null; //数据采集定时器
+    var datacollectflag = 0; //记录采集状态
+
+    var labelflag = 0; //记录标签管理状态
+    var videoflag = 0; //记录监控设备状态
+
+    var locationflag = 0; //记录定位的类型
+
+    var html = $(
+        '<div id="measurementpanel" class="measurementpanel"><div class="row aui-text-center"><div class="aui-col-xs-6" onclick="measurelength();"><i class="aui-iconfont aui-icon-paper"></i><div class="aui-grid-label">长度</div></div> <div class="aui-col-xs-6" onclick="measurearea();"><i class="aui-iconfont aui-icon-edit"></i><div class="aui-grid-label">面积</div></div><div class="aui-col-xs-6" onclick="elevationmeasure();"><i class="aui-iconfont aui-icon-flag"></i><div class="aui-grid-label">高程</div></div> <div class="aui-col-xs-6" onclick="coordinatemeasurement();"><i class="aui-iconfont aui-icon-location"></i><div class="aui-grid-label">坐标</div></div>   <div class="aui-col-xs-6" onclick="jiaodumeasurement();"><i class="aui-iconfont aui-icon-pencil"></i><div class="aui-grid-label">角度</div></div> </div></div>'
+    ); //测量面板控件
+
+    var arr = [];
+    var url;
+    var type;
+    var infoType;
+    apiready = function() {
+        api.parseTapmode();
+        var header = $api.byId('header');
+        // 实现沉浸式状态栏效果
+        $api.fixStatusBar(header);
+        headerH = $api.offset(header).h;
+        $('.menuBox').css('top', '' + (headerH + 3) + 'px');
+
+        fnReady();
+        var jsurl = 'http://api.tianditu.gov.cn/api?v=4.0&tk=7ab767e38fe3d9c04f144a091cff214f';
+        var jsapi = document.createElement('script');
+        jsapi.charset = 'utf-8';
+        jsapi.src = jsurl;
+        document.head.appendChild(jsapi);
+        api.addEventListener({
+            name: 'chooseDeviceType'
+        }, function(ret, err) {
+            if (ret) {
+                var data = ret.value.deviceType;
+                $('#deviceType').val(data.name);
+            }
+        });
+        GetMapApiUrl();
+    }
+    operationDom();
+    var actionList = {
+            'back': function() {
+                api.closeWin();
+            },
+            'home': function() {
+                mapinit();
+            },
+            'closeCard': function() { //范围查询关闭
+                $(this).parents('.aui-card-list').remove();
+                $(this).remove();
+                clearmap();
+            },
+            'OpenMenu': function() {
+                $(this).removeClass('aui-show').addClass('aui-hide');
+                $('.menubox').toggleClass('aui-show');
+                $('.menulist').removeClass('aui-hide').addClass('aui-show');
+                // if ($('.content').hasClass('aui-show')) {
+                //     $('.content').removeClass('aui-show')
+                // }
+            },
+            'MenuItem': function() {
+                var e = e || window.event;
+                e.stopPropagation();
+                clearmap();
+                $(this).siblings().removeClass('liActive');
+                $(this).addClass('liActive');
+                setTimeout(function() {
+                    $('.menulist').removeClass('aui-show').addClass('aui-hide');
+                    $('.caidan').removeClass('aui-hide').addClass('aui-show');
+                }, 200);
+                type = $(this).attr('data-name');
+                setTimeout(function() {
+                    if (type == 'assistMeasure') {
+                        assistMeasure();
+                    } else if (type == 'location') {
+                        openlocationdiolag();
+                    } else if (type == 'add') {
+                        adddevice();
+                    } else if (type == 'clear') {
+                        clearmap();
+                        $('.menulist').children().removeClass('liActive');
+                    } else if (type == 'information') {
+                        opendiolag();
+                    } else if (type == 'search') {
+                        drawsearch()
+                    } else if (type == 'dataGather') {
+                        datacollect();
+                    } else if (type == 'circumsearch') {
+                        circumsearch();
+                    } else if (type == 'label') {
+                        addlabel();
+                    } else if (type == 'monitoring') {
+                        addmonitoring();
+                    }
+                    // else if (type == 'pipedate') {
+                    //     loadpipe();
+                    // }
+                }, 500);
+
+            },
+            'closeMenu': function() {
+                var e = e || window.event;
+                e.stopPropagation();
+                setTimeout(function() {
+                    clearmap();
+                }, 500);
+
+            },
+            'movelocation': function() {
+                var data = JSON.parse($(this).attr('data-param'));
+                var preList = $(this).prevAll();
+                for (var i = 0; i < preList.length; i++) {
+                    $(preList[i]).removeClass('active');
+                }
+                var nextList = $(this).nextAll();
+                for (var i = 0; i < nextList.length; i++) {
+                    $(nextList[i]).removeClass('active');
+                }
+                $(this).addClass('active');
+                pointhighlight(data.SmID);
+            },
+            'linemovelocation': function() {
+                var data = JSON.parse($(this).attr('data-param'));
+                var preList = $(this).prevAll();
+                for (var i = 0; i < preList.length; i++) {
+                    $(preList[i]).removeClass('active');
+                }
+                var nextList = $(this).nextAll();
+                for (var i = 0; i < nextList.length; i++) {
+                    $(nextList[i]).removeClass('active');
+                }
+                $(this).addClass('active');
+                linehighlight(data.SmID);
+            },
+            'openType': function() {
+                var nameArr = [];
+                for (var i = 0; i < arr.length; i++) {
+                    if (arr[i] != "") {
+                        var data = {
+                            name: arr[i]
+                        }
+                        nameArr.push(data)
+                    }
+                }
+                api.openWin({
+                    name: 'deviceTypeList',
+                    url: './deviceTypeList.html',
+                    pageParam: {
+                        nameArr: nameArr
+                    }
+                });
+            },
+            'closeMenu1': function() {
+                $('.caidan').removeClass('aui-hide').addClass('aui-show');
+                $('.menulist').removeClass('aui-show').addClass('aui-hide');
+            }
+        }
+        //范围查询
+
+
+    function drawsearch() {
+
+        api.toast({
+            msg: '请绘制范围',
+            duration: 2000,
+            location: 'middle'
+        });
+
+        $('.menulist').removeClass('aui-show').addClass('aui-hide');
+        pointsource = null;
+        pointvector.setSource(pointsource); //清空绘制图形
+        pointsource = new ol.source.Vector({
+            wrapX: false
+        });
+        pointvector.setStyle(lineStyle);
+        pointvector.setSource(pointsource);
+
+        var draw = new ol.interaction.Draw({
+            source: pointsource,
+            type: 'Polygon'
+        });
+        map.addInteraction(draw);
+
+        draw.on('drawend', function(evt) {
+            var polygonDraw = evt.feature.getGeometry();
+            var dialog = new auiDialog();
+            dialog.alert({
+                title: "请选择查询类别",
+                buttons: ['设备', '管道']
+            }, function(ret) {
+                if (ret) {
+                    if (ret.buttonIndex == 1) {
+                        var param = new SuperMap.QueryByGeometryParameters({
+                            queryParams: {
+                                name: layername.pipepoint
+                            },
+                            geometry: polygonDraw
+                        });
+                        new ol.supermap.QueryService(mapurl).queryByGeometry(param, function(serviceResult) {
+                            if (serviceResult.result.totalCount > 0) {
+
+                                $('.flex-con').nextAll().remove();
+                                var data = serviceResult.result.recordsets[0].features.features;
+                                for (var i = 0; i < data.length; i++) {
+                                    data[i].properties.SmX = parseFloat(data[i].properties.SmX).toFixed(4);
+                                    data[i].properties.SmY = parseFloat(data[i].properties.SmY).toFixed(4);
+                                }
+                                var list = {
+                                    items: data
+                                }
+                                var str = template('deviceCardTpl', list);
+                                $('.flex-con').after(str);
+                                operationDom();
+                                api.parseTapmode();
+                            } else {
+                                // $('.deviceCardTpl').removeClass('aui-show').addClass('aui-hide');
+                                $('.menulist').removeClass('aui-show').addClass('aui-hide');
+                                api.toast({
+                                    msg: '该区域无设备',
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+                            }
+                        });
+
+                    } else if (ret.buttonIndex == 2) {
+
+                        var param = new SuperMap.QueryByGeometryParameters({
+                            queryParams: {
+                                name: layername.pipeline
+                            },
+                            geometry: polygonDraw
+                        });
+                        new ol.supermap.QueryService(mapurl).queryByGeometry(param, function(serviceResult) {
+                            if (serviceResult.result.totalCount > 0) {
+                                // console.log(JSON.stringify(serviceResult.result.recordsets[0].features.features));
+                                $('.flex-con').nextAll().remove();
+                                var list = {
+                                    items: serviceResult.result.recordsets[0].features.features
+                                }
+                                var str = template('pipeCardTpl', list);
+                                $('.flex-con').after(str);
+                                operationDom();
+                                api.parseTapmode();
+                            } else {
+                                // $('.pipeCardTpl').removeClass('aui-show').addClass('aui-hide');
+                                api.toast({
+                                    msg: '该区域无管道',
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+                            }
+                        });
+
+
+                    }
+                }
+            });
+
+            map.removeInteraction(draw);
+        });
+    }
+    //根据id高亮显示设备点
+    function pointhighlight(id) {
+        var param = new SuperMap.QueryBySQLParameters({
+            queryParams: {
+                name: layername.pipepoint,
+                attributeFilter: "SmID = " + id
+            }
+        });
+        new ol.supermap.QueryService(mapurl).queryBySQL(param, function(serviceResult) {
+            var point = [serviceResult.result.recordsets[0].features.features[0].properties.SmX, serviceResult.result.recordsets[0].features.features[0].properties.SmY];
+            var view = map.getView();
+            view.animate({
+                center: point,
+                duration: 2000
+            });
+
+            pointsource = null;
+            pointvector.setSource(pointsource);
+            pointsource = new ol.source.Vector({
+                features: (new ol.format.GeoJSON()).readFeatures(serviceResult.result.recordsets[0].features.features[0]),
+                wrapX: false
+            });
+            pointvector = new ol.layer.Vector({
+                source: pointsource,
+                style: new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: '#FFD700',
+                        width: 3
+                    }),
+                    image: new ol.style.Circle({
+                        radius: 7,
+                        fill: new ol.style.Fill({
+                            color: '#FFD700'
+                        })
+                    })
+                })
+            });
+            map.addLayer(pointvector);
+        });
+    }
+    //根据id高亮显示管线
+    function linehighlight(id) {
+        var param = new SuperMap.QueryBySQLParameters({
+            queryParams: {
+                name: layername.pipeline,
+                attributeFilter: "SmID = " + id
+            }
+        });
+        new ol.supermap.QueryService(mapurl).queryBySQL(param, function(serviceResult) {
+            var fromx = serviceResult.result.recordsets[0].features.features[0].geometry.coordinates[0][0];
+            var fromy = serviceResult.result.recordsets[0].features.features[0].geometry.coordinates[0][1];
+            var tox = serviceResult.result.recordsets[0].features.features[0].geometry.coordinates[1][0];
+            var toy = serviceResult.result.recordsets[0].features.features[0].geometry.coordinates[1][1];
+            var point = [(fromx + tox) / 2, (fromy + toy) / 2];
+            var view = map.getView();
+            view.animate({
+                center: point,
+                duration: 2000
+            });
+            //高亮显示
+            pointsource = null;
+            pointvector.setSource(pointsource);
+            pointsource = new ol.source.Vector({
+                features: (new ol.format.GeoJSON()).readFeatures(serviceResult.result.recordsets[0].features.features[0]),
+                wrapX: false
+            });
+            pointvector = new ol.layer.Vector({
+                source: pointsource,
+                style: new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: '#FFD700',
+                        width: 3
+                    }),
+                    image: new ol.style.Circle({
+                        radius: 7,
+                        fill: new ol.style.Fill({
+                            color: '#FFD700'
+                        })
+                    })
+                })
+            });
+            map.addLayer(pointvector);
+        })
+    }
+    //当前定位
+    function currentlocation() {
+        var lo = new T.Geolocation();
+        var view = map.getView();
+        fn = function(e) {
+            if (this.getStatus() == 0) {
+                var PositionFeature = new ol.Feature({
+                    geometry: new ol.geom.Point([e.lnglat.lng, e.lnglat.lat])
+                });
+                if (pointsource != null) {
+                    pointsource.clear();
+                }
+                pointsource.addFeature(PositionFeature);
+                PositionFeature.setStyle(createStyle(PositionFeature));
+                view.setCenter([e.lnglat.lng, e.lnglat.lat]);
+                $('.content').addClass('aui-show');
+                var datas = {
+                    type: type,
+                    x: e.lnglat.lat,
+                    y: e.lnglat.lng,
+                    locationflag: 0
+                };
+                $('.content').html('');
+                var str = template('menuList', datas);
+                $('.content').append(str);
+                operationDom();
+                fnReadyOpenWin();
+            }
+            if (this.getStatus() == 1) {
+                var PositionFeature = new ol.Feature({
+                    geometry: new ol.geom.Point([e.lnglat.lng, e.lnglat.lat])
+                });
+                if (pointsource != null) {
+                    pointsource.clear();
+                }
+                pointsource.addFeature(PositionFeature);
+                PositionFeature.setStyle(createStyle(PositionFeature));
+
+                view.setCenter([e.lnglat.lng, e.lnglat.lat]);
+                $('.content').addClass('aui-show');
+                var datas = {
+                    type: type,
+                    x: e.lnglat.lat,
+                    y: e.lnglat.lng
+                };
+                $('.content').html('');
+                var str = template('menuList', datas);
+                $('.content').append(str);
+                operationDom();
+                fnReadyOpenWin();
+            }
+        }
+        lo.getCurrentPosition(fn);
+    }
+    //坐标定位
+    function zuobiaolocation() {
+        $('.content').addClass('aui-show');
+        var datas = {
+            type: type,
+            locationflag: 1
+        };
+        $('.content').html('');
+        var str = template('menuList', datas);
+        $('.content').append(str);
+        operationDom();
+        fnReadyOpenWin();
+    }
+
+
+    //新增点击画设备点
+    function adddevice() {
+        api.toast({
+            msg: '请绘制设备',
+            duration: 2000,
+            location: 'middle'
+        });
+        map.addEventListener('click', pointclickEvent);
+    }
+
+    //地图点击获取坐标
+    var pointclickEvent = function(evt) {
+            var coordinate = evt.coordinate;
+
+            var newFeature = new ol.Feature({
+                geometry: new ol.geom.Point([evt.coordinate[0], evt.coordinate[1]])
+            })
+            newFeature.setStyle(createLabelStyle(newFeature));
+            pointsource.addFeature(newFeature);
+            var view = map.getView();
+            view.animate({
+                center: [evt.coordinate[0], evt.coordinate[1] - 0.001],
+                duration: 2000
+            });
+            $('.content').addClass('aui-show');
+            var datas = {
+                type: type,
+                x: evt.coordinate[0],
+                y: evt.coordinate[1]
+            };
+            $('.content').html('');
+            var str = template('menuList', datas);
+            $('.content').append(str);
+            operationDom();
+            fnReadyOpenWin();
+
+            map.removeEventListener('click', pointclickEvent);
+        }
+        //设置点样式显示
+    var createLabelStyle = function(feature) {
+        return new ol.style.Style({
+            fill: new ol.style.Fill({
+                color: 'rgba(255,255,255,0.1)'
+            }),
+            stroke: new ol.style.Stroke({
+                color: '#ffcc33',
+                width: 2
+            }),
+            image: new ol.style.Circle({
+                radius: 5,
+                fill: new ol.style.Fill({
+                    color: '#ffcc33'
+                })
+            })
+        });
+    };
+    var createLabelStyle1 = function(feature) {
+        return new ol.style.Style({
+            fill: new ol.style.Fill({
+                color: 'rgba(139,0,139,0.1)'
+            }),
+            stroke: new ol.style.Stroke({
+                color: '#8B008B',
+                width: 2
+            }),
+            image: new ol.style.Circle({
+                radius: 5,
+                fill: new ol.style.Fill({
+                    color: '#8B008B'
+                })
+            })
+        });
+    };
+    //测量长度，单位米
+    function measurelength() {
+        html.remove();
+        api.toast({
+            msg: '请绘制测量线',
+            duration: 2000,
+            location: 'middle'
+        });
+
+        pointvector.setStyle(lineStyle);
+        interaction = new ol.interaction.Draw({
+            source: pointsource,
+            type: "LineString"
+        });
+        interaction.on('drawstart', function(evt) {
+            feature = evt.feature;
+        });
+        interaction.on('drawend', function() {
+            var distanceMeasureParam = new SuperMap.MeasureParameters(feature.getGeometry());
+            new ol.supermap.MeasureService(mapurl, {
+                measureMode: ""
+            }).measureDistance(distanceMeasureParam, function(serviceResult) {
+                $('.content').addClass('aui-show');
+                var serviceResult = serviceResult.result.distance.toFixed(2);
+                var datas = {
+                    type: "RangeMeasure",
+                    distance: serviceResult
+                };
+                $('.content').html('');
+                var str = template('menuList', datas);
+                $('.content').append(str);
+                operationDom();
+                fnReadyOpenWin();
+
+            });
+            map.removeInteraction(interaction);
+        });
+        map.addInteraction(interaction);
+
+    }
+
+    //测量面积，单位平方米
+    function measurearea() {
+        html.remove();
+        api.toast({
+            msg: '请绘制测量范围',
+            duration: 2000,
+            location: 'middle'
+        });
+
+        pointvector.setStyle(lineStyle);
+        interaction = new ol.interaction.Draw({
+            source: pointsource,
+            type: "Polygon"
+        });
+        interaction.on('drawstart', function(evt) {
+            feature = evt.feature;
+        });
+        interaction.on('drawend', function() {
+            var areaMeasureParam = new SuperMap.MeasureParameters(feature.getGeometry());
+            new ol.supermap.MeasureService(mapurl).measureArea(areaMeasureParam, function(serviceResult) {
+                $('.content').addClass('aui-show');
+                var serviceResult = serviceResult.result.area.toFixed(2);
+                var datas = {
+                    type: "AreaMeasure",
+                    distance: serviceResult
+                };
+                $('.content').html('');
+                var str = template('menuList', datas);
+                $('.content').append(str);
+                operationDom();
+                fnReadyOpenWin();
+            });
+            map.removeInteraction(interaction);
+        });
+        map.addInteraction(interaction);
+    }
+
+    //清除地图相关操作
+    function clearmap() {
+        html.remove();
+
+        map.removeEventListener('click');
+        if (pointsource != null) {
+            pointsource.clear();
+        }
+        map.removeInteraction(interaction);
+        map.removeInteraction(select);
+
+        $('.flex-con').nextAll().remove();
+        $('.content').removeClass('aui-show').addClass('aui-hide');
+        $('.menulist').removeClass('aui-show').addClass('aui-hide');
+        $('.caidan').removeClass('aui-hide').addClass('aui-show');
+    }
+    //获取设备点名称，放入数组arr中
+    $(function() {
+            arr = [];
+            var param = new SuperMap.QueryBySQLParameters({
+                queryParams: {
+                    name: layername.pipepoint,
+                    attributeFilter: "SMID >= 0"
+                }
+            });
+            new ol.supermap.QueryService(mapurl).queryBySQL(param, function(serviceResult) {
+                if (serviceResult.result) {
+                    var featurearrRes = Enumerable.From(serviceResult.result.recordsets[0].features.features).Distinct("x=>x.properties.devicename").ToArray();
+                    for (var j = 0; j < featurearrRes.length; j++) {
+                        var name = featurearrRes[j].properties.devicename;
+                        arr.push(name);
+                    }
+                }
+            });
+        })
+        //取消
+    function cancel() {
+        if (pointsource != null) {
+            pointsource.clear();
+        }
+        // if (linesource != null) {
+        //     linesource.clear();
+        // }
+        $('.content').removeClass('aui-show').addClass('aui-hide');
+    }
+
+    // 新增确定
+    function sure() {
+        var x = parseFloat($('#lat').val());
+        var y = parseFloat($('#lon').val());
+        var mapno = $('#pointNumber').val();
+        var elevation = parseFloat($('#altitude').val());
+        var road = $('#road').val();
+        var devicename = $('#deviceType').val();
+
+        var editFeaturesService = new ol.supermap.FeatureService(editUrl);
+        var pointFeature = new ol.Feature(new ol.geom.Point([x, y]));
+        pointFeature.setProperties({
+            mapno: mapno,
+            elevation: elevation,
+            road: road,
+            devicename: devicename
+        });
+        if (pointFeature) {
+            var addFeatureParams = new SuperMap.EditFeaturesParameters({
+                features: pointFeature,
+                dataSourceName: mapconfig.dataSourceName,
+                dataSetName: mapconfig.pointdataSetName,
+                editType: "add",
+                returnContent: true
+            });
+            editFeaturesService.editFeatures(addFeatureParams, function(serviceResult) {
+                if (serviceResult.result.succeed) {
+                    pointsource.clear();
+                    layer.getSource().refresh();
+                    pointFeature = null;
+                    api.toast({
+                        msg: '添加成功',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+
+                    $('.content').removeClass('aui-show').addClass('aui-hide');
+                    map.removeLayer(layer);
+                    map.addLayer(layer);
+                }
+            });
+        } else {
+            api.toast({
+                msg: '添加失败',
+                duration: 2000,
+                location: 'bottom'
+            });
+        }
+    }
+    //定位
+    function openlocationdiolag() {
+        api.actionSheet({
+            buttons: ['我的位置', '坐标定位']
+        }, function(ret, err) {
+            if (ret) {
+                if (ret.buttonIndex == 1) {
+                    currentlocation();
+                } else if (ret.buttonIndex == 2) {
+                    zuobiaolocation();
+                }
+            }
+        });
+    }
+
+    //信息查询
+    function opendiolag() {
+        api.actionSheet({
+            buttons: ['设备', '管道']
+        }, function(ret, err) {
+            if (ret) {
+                if (ret.buttonIndex == 1) {
+                    map.addEventListener('click', pointclicksearch);
+                    // 设备
+                    infoType = 'equipment';
+                } else if (ret.buttonIndex == 2) {
+                    map.addEventListener('click', lineclicksearch);
+                    // 管道
+                    infoType = 'piping';
+                }
+            }
+        });
+    }
+    //管点设备查询
+    var pointclicksearch = function(evt) {
+            var coordinate = evt.coordinate;
+            var point = new ol.geom.Point([evt.coordinate[0], evt.coordinate[1]]);
+
+
+            var param = new SuperMap.QueryByDistanceParameters({
+                queryParams: {
+                    name: layername.pipepoint
+                },
+                distance: 0.0001,
+                geometry: point,
+                isNearest: true
+            });
+            new ol.supermap.QueryService(mapurl).queryByDistance(param, function(serviceResult) {
+                if (serviceResult.result.totalCount > 0) {
+                    var view = map.getView();
+                    view.animate({
+                        center: [evt.coordinate[0], evt.coordinate[1] - 0.001],
+                        duration: 2000
+                    });
+
+                    var result = serviceResult.result.recordsets[0].features.features[0];
+                    result.properties.SmX = parseFloat(result.properties.SmX).toFixed(2);
+                    result.properties.SmY = parseFloat(result.properties.SmY).toFixed(2);
+                    $('.content').addClass('aui-show');
+                    var datas = {
+                        type: infoType,
+                        result: result
+                    };
+                    $('.content').html('');
+                    var str = template('menuList', datas);
+                    $('.content').append(str);
+                    operationDom();
+                    fnReadyOpenWin();
+                    //高亮显示
+                    pointsource = null;
+                    pointvector.setSource(pointsource);
+                    pointsource = new ol.source.Vector({
+                        features: (new ol.format.GeoJSON()).readFeatures(serviceResult.result.recordsets[0].features.features[0]),
+                        wrapX: false
+                    });
+                    pointvector = new ol.layer.Vector({
+                        source: pointsource,
+                        style: new ol.style.Style({
+                            fill: new ol.style.Fill({
+                                color: 'rgba(255, 255, 255, 1)'
+                            }),
+                            stroke: new ol.style.Stroke({
+                                color: '#e2133d',
+                                width: 3
+                            }),
+                            image: new ol.style.Circle({
+                                radius: 7,
+                                fill: new ol.style.Fill({
+                                    color: '#ffcc33'
+                                })
+                            })
+                        })
+                    });
+                    map.addLayer(pointvector);
+                } else {
+                    if (pointsource != null) {
+                        pointsource.clear();
+                    }
+
+                    $('.content').removeClass('aui-show').addClass('aui-hide');
+                    api.toast({
+                        msg: '尚未选中设备',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+
+                }
+            })
+        }
+        //管线点击查询
+    var lineclicksearch = function(evt) {
+            var coordinate = evt.coordinate;
+            var point = new ol.geom.Point([evt.coordinate[0], evt.coordinate[1]]);
+            var paramline = new SuperMap.QueryByDistanceParameters({
+                queryParams: {
+                    name: layername.pipeline
+                },
+                distance: 0.0001,
+                isNearest: true,
+                geometry: point
+            });
+            new ol.supermap.QueryService(mapurl).queryByDistance(paramline, function(serviceResult) {
+                if (serviceResult.result.totalCount > 0) {
+                    var view = map.getView();
+                    view.animate({
+                        center: [evt.coordinate[0], evt.coordinate[1] - 0.001],
+                        duration: 2000
+                    });
+
+
+                    $('.content').addClass('aui-show');
+                    var result = serviceResult.result.recordsets[0].features.features[0];
+                    var datas = {
+                        type: infoType,
+                        result: result
+                    };
+                    $('.content').html('');
+                    var str = template('menuList', datas);
+                    $('.content').append(str);
+                    operationDom();
+                    fnReadyOpenWin();
+                    //高亮显示
+                    pointsource = null;
+                    pointvector.setSource(pointsource);
+                    pointsource = new ol.source.Vector({
+                        features: (new ol.format.GeoJSON()).readFeatures(serviceResult.result.recordsets[0].features.features[0]),
+                        wrapX: false
+                    });
+                    pointvector = new ol.layer.Vector({
+                        source: pointsource,
+                        style: new ol.style.Style({
+                            fill: new ol.style.Fill({
+                                color: 'rgba(255, 255, 255, 1)'
+                            }),
+                            stroke: new ol.style.Stroke({
+                                color: '#ffcc33',
+                                width: 4
+                            }),
+                            image: new ol.style.Circle({
+                                radius: 7,
+                                fill: new ol.style.Fill({
+                                    color: '#ffcc33'
+                                })
+                            })
+                        })
+                    });
+                    map.addLayer(pointvector);
+                } else {
+                    if (pointsource != null) {
+                        pointsource.clear();
+                    }
+                    $('.content').removeClass('aui-show').addClass('aui-hide');
+                    api.toast({
+                        msg: '尚未选中管线',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                }
+            })
+        }
+        // 判断是否有新增权限 data-name='add'
+    function GetMapApiUrl() {
+        var GISAdd = $api.getStorage('GISAdd');
+        if (GISAdd == 'true') {
+            $("li[data-name='add']").removeClass('aui-hide');
+        } else {
+            $("li[data-name='add']").addClass('aui-hide');
+        }
+    }
+    //打开数据采集窗口
+    function datacollect() {
+        $('.content').addClass('aui-show');
+        var datas = {
+            type: type
+        };
+        $('.content').html('');
+        var str = template('menuList', datas);
+        $('.content').append(str);
+        operationDom();
+        fnReadyOpenWin();
+    }
+    //开始采集
+    function startCollect() {
+        if (datacollectflag == 0) {
+            var taskname = $('.taskname').val();
+            api.ajax({
+                url: 'http://119.3.192.111:8099/api/services/GIS/PostGisService/CreateTask',
+                method: 'post',
+                dataType: 'json',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                data: {
+                    body: {
+                        taskName: taskname
+                    }
+                }
+            }, function(ret, err) {
+                if (ret) {
+                    datacollectflag = 1;
+                    taskId = ret.result.id;
+                    timer = setInterval(function() {　　　　
+                        currenttasklocation(taskId);
+                    }, 10000);
+                }
+            })
+        } else {
+            alert("正在采集");
+        }
+
+    }
+    //上传坐标数据
+    function currenttasklocation(taskId) {
+        var tasklocation = new T.Geolocation();
+        var view = map.getView();
+        taskfn = function(e) {
+            if (this.getStatus() == 0) {
+                view.setCenter([e.lnglat.lng, e.lnglat.lat]);
+                view.setZoom(17);
+                var PositionFeature = new ol.Feature({
+                    geometry: new ol.geom.Point([e.lnglat.lng, e.lnglat.lat])
+                });
+                if (pointsource != null) {
+                    pointsource.clear();
+                }
+                pointsource.addFeature(PositionFeature);
+                PositionFeature.setStyle(createStyle(PositionFeature));
+                api.ajax({
+                    url: 'http://119.3.192.111:8099/api/services/GIS/PostGisService/InsertPositionData',
+                    method: 'post',
+                    dataType: 'json',
+                    headers: {
+                        'Content-Type': 'application/json;charset=utf-8'
+                    },
+                    data: {
+                        body: {
+                            x: e.lnglat.lng,
+                            y: e.lnglat.lat,
+                            taskId: taskId
+                        }
+                    }
+                }, function(ret, err) {
+                    if (ret) {
+                        // var data = ret.Data;
+                        // alert({ msg: JSON.stringify(data) })
+                    }
+                })
+            }
+            if (this.getStatus() == 1) {
+                view.setCenter([e.lnglat.lng, e.lnglat.lat]);
+                var PositionFeature = new ol.Feature({
+                    geometry: new ol.geom.Point([e.lnglat.lng, e.lnglat.lat])
+                });
+                pointsource.addFeature(PositionFeature);
+                PositionFeature.setStyle(createStyle(PositionFeature));
+            }
+        }
+        tasklocation.getCurrentPosition(taskfn);
+    }
+
+    //停止采集
+    function stopCollect() {
+        clearInterval(timer);
+        datacollectflag = 0;
+    }
+
+    //坐标定位
+    function moveto() {
+        var lonvalue = $('.lonvalue').val();
+        var lngvalue = $('.lngvalue').val();
+        if (lonvalue == "" || lngvalue == "") {
+            return api.toast({
+                msg: '经纬度值不能为空',
+                duration: 2000,
+                location: 'bottom'
+            });
+        }
+        if (lonvalue > 180 || lngvalue > 80) {
+            return api.toast({
+                msg: '经纬度值无效',
+                duration: 2000,
+                location: 'bottom'
+            });
+        }
+        var position = [lonvalue, lngvalue];
+        var PositionFeature = new ol.Feature({
+            geometry: new ol.geom.Point(position)
+        });
+        if (pointsource != null) {
+            pointsource.clear();
+        }
+        pointsource.addFeature(PositionFeature);
+        PositionFeature.setStyle(createStyle(PositionFeature));
+
+
+        var view = map.getView();
+        view.animate({
+            center: position,
+            duration: 1000
+        });
+    }
+
+    //周边查询
+    function circumsearch() {
+        var dialog = new auiDialog();
+        dialog.alert({
+            title: "请选择查询类别",
+            buttons: ['设备', '管道']
+        }, function(ret) {
+            if (ret) {
+                if (ret.buttonIndex == 1) {
+                    var view = map.getView();
+                    var lo = new T.Geolocation();
+                    fn = function(e) {
+                        if (pointsource != null) {
+                            pointsource.clear();
+                        }
+                        var geometryCircle = new ol.geom.Circle();
+                        geometryCircle.setCenterAndRadius(ol.proj.transform([e.lnglat.lng, e.lnglat.lat], 'EPSG:4326', 'EPSG:3857'), 100);
+                        geometryCircle.transform('EPSG:3857', 'EPSG:4326');
+                        var featureCircle = new ol.Feature({
+                            geometry: geometryCircle
+                        });
+                        pointsource.addFeature(featureCircle);
+                        featureCircle.setStyle(CircleStyle(featureCircle));
+                        var PositionFeature = new ol.Feature({
+                            geometry: new ol.geom.Point([e.lnglat.lng, e.lnglat.lat])
+                        });
+                        pointsource.addFeature(PositionFeature);
+                        PositionFeature.setStyle(createStyle(PositionFeature));
+                        view.setCenter([e.lnglat.lng, e.lnglat.lat]);
+                        view.setZoom(18);
+
+                        var param = new SuperMap.QueryByBoundsParameters({
+                            queryParams: {
+                                name: layername.pipepoint
+                            },
+                            bounds: geometryCircle.getExtent()
+                        });
+                        new ol.supermap.QueryService(mapurl).queryByBounds(param, function(serviceResult) {
+                            var count = serviceResult.result.totalCount;
+                            if (count > 0) {
+                                $('.flex-con').nextAll().remove();
+                                var data = serviceResult.result.recordsets[0].features.features;
+                                for (var i = 0; i < data.length; i++) {
+                                    data[i].properties.SmX = parseFloat(data[i].properties.SmX).toFixed(4);
+                                    data[i].properties.SmY = parseFloat(data[i].properties.SmY).toFixed(4);
+                                }
+                                var list = {
+                                    items: data
+                                }
+                                var str = template('deviceCardTpl', list);
+                                $('.flex-con').after(str);
+                                operationDom();
+                                api.parseTapmode();
+                            } else {
+                                // $('.deviceCardTpl').removeClass('aui-show').addClass('aui-hide');
+
+                                api.toast({
+                                    msg: '周边暂无设备',
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+                            }
+                        });
+                    }
+                    lo.getCurrentPosition(fn);
+                }
+                if (ret.buttonIndex == 2) {
+                    var view = map.getView();
+                    var lo = new T.Geolocation();
+                    fn = function(e) {
+                        if (pointsource != null) {
+                            pointsource.clear();
+                        }
+                        var geometryCircle = new ol.geom.Circle();
+                        geometryCircle.setCenterAndRadius(ol.proj.transform([e.lnglat.lng, e.lnglat.lat], 'EPSG:4326', 'EPSG:3857'), 100);
+                        geometryCircle.transform('EPSG:3857', 'EPSG:4326');
+                        var featureCircle = new ol.Feature({
+                            geometry: geometryCircle
+                        });
+                        pointsource.addFeature(featureCircle);
+                        featureCircle.setStyle(CircleStyle(featureCircle));
+                        var PositionFeature = new ol.Feature({
+                            geometry: new ol.geom.Point([e.lnglat.lng, e.lnglat.lat])
+                        });
+                        pointsource.addFeature(PositionFeature);
+                        PositionFeature.setStyle(createStyle(PositionFeature));
+                        view.setCenter([e.lnglat.lng, e.lnglat.lat]);
+                        view.setZoom(18);
+
+
+
+                        var param = new SuperMap.QueryByBoundsParameters({
+                            queryParams: {
+                                name: layername.pipeline
+                            },
+                            bounds: geometryCircle.getExtent()
+                        });
+                        new ol.supermap.QueryService(mapurl).queryByBounds(param, function(serviceResult) {
+                            var count = serviceResult.result.totalCount;
+                            if (count > 0) {
+                                $('.flex-con').nextAll().remove();
+                                var list = {
+                                    items: serviceResult.result.recordsets[0].features.features
+                                }
+                                var str = template('pipeCardTpl', list);
+                                $('.flex-con').after(str);
+                                operationDom();
+                                api.parseTapmode();
+                            } else {
+                                api.toast({
+                                    msg: '周边暂无管线',
+                                    duration: 2000,
+                                    location: 'bottom'
+                                });
+                            }
+                        });
+                    }
+                    lo.getCurrentPosition(fn);
+                }
+            }
+        })
+    }
+
+    //添加标注
+    function addlabel() {
+        api.actionSheet({
+            buttons: ['添加标注', '地图展示', '移除标注', '删除标注']
+        }, function(ret, err) {
+            if (ret) {
+                if (ret.buttonIndex == 1) {
+                    api.toast({
+                        msg: '请绘制标注点',
+                        duration: 2000,
+                        location: 'middle'
+                    });
+                    map.addEventListener('click', labelclickEvent);
+                } else if (ret.buttonIndex == 2) {
+                    loadlabel();
+                } else if (ret.buttonIndex == 3) {
+                    removelabel();
+                } else if (ret.buttonIndex == 4) {
+                    if (labelflag != 1) {
+                        api.toast({
+                            msg: '请先加载标注',
+                            duration: 2000,
+                            location: 'middle'
+                        });
+                    } else {
+                        api.toast({
+                            msg: '请选择需要删除的标注',
+                            duration: 2000,
+                            location: 'middle'
+                        });
+                        map.addEventListener('click', deletelabelclickEvent);
+                    }
+
+
+                }
+            }
+        });
+
+
+    }
+
+    var labelclickEvent = function(evt) {
+            var coordinate = evt.coordinate;
+            var newFeature = new ol.Feature({
+                geometry: new ol.geom.Point([evt.coordinate[0], evt.coordinate[1]])
+            })
+            newFeature.setStyle(createLabelStyle(newFeature));
+            pointsource.addFeature(newFeature);
+            var view = map.getView();
+            view.animate({
+                center: [evt.coordinate[0], evt.coordinate[1] - 0.001],
+                duration: 2000
+            });
+            $('.content').addClass('aui-show');
+            var datas = {
+                type: type,
+                x: evt.coordinate[0],
+                y: evt.coordinate[1]
+            };
+            $('.content').html('');
+            var str = template('menuList', datas);
+            $('.content').append(str);
+            operationDom();
+            fnReadyOpenWin();
+
+            map.removeEventListener('click');
+        }
+        //标注确认添加
+    function labelsure() {
+        var x = parseFloat($('#lat').val());
+        var y = parseFloat($('#lon').val());
+        var labeltext = $('#labeltext').val();
+        if (labeltext != "") {
+            var headers = {};
+            headers["Content-Type"] = 'application/json;charset=utf-8';
+            headers.Authorization = $api.getStorage('loginInfo');
+            api.ajax({
+                url: apiUrl + '/api/services/GIS/LabelsService/AddLabel',
+                method: 'post',
+                dataType: 'json',
+                headers: headers,
+                data: {
+                    body: {
+                        "id": null,
+                        "name": labeltext,
+                        "x": x,
+                        "y": y
+                    }
+                }
+            }, function(ret, err) {
+                if (ret.success) {
+                    api.toast({
+                        msg: '添加成功',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    loadlabel();
+                    if (pointsource != null) {
+                        pointsource.clear();
+                    }
+                    $('.content').removeClass('aui-show').addClass('aui-hide');
+                } else {
+                    api.toast({
+                        msg: '添加失败',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    $('.content').removeClass('aui-show').addClass('aui-hide');
+                }
+            })
+        } else {
+            api.toast({
+                msg: '标注信息不能为空',
+                duration: 2000,
+                location: 'bottom'
+            });
+        }
+    }
+
+    //加载标签
+    function loadlabel() {
+        api.showProgress({
+            title: '加载中',
+            modal: true
+        });
+        var headers = {};
+        headers["Content-Type"] = 'application/json;charset=utf-8';
+        headers.Authorization = $api.getStorage('loginInfo');
+        api.ajax({
+            url: apiUrl + '/api/services/GIS/LabelsService/GetAllLabels',
+            method: 'get',
+            dataType: 'json',
+            headers: headers
+        }, function(ret, err) {
+            api.hideProgress();
+            if (ret.success) {
+                labelflag = 1;
+                if (linesource != null) {
+                    linesource.clear();
+                    map.removeInteraction(select); //清除选中后留下的样式
+                }
+                var data = ret.result;
+                var length = data.length;
+                for (var i = 0; i < length; i++) {
+                    var name = data[i].name;
+                    var x = data[i].x;
+                    var y = data[i].y;
+                    var id = data[i].id;
+                    var newFeature = new ol.Feature({
+                        geometry: new ol.geom.Point([x, y]),
+                        name: name
+                    })
+                    newFeature.setStyle(labelStyle(newFeature));
+                    newFeature.setId(id);
+                    linesource.addFeature(newFeature);
+                }
+            } else {
+                api.toast({
+                    msg: '加载失败',
+                    duration: 2000,
+                    location: 'bottom'
+                });
+
+            }
+        })
+    }
+
+    //移除标注
+    function removelabel() {
+        if (labelflag != 1) {
+            api.toast({
+                msg: '暂无标注可移除',
+                duration: 2000,
+                location: 'middle'
+            });
+        } else {
+            linesource.clear();
+            labelflag = 0;
+        }
+    }
+
+    //删除标注
+    var deletelabelclickEvent = function(evt) {
+        select = new ol.interaction.Select({
+            layers: [linevector],
+            multi: false,
+            hitTolerance: 10
+        });
+        select.on("select", function(e) {
+            var features = e.selected;
+            if (features.length == 1) {
+                clearstyle();
+                features[0].setStyle(createSelectedStyle(features[0]));
+
+                var featureid = features[0].getId();
+
+                var dialog = new auiDialog();
+                dialog.alert({
+                    title: "是否删除",
+                    buttons: ['取消', '确定']
+                }, function(ret) {
+                    if (ret) {
+                        if (ret.buttonIndex == 1) {
+                            clearstyle();
+                            map.removeInteraction(select);
+                        }
+                        if (ret.buttonIndex == 2) {
+                            deletelabel(featureid);
+                        }
+                    }
+                })
+
+
+            }
+        });
+        map.addInteraction(select);
+
+    }
+
+    //清除选中样式
+    function clearstyle() {
+        for (var i = 0; i < linesource.getFeatures().length; i++) {
+            var feaureN = linesource.getFeatures()[i];
+            feaureN.setStyle(labelStyle(feaureN));
+        }
+    }
+
+    //根据id删除标签
+    function deletelabel(id) {
+        var headers = {};
+        headers["Content-Type"] = 'application/json;charset=utf-8';
+        headers.Authorization = $api.getStorage('loginInfo');
+        api.ajax({
+            url: apiUrl + '/api/services/GIS/LabelsService/DeleteLabel?id=' + id,
+            method: 'delete',
+            dataType: 'json',
+            headers: headers
+        }, function(ret, err) {
+            if (ret.success) {
+                api.toast({
+                    msg: '删除成功',
+                    duration: 2000,
+                    location: 'middle'
+                });
+                clearstyle();
+                removelabel();
+                loadlabel();
+            } else {
+                api.toast({
+                    msg: '删除失败',
+                    duration: 2000,
+                    location: 'middle'
+                });
+            }
+        })
+    }
+    //加载管网
+    // function loadpipe(){
+    //   api.actionSheet({
+    //         buttons: ['加载','移除']
+    //     }, function(ret, err) {
+    //         if (ret) {
+    //             if (ret.buttonIndex == 1) {
+    //                 loaddate();
+    //             } else if (ret.buttonIndex == 2) {
+    //                 removedate();
+    //             }
+    //           }
+    //   })
+    // }
+    // function loaddate(){
+    //     api.showProgress({
+    //         title: '加载中，请耐心等待',
+    //         modal: true
+    //     });
+    //     map.addLayer(layer);
+    //     api.hideProgress();
+    // }
+    // function removedate(){
+    //   map.removeLayer(layer);
+    // }
+    //视频监控分布
+    function addmonitoring() {
+        api.actionSheet({
+            buttons: ['加载', '移除']
+        }, function(ret, err) {
+            if (ret) {
+                if (ret.buttonIndex == 1) {
+                    loadmonitoring();
+                } else if (ret.buttonIndex == 2) {
+                    removemonitoring();
+                }
+            }
+        })
+    }
+
+
+    //加载视频监控数据
+    function loadmonitoring() {
+        api.showProgress({
+            title: '加载中',
+            modal: true
+        });
+        var headers = {};
+        headers["Content-Type"] = 'application/json;charset=utf-8';
+        headers.Authorization = $api.getStorage('loginInfo');
+        api.ajax({
+            url: apiUrl + '/api/services/GIS/VideoService/GetVideo',
+            method: 'get',
+            dataType: 'json',
+            headers: headers
+        }, function(ret, err) {
+            api.hideProgress();
+            if (ret.success) {
+                videoflag = 1;
+                if (linesource != null) {
+                    linesource.clear();
+                }
+                var data = ret.result;
+                var length = data.length;
+                for (var i = 0; i < length; i++) {
+                    var name = data[i].name;
+                    var x = data[i].x;
+                    var y = data[i].y;
+                    var id = data[i].id;
+                    var newFeature = new ol.Feature({
+                        geometry: new ol.geom.Point([x, y]),
+                        name: name
+                    })
+                    newFeature.setStyle(labelStyle(newFeature));
+                    newFeature.setId(id);
+                    linesource.addFeature(newFeature);
+                }
+                var view = map.getView();
+                view.setZoom(10);
+            } else {
+                api.toast({
+                    msg: '监控设备加载失败',
+                    duration: 2000,
+                    location: 'middle'
+                });
+            }
+        })
+    }
+    //移除视频监控
+    function removemonitoring() {
+        if (videoflag != 1) {
+            api.toast({
+                msg: '暂无监控设备可移除',
+                duration: 2000,
+                location: 'middle'
+            });
+        } else {
+            linesource.clear();
+            videoflag = 0;
+        }
+    }
+    //恢复初始位置
+    function mapinit() {
+        var view = map.getView();
+        view.setCenter(mapconfig.center);
+        view.setZoom(mapconfig.initialZoom);
+    }
+    //高程测量
+    function elevationmeasure() {
+        html.remove();
+        api.toast({
+            msg: '请绘制高程测量点',
+            duration: 2000,
+            location: 'middle'
+        });
+        map.addEventListener('click', clickelevationmeasure);
+    }
+
+    var clickelevationmeasure = function(evt) {
+            if (pointsource != null) {
+                pointsource.clear();
+            }
+            var newFeature = new ol.Feature({
+                geometry: new ol.geom.Point([evt.coordinate[0], evt.coordinate[1]])
+            })
+            newFeature.setStyle(createLabelStyle(newFeature));
+            pointsource.addFeature(newFeature);
+
+            var view = map.getView();
+            view.animate({
+                center: [evt.coordinate[0], evt.coordinate[1]],
+                duration: 2000
+            });
+
+            var url = "http://118.122.84.146:8090/iserver/services/data-RenShouXiangisGongZuoKongJian/rest/data";
+            var getGridCellInfosParam = new SuperMap.GetGridCellInfosParameters({
+                dataSourceName: mapconfig.dataSourceName,
+                datasetName: "DatasetDEM",
+                X: evt.coordinate[0],
+                Y: evt.coordinate[1]
+            });
+
+            new ol.supermap.GridCellInfosService(url).getGridCellInfos(getGridCellInfosParam, function(serviceResult) {
+                if (!serviceResult.result) {
+                    api.toast({
+                        msg: '该区域无高程值',
+                        duration: 2000,
+                        location: 'middle'
+                    });
+                    $('.content').removeClass('aui-show').addClass('aui-hide');
+                    return;
+                }
+                var result = serviceResult.result;
+                $('.content').addClass('aui-show');
+                var datas = {
+                    type: "elevation",
+                    elevation: result.value
+                };
+                $('.content').html('');
+                var str = template('menuList', datas);
+                $('.content').append(str);
+                operationDom();
+                fnReadyOpenWin();
+            });
+        }
+        //角度定位
+    function jiaodumeasurement() {
+        html.remove();
+        api.toast({
+            msg: '请绘制参照点',
+            duration: 2000,
+            location: 'middle'
+        });
+        map.addEventListener('click', clickjiaodumeasurement);
+    }
+    var clickjiaodumeasurement = function(evt) {
+        if (pointsource != null) {
+            pointsource.clear();
+        }
+        var newFeature = new ol.Feature({
+            geometry: new ol.geom.Point([evt.coordinate[0], evt.coordinate[1]])
+        })
+        newFeature.setStyle(createLabelStyle1(newFeature));
+        pointsource.addFeature(newFeature);
+
+        var view = map.getView();
+        view.animate({
+            center: [evt.coordinate[0], evt.coordinate[1] - 0.001],
+            duration: 2000
+        });
+
+        $('.content').addClass('aui-show');
+        var datas = {
+            type: "jiaodumeasurement",
+            x: evt.coordinate[0],
+            y: evt.coordinate[1]
+        };
+        $('.content').html('');
+        var str = template('menuList', datas);
+        $('.content').append(str);
+        operationDom();
+        fnReadyOpenWin();
+
+    }
+
+
+    //坐标测量
+    function coordinatemeasurement() {
+        html.remove();
+        api.toast({
+            msg: '请绘制坐标测量点',
+            duration: 2000,
+            location: 'middle'
+        });
+        map.addEventListener('click', clickcoordinatemeasurement);
+    }
+
+    var clickcoordinatemeasurement = function(evt) {
+        if (pointsource != null) {
+            pointsource.clear();
+        }
+        var newFeature = new ol.Feature({
+            geometry: new ol.geom.Point([evt.coordinate[0], evt.coordinate[1]])
+        })
+        newFeature.setStyle(createLabelStyle(newFeature));
+        pointsource.addFeature(newFeature);
+
+        var view = map.getView();
+        view.animate({
+            center: [evt.coordinate[0], evt.coordinate[1]],
+            duration: 2000
+        });
+
+        $('.content').addClass('aui-show');
+        var datas = {
+            type: "coordinatemeasurement",
+            x: evt.coordinate[0],
+            y: evt.coordinate[1]
+        };
+        $('.content').html('');
+        var str = template('menuList', datas);
+        $('.content').append(str);
+        operationDom();
+        fnReadyOpenWin();
+
+    }
+
+    //辅助测量控件
+    function assistMeasure() {
+        var viewport = map.getViewport();
+        $(viewport).append(html);
+
+
+
+        var frameWidth = api.frameWidth;
+        var frameHeight = api.frameHeight;
+
+        var height = $("#measurementpanel").height();
+        var width = $("#measurementpanel").width();
+
+        var headerheight = $("#header").height();
+        var headerwidth = $("#header").width();
+
+        var left = (frameWidth - width) / 2;
+        var top = (frameHeight - height - headerheight) / 2;
+
+        $("#measurementpanel").css("left", left);
+        $("#measurementpanel").css('top', top);
+
+    }
+    // 重置
+    function reset() {
+        document.getElementById('cankaodianx').innerHTML = "";
+        document.getElementById('cankaodiany').innerHTML = "";
+
+        document.getElementById('distence').value = "";
+        document.getElementById('jiaodu').value = "";
+        document.getElementById("calculatex").innerHTML = "";
+        document.getElementById("calculatey").innerHTML = "";
+        if (pointsource != null) {
+            pointsource.clear();
+        }
+    }
+    //计算角度定位坐标
+    function calculate() {
+
+        var x = document.getElementById('cankaodianx').innerText;
+        var y = document.getElementById('cankaodiany').innerText;
+        var distence = document.getElementById('distence').value;
+        var jiaodu = document.getElementById('jiaodu').value;
+        var coord = ADestinceAngle_B({
+            lon: x,
+            lat: y
+        }, jiaodu, distence);
+        if (x == "" || y == "") {
+            api.toast({
+                msg: '请先绘制参照点',
+                duration: 2000,
+                location: 'middle'
+            });
+        } else {
+            if (distence == '' || jiaodu == '') {
+                api.toast({
+                    msg: '请输入正确的距离和角度',
+                    duration: 2000,
+                    location: 'middle'
+                });
+            } else {
+                document.getElementById("calculatex").innerHTML = coord.lon;
+                document.getElementById("calculatey").innerHTML = coord.lat;
+                var newFeature = new ol.Feature({
+                    geometry: new ol.geom.Point([coord.lon, coord.lat])
+                })
+                newFeature.setStyle(createLabelStyle(newFeature));
+                pointsource.addFeature(newFeature);
+                document.getElementById('distence').setAttribute('disabled', 'disabled');
+                document.getElementById('jiaodu').setAttribute('disabled', 'disabled');
+                var view = map.getView();
+                view.animate({
+                    center: [coord.lon, coord.lat - 0.001],
+                    duration: 2000
+                });
+            }
+        }
+    }
+
+    function rad(d) {
+        return d * Math.PI / 180.0;
+    }
+
+    function deg(x) {
+        return x * 180 / Math.PI;
+    }
+
+    function ADestinceAngle_B(lonlat, brng, dist) {
+        var u = this;
+        var ct = {
+            a: 6378137,
+            b: 6356752.3142,
+            f: 1 / 298.257223563
+        };
+        var a = ct.a,
+            b = ct.b,
+            f = ct.f;
+
+        var lon1 = lonlat.lon * 1; //乘一（*1）是为了确保经纬度的数据类型为number
+        var lat1 = lonlat.lat * 1;
+
+        var s = dist;
+        var alpha1 = rad(brng);
+        var sinAlpha1 = Math.sin(alpha1);
+        var cosAlpha1 = Math.cos(alpha1);
+
+        var tanU1 = (1 - f) * Math.tan(rad(lat1));
+        var cosU1 = 1 / Math.sqrt((1 + tanU1 * tanU1)),
+            sinU1 = tanU1 * cosU1;
+        var sigma1 = Math.atan2(tanU1, cosAlpha1);
+        var sinAlpha = cosU1 * sinAlpha1;
+        var cosSqAlpha = 1 - sinAlpha * sinAlpha;
+        var uSq = cosSqAlpha * (a * a - b * b) / (b * b);
+        var A = 1 + uSq / 16384 * (4096 + uSq * (-768 + uSq * (320 - 175 * uSq)));
+        var B = uSq / 1024 * (256 + uSq * (-128 + uSq * (74 - 47 * uSq)));
+
+        var sigma = s / (b * A),
+            sigmaP = 2 * Math.PI;
+        while (Math.abs(sigma - sigmaP) > 1e-12) {
+            var cos2SigmaM = Math.cos(2 * sigma1 + sigma);
+            var sinSigma = Math.sin(sigma);
+            var cosSigma = Math.cos(sigma);
+            var deltaSigma = B * sinSigma * (cos2SigmaM + B / 4 * (cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM) -
+                B / 6 * cos2SigmaM * (-3 + 4 * sinSigma * sinSigma) * (-3 + 4 * cos2SigmaM * cos2SigmaM)));
+            sigmaP = sigma;
+            sigma = s / (b * A) + deltaSigma;
+        }
+
+        var tmp = sinU1 * sinSigma - cosU1 * cosSigma * cosAlpha1;
+        var lat2 = Math.atan2(sinU1 * cosSigma + cosU1 * sinSigma * cosAlpha1,
+            (1 - f) * Math.sqrt(sinAlpha * sinAlpha + tmp * tmp));
+        var lambda = Math.atan2(sinSigma * sinAlpha1, cosU1 * cosSigma - sinU1 * sinSigma * cosAlpha1);
+        var C = f / 16 * cosSqAlpha * (4 + f * (4 - 3 * cosSqAlpha));
+        var L = lambda - (1 - C) * f * sinAlpha * (sigma + C * sinSigma * (cos2SigmaM + C * cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM)));
+        var revAz = Math.atan2(sinAlpha, -tmp); // final bearing
+        var lon_destina = lon1 * 1 + deg(L);
+        var lonlat_destination = {
+            lon: lon_destina,
+            lat: deg(lat2)
+        };
+
+        return lonlat_destination;
+    }
+</script>
+
+</html>

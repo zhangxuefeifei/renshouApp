@@ -1,0 +1,1143 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>财务统计页面</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/aui1.css" />
+    <link rel=stylesheet type=text/css href=../../../css/rolldate.css />
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #F0F0F0;
+            -webkit-box-orient: vertical;
+            -webkit-flex-flow: column;
+            flex-flow: column;
+            display: flex;
+            overflow-x: hidden;
+        }
+
+        .aui-bar-nav {
+            top: 0;
+            z-index: 1;
+            background-color: #0c9ff4;
+            color: #FFF;
+            font-size: var(--fontsize9);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+        }
+
+        .aui-bar-nav .aui-btn .aui-iconfont {
+            color: #FFF;
+            font-weight: 900;
+        }
+
+        .aui-tab {
+            width: 100%;
+            border-bottom: solid 0.03rem #e6e6e6;
+        }
+
+        .aui-tab-item {
+            font-size: var(--fontsize7);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0vw;
+            color: #333333;
+        }
+
+        .aui-tab-item.aui-active {
+            border-bottom: 0.05rem solid #0c9ff4;
+        }
+
+        .aui-tab-item.aui-active,
+        .aui-tab-item.aui-active .aui-iconfont {
+            color: #0c9ff4;
+        }
+
+        .aui-tab-item .aui-iconfont {
+            color: #999999;
+            font-weight: 900;
+            margin-left: 0.15rem;
+        }
+
+        .aui-card-list-header {
+            padding: 4.13vw 3.2vw;
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0vw;
+            color: #262626;
+        }
+
+        .timeIcon {
+            width: 4.27vw;
+            height: 4.27vw;
+            background-image: url('../../../image/decision/time.png');
+            background-size: 100% 100%;
+        }
+
+        .aui-card-list-header input {
+            width: 74.67vw;
+            height: 7.73vw;
+            border-radius: 0.4vw;
+            border: solid 1px #dcdcdc;
+            font-size: var(--fontsize7);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0.4vw;
+            color: #262626;
+            padding: 2vw 3.33vw;
+        }
+
+        .downArrow {
+            width: 2.93vw;
+            height: 1.6vw;
+            position: absolute;
+            top: 7.2vw;
+            right: 6.27vw;
+            background-image: url('../../../image/decision/downArrow.png');
+            background-size: 100% 100%;
+        }
+
+        .close {
+            width: 4.0vw;
+            height: 4.0vw;
+            position: absolute;
+            top: 6vw;
+            right: 12vw;
+            background-image: url('../../../image/message_frame/close2.png');
+            background-size: 100% 100%;
+        }
+
+        section {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            padding: 3.07vw;
+        }
+
+        .aui-card-list {
+            border-radius: 1.33vw;
+        }
+
+        .line {
+            width: 0.8vw;
+            height: 4vw;
+            background-color: #0c9ff4;
+            margin-right: 2vw;
+        }
+
+        section .aui-card-list-header {
+            padding: 2.67vw 3.2vw;
+        }
+
+        .aui-card-list-user-name {
+            justify-content: space-between;
+            font-size: var(--fontsize7);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0vw;
+            color: #0c9ff4;
+        }
+
+        .aui-card-list-user-name .left {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .aui-card-list-user-name a {
+            color: #0c9ff4;
+            float: right;
+        }
+
+        .noData {
+            width: 100%;
+            height: 30vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--fontsize7);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0vw;
+            color: #0c9ff4;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav" id="header">
+        <div class="aui-pull-left aui-btn" tapmode data-action='back'>
+            <span class="aui-iconfont aui-icon-left"></span>
+        </div>
+        <div class="aui-title">财务统计</div>
+    </header>
+    <div class="aui-tab" id="tab">
+        <div class="aui-tab-item aui-active">应收费用</div>
+        <div class="aui-tab-item">实收费用</div>
+        <div class="aui-tab-item">售水量</div>
+        <div class="aui-tab-item">收回欠费</div>
+    </div>
+
+    <div class="aui-card-list">
+        <div class="aui-card-list-header">
+            <div class="timeIcon"></div>时间：
+            <input tapmode placeholder="请选择时间" type="text" name="input_date" id="Time" readonly="readonly" />
+            <div class="downArrow"></div>
+        </div>
+    </div>
+
+    <section id="ReceivableAccounts">
+        <div class="aui-card-list">
+
+            <div class="aui-card-list-header aui-card-list-user">
+                <div class="aui-card-list-user-name">
+                    <div class="left">
+                        <div class="line">
+                        </div>当月应收费用（收费项目）
+                    </div>
+                </div>
+            </div>
+
+            <div class="aui-card-list-content-padded">
+                <div id="ReceivableChargingItem" style="width:90vw">
+                </div>
+                <div class="noData">
+                    暂无数据！
+                </div>
+            </div>
+
+        </div>
+
+        <div class="aui-card-list">
+
+            <div class="aui-card-list-header aui-card-list-user">
+                <div class="aui-card-list-user-name">
+                    <div class="left">
+                        <div class="line">
+                        </div>当月应收费用（用水性质）
+                    </div>
+                    <a tapmode data-action="ReceivableWaterNatureMore">更多</a>
+                </div>
+            </div>
+
+            <div class="aui-card-list-content-padded">
+                <div id="ReceivableWaterNature" style="width:90vw">
+                </div>
+                <div class="noData">
+                    暂无数据！
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="ActualCosts">
+        <div class="aui-card-list">
+
+            <div class="aui-card-list-header aui-card-list-user">
+                <div class="aui-card-list-user-name">
+                    <div class="left">
+                        <div class="line">
+                        </div>当月实收费用（自收/代收）
+                    </div>
+                    <a tapmode data-action="ActualCostsCollectionMore">更多</a>
+                </div>
+            </div>
+
+            <div class="aui-card-list-content-padded">
+                <div id="ActualCostsCollection" style="width:90vw">
+                </div>
+                <div class="noData">
+                    暂无数据！
+                </div>
+            </div>
+
+        </div>
+
+        <div class="aui-card-list">
+
+            <div class="aui-card-list-header aui-card-list-user">
+                <div class="aui-card-list-user-name">
+                    <div class="left">
+                        <div class="line">
+                        </div>当月实收费用（预存/非预存）
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="aui-card-list-content-padded">
+                <div id="ActualCostsPrestore" style="width:90vw">
+                </div>
+                <div class="noData">
+                    暂无数据！
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="SalesVolume">
+
+        <div class="aui-card-list">
+
+            <div class="aui-card-list-header aui-card-list-user">
+                <div class="aui-card-list-user-name">
+                    <div class="left">
+                        <div class="line">
+                        </div>当月售水量（用水性质）
+                    </div>
+                    <a tapmode data-action="SalesVolumeWaterNatureMore">更多</a>
+                </div>
+            </div>
+
+            <div class="aui-card-list-content-padded">
+                <div id="SalesVolumeWaterNature" style="width:90vw">
+                </div>
+                <div class="noData">
+                    暂无数据！
+                </div>
+            </div>
+
+        </div>
+
+    </section>
+
+    <section id="ArrearsRecovery">
+        <div class="aui-card-list">
+
+            <div class="aui-card-list-header aui-card-list-user">
+                <div class="aui-card-list-user-name">
+                    <div class="left">
+                        <div class="line">
+                        </div>当月收回欠费（收费项目）
+                    </div>
+                </div>
+            </div>
+
+            <div class="aui-card-list-content-padded">
+                <div id="RecoveryChargingItem" style="width:90vw">
+                </div>
+                <div class="noData">
+                    暂无数据！
+                </div>
+            </div>
+
+        </div>
+
+        <div class="aui-card-list">
+
+            <div class="aui-card-list-header aui-card-list-user">
+                <div class="aui-card-list-user-name">
+                    <div class="left">
+                        <div class="line">
+                        </div>当月收回欠费（用水性质）
+                    </div>
+                    <a tapmode data-action="RecoveryWaterNatureMore">更多</a>
+                </div>
+            </div>
+
+            <div class="aui-card-list-content-padded">
+                <div id="RecoveryWaterNature" style="width:90vw">
+                </div>
+                <div class="noData">
+                    暂无数据！
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/diy/public.js"></script>
+<script type="text/javascript" src="../../../script/aui-tab.js"></script>
+<script type="text/javascript" src="../../../script/rolldate.js"></script>
+<script type="text/javascript" src="../../../script/echarts.min.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/moment.js"></script>
+<script type="text/javascript">
+    document.body.addEventListener('touchstart', function() {});
+    apiready = function() {
+        api.addEventListener({
+            name: 'changedFontSize'
+        }, function(ret, err) {
+            if (ret) {
+                changeFontSize();
+            }
+        });
+        api.parseTapmode();
+        $('.noData').hide();
+        var header = $api.byId('header');
+        // 实现沉浸式状态栏效果
+        $api.fixStatusBar(header);
+        headerH = $api.offset(header).h;
+        fnReady();
+        $('#ReceivableAccounts').show();
+        $('#ActualCosts').hide();
+        $('#SalesVolume').hide();
+        $('#ArrearsRecovery').hide();
+        getReceivableChargingItem();
+        getReceivableWaterNature();
+    };
+
+    var tab = new auiTab({
+        element: document.getElementById("tab"),
+    }, function(ret) {
+        if (ret.index == 1) {
+            $('#ReceivableAccounts').show();
+            $('#ActualCosts').hide();
+            $('#SalesVolume').hide();
+            $('#ArrearsRecovery').hide();
+            getReceivableChargingItem();
+            getReceivableWaterNature();
+        } else if (ret.index == 2) {
+            $('#ReceivableAccounts').hide();
+            $('#SalesVolume').hide();
+            $('#ActualCosts').show();
+            $('#ArrearsRecovery').hide();
+            getActualCostsCollection();
+        } else if (ret.index == 3) {
+            $('#SalesVolume').show();
+            $('#ReceivableAccounts').hide();
+            $('#ActualCosts').hide();
+            $('#ArrearsRecovery').hide();
+            getSalesVolumeWaterNature();
+        } else if (ret.index == 4) {
+            $('#ArrearsRecovery').show();
+            $('#ReceivableAccounts').hide();
+            $('#ActualCosts').hide();
+            $('#SalesVolume').hide();
+            getRecoveryChargingItem();
+            getRecoveryWaterNature();
+        }
+    });
+
+    var actionList = {
+        'back': function() {
+            api.closeWin();
+        },
+        'ReceivableWaterNatureMore': function() { //财务统计当月应收费用(用水性质 - 二级用水性质)
+            if (WaterNatureNameData.length == 0) {
+                api.toast({
+                    msg: '暂无数据！',
+                    duration: 2000,
+                    location: 'top'
+                });
+            } else {
+                api.openWin({
+                    name: 'ReceivableWaterNatureMore',
+                    url: './ReceivableWaterNatureMore.html',
+                    pageParam: {
+                        Time: Time,
+                        nameData: WaterNatureNameData
+                    }
+                });
+            }
+        },
+        'ActualCostsCollectionMore': function() {
+            api.openWin({
+                name: 'ActualCostsCollectionMore',
+                url: './ActualCostsCollectionMore.html',
+                pageParam: {
+                    Time: Time,
+                    nameData: WaterNatureNameData
+                }
+            });
+        },
+        'SalesVolumeWaterNatureMore': function() {
+            if (WaterNatureNameData.length == 0) {
+                api.toast({
+                    msg: '暂无数据！',
+                    duration: 2000,
+                    location: 'top'
+                });
+            } else {
+                api.openWin({
+                    name: 'SalesVolumeWaterNatureMore',
+                    url: './SalesVolumeWaterNatureMore.html',
+                    pageParam: {
+                        Time: Time,
+                        nameData: WaterNatureNameData
+                    }
+                });
+            }
+        },
+        'RecoveryWaterNatureMore': function() {
+            if (WaterNatureNameData.length == 0) {
+                api.toast({
+                    msg: '暂无数据！',
+                    duration: 2000,
+                    location: 'top'
+                });
+            } else {
+                api.openWin({
+                    name: 'RecoveryWaterNatureMore',
+                    url: './RecoveryWaterNatureMore.html',
+                    pageParam: {
+                        Time: Time,
+                        nameData: WaterNatureNameData
+                    }
+                });
+            }
+        }
+    }
+
+    TimeInit('Time');
+
+    var Time = "";
+    //时间选择器
+    function TimeInit(inputId) {
+        var el = '#' + inputId;
+        var format = "YYYY-MM";
+        var dateError = false;
+        new rolldate.Date({
+            el: el,
+            format: format,
+            beginYear: 2000,
+            endYear: 2100,
+            tapBefore: function(el) {
+                // console.log('插件开始触发');
+            },
+            moveEnd: function(el, iscroll) {
+                // console.log('滚动结束');
+            },
+            confirmBefore: function(el, date) {
+                Time = date;
+                Time = Time.replaceAll('-', '');
+                var closeHtml = '<div class="close" tapmode onclick="clearTime(&quot;' + inputId + '&quot;)"></div>';
+                $('#' + inputId + '').parent().append(closeHtml);
+                var tabList = $('.aui-tab-item');
+                for (var i = 0; i < tabList.length; i++) {
+                    if ($(tabList[i]).hasClass('aui-active')) {
+                        if (i == 0) {
+                            getReceivableChargingItem();
+                            getReceivableWaterNature();
+                        } else if (i == 1) {
+                            getActualCostsCollection();
+                        } else if (i == 2) {
+                            getSalesVolumeWaterNature();
+                        } else if (i == 3) {
+                            getRecoveryChargingItem();
+                            getRecoveryWaterNature();
+                        }
+                    }
+                }
+                return date.replaceAll('-', '/');
+            },
+            confirmEnd: function(el, date) {
+
+            }
+        })
+    }
+
+    //点击关闭图标删除时间
+    function clearTime(inputId) {
+        $('#' + inputId + '').val("");
+        $('#' + inputId + '').parent().find('.close').remove();
+        Time = "";
+        var tabList = $('.aui-tab-item');
+        for (var i = 0; i < tabList.length; i++) {
+            if ($(tabList[i]).hasClass('aui-active')) {
+                if (i == 0) {
+                    getReceivableChargingItem();
+                    getReceivableWaterNature();
+                } else if (i == 1) {
+                    getActualCostsCollection();
+                } else if (i == 2) {
+                    getSalesVolumeWaterNature();
+                } else if (i == 3) {
+                    getRecoveryChargingItem();
+                    getRecoveryWaterNature();
+                }
+            }
+        }
+    }
+
+    //获取财务统计应收费用(收费项目)
+    function getReceivableChargingItem() {
+        var url = 'services/Report/Finance/GetCostTypeStatistics?typeId=1';
+        if (Time != "") {
+            url = url + '&date=' + Time + '';
+        } else {
+            var time = moment().format('YYYYMM');
+            url = url + '&date=' + time + '';
+        }
+        fnGet(url, {}, false, function(ret, err) {
+            if (ret) {
+                if (ret.success) {
+                    var nameData = [];
+                    var data = [];
+                    var autoHeight = 0;
+                    if (ret.result != null) {
+                        $('#ReceivableChargingItem').next('.noData').hide();
+                        nameData = ret.result.nameArry;
+                        for (var i = 0; i < nameData.length; i++) {
+                            nameData[i] = nameData[i].trim();
+                        }
+                        data = ret.result.dataArray;
+                        autoHeight = nameData.length * 50 + 50;
+                    } else {
+                        $('#ReceivableChargingItem').next('.noData').show();
+                    }
+                    var chartName = echarts.init(document.getElementById("ReceivableChargingItem"));
+                    option = {
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'line',
+                                shadowStyle: {
+                                    color: 'rgba(12,159,244,0.3)'
+                                }
+                            }
+                        },
+                        color: ['#0c9ff4'],
+                        grid: {
+                            left: '3%',
+                            right: '12%',
+                            bottom: 10,
+                            top: 0,
+                            containLabel: true
+                        },
+                        xAxis: {
+                            type: 'value',
+                            axisLabel: {
+                                rotate: 40
+                            },
+                            name: '(元)',
+                            nameLocation: 'end',
+                        },
+                        yAxis: {
+                            type: 'category',
+                            data: nameData,
+                            axisLabel: {
+                                interval: 0,
+                                formatter: function(value) {
+                                    if (value.length > 5) {
+                                        return value.substring(0, 5) + "...";
+                                    } else {
+                                        return value;
+                                    }
+                                }
+                            }
+                        },
+                        series: [{
+                            name: '费用',
+                            type: 'bar',
+                            barWidth: '20',
+                            data: data
+                        }, ]
+                    };
+                    chartName.setOption(option);
+                    chartName.getDom().style.height = autoHeight + "px";
+                    chartName.resize();
+                }
+            }
+        })
+    }
+
+    var WaterNatureNameData = [];
+
+    //获取财务统计应收费用(用水性质)
+    function getReceivableWaterNature() {
+        var url = 'services/Report/Finance/GetWaterNatureStatistics?typeId=1';
+        if (Time != "") {
+            url = url + '&date=' + Time + '';
+        } else {
+            var time = moment().format('YYYYMM');
+            url = url + '&date=' + time + '';
+        }
+        fnGet(url, {}, false, function(ret, err) {
+            if (ret) {
+                if (ret.success) {
+                    var nameData = [];
+                    WaterNatureNameData = [];
+                    var data = [];
+                    var autoHeight = 0;
+                    if (ret.result != null) {
+                        $('#ReceivableWaterNature').next('.noData').hide();
+                        nameData = ret.result.nameArry;
+                        for (var i = 0; i < nameData.length; i++) {
+                            nameData[i] = nameData[i].trim();
+                        }
+                        WaterNatureNameData = ret.result.nameArry;
+                        for (var i = 0; i < WaterNatureNameData.length; i++) {
+                            WaterNatureNameData[i] = WaterNatureNameData[i].trim();
+                        }
+                        data = ret.result.dataArray;
+                        autoHeight = nameData.length * 50 + 50;
+                    } else {
+                        $('#ReceivableWaterNature').next('.noData').show();
+                    }
+                    var chartName = echarts.init(document.getElementById("ReceivableWaterNature"));
+                    option = {
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'line',
+                                shadowStyle: {
+                                    color: 'rgba(253,200,102,0.3)'
+                                }
+                            }
+                        },
+                        color: ['#fdc866'],
+                        grid: {
+                            left: '3%',
+                            right: '12%',
+                            bottom: 10,
+                            top: 0,
+                            containLabel: true
+                        },
+                        xAxis: {
+                            type: 'value',
+                            axisLabel: {
+                                rotate: 40
+                            },
+                            name: '(元)',
+                            nameLocation: 'end'
+                        },
+                        yAxis: {
+                            type: 'category',
+                            data: nameData,
+                            axisLabel: {
+                                interval: 0,
+                                formatter: function(value) {
+                                    if (value.length > 5) {
+                                        return value.substring(0, 5) + "...";
+                                    } else {
+                                        return value;
+                                    }
+                                }
+                            }
+                        },
+                        series: [{
+                            name: '费用',
+                            type: 'bar',
+                            barWidth: '20',
+                            data: data
+                        }, ]
+                    };
+                    chartName.setOption(option);
+                    chartName.getDom().style.height = autoHeight + "px";
+                    chartName.resize();
+                }
+            }
+        })
+    }
+
+    //获取实收费用(自收/代收、预存/非预存)
+    function getActualCostsCollection() {
+        var url = 'services/Report/Finance/GetActualCostStatistics';
+        if (Time != "") {
+            url = url + '?date=' + Time + '';
+        } else {
+            var time = moment().format('YYYYMM');
+            url = url + '?date=' + time + '';
+        }
+        fnGet(url, {}, false, function(ret, err) {
+            if (ret) {
+                if (ret.success) {
+                    var CollectionNameData = [];
+                    var PrestoreNameData = [];
+                    var CollectionData = [];
+                    var PrestoreData = [];
+                    var CollectionAutoHeight = 0;
+                    var PrestoreAutoHeight = 0;
+                    if (ret.result != null) {
+                        $('#ActualCostsCollection').next('.noData').hide();
+                        CollectionNameData = ret.result.collectFeesNameList;
+                        for (var i = 0; i < CollectionNameData.length; i++) {
+                            CollectionNameData[i] = CollectionNameData[i].trim();
+                        }
+                        CollectionData = ret.result.collectFeesAmountList;
+                        CollectionAutoHeight = CollectionNameData.length * 50 + 50;
+                        $('#ActualCostsPrestore').next('.noData').hide();
+                        PrestoreNameData = ret.result.prestoreNameList;
+                        for (var i = 0; i < PrestoreNameData.length; i++) {
+                            PrestoreNameData[i] = PrestoreNameData[i].trim();
+                        }
+                        PrestoreData = ret.result.prestoreAmountList;
+                        PrestoreAutoHeight = PrestoreNameData.length * 50 + 50;
+                    } else {
+                        $('#ActualCostsCollection').next('.noData').show();
+                        $('#ActualCostsPrestore').next('.noData').show();
+                    }
+                    var chartName = echarts.init(document.getElementById("ActualCostsCollection"));
+                    var pchartName = echarts.init(document.getElementById("ActualCostsPrestore"));
+                    option = {
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'line',
+                                shadowStyle: {
+                                    color: 'rgba(12,159,244,0.3)'
+                                }
+                            }
+                        },
+                        color: ['#0c9ff4'],
+                        grid: {
+                            left: '3%',
+                            right: '12%',
+                            bottom: 10,
+                            top: 0,
+                            containLabel: true
+                        },
+                        xAxis: {
+                            type: 'value',
+                            axisLabel: {
+                                rotate: 40
+                            },
+                            name: '(元)',
+                            nameLocation: 'end'
+                        },
+                        yAxis: {
+                            type: 'category',
+                            data: CollectionNameData,
+                            axisLabel: {
+                                interval: 0,
+                                formatter: function(value) {
+                                    if (value.length > 5) {
+                                        return value.substring(0, 5) + "...";
+                                    } else {
+                                        return value;
+                                    }
+                                }
+                            }
+                        },
+                        series: [{
+                            name: '费用',
+                            type: 'bar',
+                            barWidth: '20',
+                            data: CollectionData
+                        }, ]
+                    };
+                    poption = {
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'line',
+                                shadowStyle: {
+                                    color: 'rgba(253,200,102,0.3)'
+                                }
+                            }
+                        },
+                        color: ['#fdc866'],
+                        grid: {
+                            left: '3%',
+                            right: '12%',
+                            bottom: '3%',
+                            top: '0%',
+                            containLabel: true
+                        },
+                        xAxis: {
+                            type: 'value',
+                            axisLabel: {
+                                rotate: 40
+                            },
+                            name: '(元)',
+                            nameLocation: 'end'
+                        },
+                        yAxis: {
+                            type: 'category',
+                            data: PrestoreNameData,
+                            axisLabel: {
+                                interval: 0,
+                                formatter: function(value) {
+                                    if (value.length > 5) {
+                                        return value.substring(0, 5) + "...";
+                                    } else {
+                                        return value;
+                                    }
+                                }
+                            }
+                        },
+                        series: [{
+                            name: '费用',
+                            type: 'bar',
+                            barWidth: '20',
+                            data: PrestoreData
+                        }, ]
+                    };
+                    chartName.setOption(option);
+                    chartName.getDom().style.height = CollectionAutoHeight + "px";
+                    chartName.resize();
+                    pchartName.setOption(poption);
+                    pchartName.getDom().style.height = PrestoreAutoHeight + "px";
+                    pchartName.resize();
+                }
+            }
+        })
+    }
+
+    //获取售水量(用水性质)
+    function getSalesVolumeWaterNature() {
+        var url = 'services/Report/Finance/GetWaterNatureStatistics?typeId=2';
+        if (Time != "") {
+            url = url + '&date=' + Time + '';
+        } else {
+            var time = moment().format('YYYYMM');
+            url = url + '&date=' + time + '';
+        }
+        fnGet(url, {}, false, function(ret, err) {
+            if (ret) {
+                if (ret.success) {
+                    var nameData = [];
+                    WaterNatureNameData = []
+                    var data = [];
+                    var autoHeight = 0;
+                    if (ret.result != null) {
+                        $('#SalesVolumeWaterNature').next('.noData').hide();
+                        nameData = ret.result.nameArry;
+                        for (var i = 0; i < nameData.length; i++) {
+                            nameData[i] = nameData[i].trim();
+                        }
+                        WaterNatureNameData = ret.result.nameArry;
+                        for (var i = 0; i < WaterNatureNameData.length; i++) {
+                            WaterNatureNameData[i] = WaterNatureNameData[i].trim();
+                        }
+                        data = ret.result.dataArray;
+                        autoHeight = nameData.length * 50 + 50;
+                    } else {
+                        $('#SalesVolumeWaterNature').next('.noData').show();
+                    }
+                    var chartName = echarts.init(document.getElementById("SalesVolumeWaterNature"));
+                    option = {
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'line',
+                                shadowStyle: {
+                                    color: 'rgba(12,159,244,0.3)'
+                                }
+                            }
+                        },
+                        color: ['#0c9ff4'],
+                        grid: {
+                            left: '3%',
+                            right: '12%',
+                            bottom: 10,
+                            top: 0,
+                            containLabel: true
+                        },
+                        xAxis: {
+                            type: 'value',
+                            axisLabel: {
+                                rotate: 40
+                            },
+                            name: '(吨)',
+                            nameLocation: 'end'
+                        },
+                        yAxis: {
+                            type: 'category',
+                            data: nameData,
+                            axisLabel: {
+                                interval: 0,
+                                formatter: function(value) {
+                                    if (value.length > 5) {
+                                        return value.substring(0, 5) + "...";
+                                    } else {
+                                        return value;
+                                    }
+                                }
+                            }
+                        },
+                        series: [{
+                            name: '吨数',
+                            type: 'bar',
+                            barWidth: '20',
+                            data: data
+                        }, ]
+                    };
+                    chartName.setOption(option);
+                    chartName.getDom().style.height = autoHeight + "px";
+                    chartName.resize();
+                }
+            }
+        })
+    }
+
+
+    //获取收回欠费(收费项目)
+    function getRecoveryChargingItem() {
+        var url = 'services/Report/Finance/GetCostTypeStatistics?typeId=2';
+        if (Time != "") {
+            url = url + '&date=' + Time + '';
+        } else {
+            var time = moment().format('YYYYMM');
+            url = url + '&date=' + time + '';
+        }
+        fnGet(url, {}, false, function(ret, err) {
+            if (ret) {
+                if (ret.success) {
+                    var nameData = [];
+                    WaterNatureNameData = [];
+                    var data = [];
+                    var autoHeight = 0;
+                    if (ret.result != null) {
+                        $('#RecoveryChargingItem').next('.noData').hide();
+                        nameData = ret.result.nameArry;
+                        for (var i = 0; i < nameData.length; i++) {
+                            nameData[i] = nameData[i].trim();
+                        }
+                        WaterNatureNameData = ret.result.nameArry;
+                        for (var i = 0; i < WaterNatureNameData.length; i++) {
+                            WaterNatureNameData[i] = WaterNatureNameData[i].trim();
+                        }
+                        data = ret.result.dataArray;
+                        autoHeight = nameData.length * 50 + 50;
+                    } else {
+                        $('#RecoveryChargingItem').next('.noData').show();
+                    }
+                    var chartName = echarts.init(document.getElementById("RecoveryChargingItem"));
+                    option = {
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'line',
+                                shadowStyle: {
+                                    color: 'rgba(12,159,244,0.3)'
+                                }
+                            },
+                        },
+                        color: ['#0c9ff4'],
+                        grid: {
+                            left: '3%',
+                            right: '12%',
+                            bottom: 10,
+                            top: 0,
+                            containLabel: true
+                        },
+                        xAxis: {
+                            type: 'value',
+                            axisLabel: {
+                                rotate: 40
+                            },
+                            name: '(元)',
+                            nameLocation: 'end'
+                        },
+                        yAxis: {
+                            type: 'category',
+                            data: nameData,
+                            axisLabel: {
+                                interval: 0,
+                                formatter: function(value) {
+                                    if (value.length > 5) {
+                                        return value.substring(0, 5) + "...";
+                                    } else {
+                                        return value;
+                                    }
+                                }
+                            }
+                        },
+                        series: [{
+                            name: '费用',
+                            type: 'bar',
+                            barWidth: '20',
+                            data: data
+                        }, ]
+                    };
+                    chartName.setOption(option);
+                    chartName.getDom().style.height = autoHeight + "px";
+                    chartName.resize();
+                }
+            }
+        })
+    }
+
+    //获取收回欠费(用水性质)
+    function getRecoveryWaterNature() {
+        var url = 'services/Report/Finance/GetWaterNatureStatistics?typeId=3';
+        if (Time != "") {
+            url = url + '&date=' + Time + '';
+        } else {
+            var time = moment().format('YYYYMM');
+            url = url + '&date=' + time + '';
+        }
+        fnGet(url, {}, false, function(ret, err) {
+            if (ret) {
+                if (ret.success) {
+                    var nameData = [];
+                    var data = [];
+                    var autoHeight = 0;
+                    if (ret.result != null) {
+                        $('#RecoveryWaterNature').next('.noData').hide();
+                        nameData = ret.result.nameArry;
+                        for (var i = 0; i < nameData.length; i++) {
+                            nameData[i] = nameData[i].trim();
+                        }
+
+                        data = ret.result.dataArray;
+                        autoHeight = nameData.length * 50 + 50;
+                    } else {
+                        $('#RecoveryWaterNature').next('.noData').show();
+                    }
+                    var chartName = echarts.init(document.getElementById("RecoveryWaterNature"));
+                    option = {
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'line',
+                                shadowStyle: {
+                                    color: 'rgba(253,200,102,0.3)'
+                                }
+                            }
+                        },
+                        color: ['#fdc866'],
+                        grid: {
+                            left: '3%',
+                            right: '12%',
+                            bottom: 10,
+                            top: 0,
+                            containLabel: true
+                        },
+                        xAxis: {
+                            type: 'value',
+                            axisLabel: {
+                                rotate: 40
+                            },
+                            name: '(元)',
+                            nameLocation: 'end'
+                        },
+                        yAxis: {
+                            type: 'category',
+                            data: nameData,
+                            axisLabel: {
+                                interval: 0,
+                                formatter: function(value) {
+                                    if (value.length > 5) {
+                                        return value.substring(0, 5) + "...";
+                                    } else {
+                                        return value;
+                                    }
+                                }
+                            }
+                        },
+                        series: [{
+                            name: '费用',
+                            type: 'bar',
+                            barWidth: '20',
+                            data: data
+                        }, ]
+                    };
+                    chartName.setOption(option);
+                    chartName.getDom().style.height = autoHeight + "px";
+                    chartName.resize();
+                }
+            }
+        })
+    }
+</script>
+
+</html>

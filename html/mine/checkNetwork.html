@@ -1,0 +1,209 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>网络检测</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui1.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/dialog.css">
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #FFF;
+            /*overflow: hidden;*/
+        }
+
+        .aui-bar-nav {
+            top: 0;
+            z-index: 1;
+            background-color: #fff;
+            color: #333333;
+            font-size: var(--fontsize9);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+        }
+
+        .aui-bar-nav .aui-btn .aui-iconfont {
+            color: #333333;
+            font-weight: 900;
+        }
+
+        .aui-list {
+            background-image: none;
+        }
+
+        .aui-list .aui-list-item-inner {
+            justify-content: flex-start;
+        }
+
+        #footer {
+            position: absolute;
+            bottom: 2.5rem;
+            width: 100%;
+        }
+
+        #footer .btn_check {
+            width: 4rem;
+            height: 4rem;
+            border-radius: 5rem;
+            background: rgb(0, 153, 204);
+            color: #fff;
+            font-size: 0.7rem;
+            font-weight: 500;
+            padding: 1.5rem 0.2rem;
+            letter-spacing: 0.2rem;
+            margin: 0 auto;
+            background: linear-gradient(-5deg, rgba(98, 84, 255, 1), rgba(75, 120, 191, 1));
+            box-shadow: 0rem 0rem 1rem 0rem rgba(150, 150, 150, 0.77);
+        }
+
+        .pull-right {
+            position: absolute;
+            right: 0.5rem;
+        }
+
+        .net_state_yes {
+            color: #00CC66;
+        }
+
+        .net_state_no {
+            color: #ff0000;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav aui-border-b" id="header">
+        <div class="aui-pull-left aui-btn" tapmode data-action="back">
+            <span class="aui-iconfont aui-icon-left"></span>
+        </div>
+        <div class="aui-title">网络检测</div>
+    </header>
+    <div class="aui-content">
+        <ul class="aui-list">
+            <li class="aui-list-item" tapmode onclick="fnOpenAccountAndSecurity()">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-inner">
+                        IP地址:<span class='aui-padded-l-10' id="ipAdress"></span> <span class="pull-right" id="net_state"></span>
+                    </div>
+                </div>
+            </li>
+    </div>
+
+    <div id="footer">
+        <div class="btn_check" onclick='checkNet()'>
+            检测网络
+        </div>
+    </div>
+
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/diy/public.js"></script>
+<script type="text/javascript" src="../../script/remote.js"></script>
+<script type="text/javascript" src="../../script/zepto.js"></script>
+<script type="text/javascript" src="../../script/diy/template.js"></script>
+
+<script type="text/javascript">
+    var num = 0;
+    var apiUrl;
+    apiready = function() {
+        api.addEventListener({
+            name: 'changedFontSize'
+        }, function(ret, err) {
+            if (ret) {
+                changeFontSize();
+            }
+        });
+        api.parseTapmode();
+        var header = $api.byId('header');
+        // 实现沉浸式状态栏效果
+        $api.fixStatusBar(header);
+        apiUrl = $api.getStorage('apiUrl');
+        $('#ipAdress').text(apiUrl);
+    };
+
+    operationDom();
+    var headers = {};
+    headers["Content-Type"] = 'application/json';
+    var testData = {
+        body: JSON.stringify({
+
+        })
+    };
+    // 检测地址成功数据
+    var Faddress = [];
+    var actionList = {
+        'back': function() {
+            api.closeWin();
+
+        },
+    }
+
+    var one = false,
+        two = false;
+
+    var responseTimeMs;
+
+    function checkNet() {
+        var sendDate = (new Date()).getTime();
+        var connectionType = api.connectionType;
+        // console.log(connectionType);
+        if (connectionType == '2g' || connectionType == '3g' || connectionType == 'none') {
+            one = false;
+        } else {
+            one = true;
+        }
+        var url = 'http://' + apiUrl + '/api/services/app/PushInterface/ConnectionTest'
+        api.showProgress({
+            title: '加载中...',
+            modal: false
+        });
+        api.ajax({
+            url: url,
+            method: 'post',
+            timeout: 100,
+            dataType: 'json',
+            returnAll: false,
+            headers: headers,
+            data: testData
+        }, function(ret, err) {
+            api.hideProgress();
+            if (ret) {
+                if (ret.result && ret.success) {
+                    // alert('网络正常');
+                    var receiveDate = (new Date()).getTime();
+                    responseTimeMs = receiveDate - sendDate;
+                    two = true;
+                    judgeNetwork(responseTimeMs);
+                } else {
+                    two = false;
+                }
+            }
+        });
+    }
+    function judgeNetwork(responseTimeMs) {
+        if (responseTimeMs <= 8000) {
+            if (one && two) {
+                $('#net_state').addClass('net_state_yes').removeClass('net_state_no');
+                $('#net_state').text('网络正常');
+            } else {
+                $('#net_state').addClass('net_state_yes').removeClass('net_state_no');
+                $('#net_state').text('网络异常');
+            }
+        } else {
+            $('#net_state').addClass('net_state_yes').removeClass('net_state_no');
+            $('#net_state').text('网络异常');
+        }
+
+    }
+</script>
+
+</html>

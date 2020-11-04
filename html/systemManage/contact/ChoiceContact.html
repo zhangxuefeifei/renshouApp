@@ -1,0 +1,913 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>选择联系人页面</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/aui1.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/dialog.css">
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #F9F9F9;
+            -webkit-box-orient: vertical;
+            -webkit-flex-flow: column;
+            flex-flow: column;
+            display: flex;
+        }
+
+        .aui-bar-nav {
+            top: 0;
+            background-color: #fff;
+            color: #000000;
+            box-shadow: 0rem 0.05rem 0.13rem 0rem #c8c8c8;
+            font-size: var(--fontsize9);
+        }
+
+        .aui-bar-nav .aui-btn .aui-iconfont {
+            color: #000000;
+            font-weight: 900;
+        }
+
+        .aui-searchbar {
+            background-color: #fff !important;
+            padding: 0.53rem 0.8rem;
+            height: auto;
+            width: auto;
+            color: #212121;
+        }
+
+        .aui-searchbar-input {
+            border-radius: 0.42rem;
+            height: 2.65rem;
+            line-height: 2.65rem;
+            border: 1px solid #d7d7d7;
+            -webkit-box-pack: center;
+            -webkit-box-align: center;
+            padding: 0;
+            margin: 0;
+        }
+
+        .searchIcon {
+            position: absolute;
+            right: 0.5rem;
+            top: 0.5rem;
+            width: 1.65rem;
+            height: 1.65rem;
+            background: url(../../../image/message/message_icon_ss.png);
+            background-size: 1.65rem 1.65rem;
+            background-position: center center;
+            background-repeat: no-repeat;
+        }
+
+        .aui-searchbar .aui-iconfont {
+            margin-left: 0.75rem;
+        }
+
+        .aui-searchbar-input input {
+            height: 2rem;
+            color: #aaaaaa;
+            margin: 0;
+            margin-left: 0.8rem;
+            padding: 0;
+        }
+
+        .aui-searchbar-input {
+            height: 1.6rem;
+            background-color: #f0f0f0;
+            border-radius: 0.8rem;
+            line-height: 1.6rem;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+            display: flex;
+            align-items: center;
+        }
+
+        .aui-searchbar-clear-btn {
+            background-color: #999999;
+            position: relative;
+            width: 0.8rem;
+            height: 0.8rem;
+            top: 0rem;
+        }
+
+        .aui-searchbar-clear-btn .aui-iconfont {
+            color: #FFF !important;
+            top: -5px;
+            font-size: var(--fontsize5);
+            position: absolute;
+            right: 0.14rem;
+        }
+
+        input {
+            outline: none;
+        }
+
+        .aui-card-list {
+            margin-bottom: 0;
+            padding: 0 0.8rem;
+        }
+
+        .aui-card-list-header {
+            justify-content: flex-start;
+            padding: 0;
+            align-items: flex-start;
+            min-height: 0;
+        }
+
+        .org {
+            font-size: var(--fontsize7) !important;
+            /*padding-bottom: 0.53rem;*/
+        }
+
+        .org::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0.8rem;
+            border-bottom: 1px solid #dddddd;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            width: calc( 200% - 3.2rem);
+            height: 200%;
+            -webkit-transform: scale(0.5);
+            transform: scale(0.5);
+            -webkit-transform-origin: left top;
+            transform-origin: left top;
+            pointer-events: none;
+        }
+
+        .superiorText {
+            color: #3883f8;
+        }
+
+        .juniorText {
+            color: #aaaaaa;
+        }
+        /*.aui-radio {
+            width: 1rem;
+            height: 1.05rem;
+            margin-right: 0.5rem;
+        }*/
+
+        .aui-radio {
+            display: inline-table;
+            margin: auto;
+            width: 1rem;
+            height: 1rem;
+            margin-right: 0.78rem;
+            box-sizing: border-box;
+        }
+
+        .aui-radio:checked,
+        .aui-radio.aui-checked,
+        .aui-checkbox:checked,
+        .aui-checkbox.aui-checked {
+            background-color: #4F79E8;
+            border: solid 1px #4f79e8;
+        }
+
+        .contactList {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+            margin-top: 0.5rem;
+        }
+
+        .junior {
+            width: 2.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--fontsize7) !important;
+            color: #aaaaaa !important;
+        }
+
+        .junior .juniorImg {
+            width: 0.63rem;
+            height: 0.8rem;
+            background: url(../../../image/message_frame/junior.png);
+            background-size: 0.63rem 0.8rem;
+            background-position: center center;
+            background-repeat: no-repeat;
+        }
+
+        .junior.active {
+            color: #3883f8 !important;
+        }
+
+        /*.junior.active .juniorImg {
+            width: 0.63rem;
+            height: 0.8rem;
+            background: url(../../../image/message_frame/junior_pre.png);
+            background-size: 0.63rem 0.8rem;
+            background-position: center center;
+            background-repeat: no-repeat;
+        }*/
+
+        .aui-list {
+            padding: 0 0.83rem;
+            background-image: none;
+        }
+
+        .contactList .aui-list .aui-list-item-inner,
+        .aui-list .aui-list-item {
+            min-height: 0;
+            padding-left: 0;
+        }
+
+        .contactList .hasJunior .aui-list-item-inner,
+        .contactList .hasJunior .aui-list-item {
+            padding-right: 2.1rem;
+        }
+
+        .contactList .aui-list .aui-list-item:active {
+            background-color: transparent;
+        }
+
+        .contactList .aui-media-list-item-inner:active {
+            background-color: #f5f5f5;
+        }
+
+        .contactList .aui-media-list-item-inner {
+            padding: 0.98rem 0;
+        }
+
+        .contactList .aui-media-list .aui-list-item-inner {
+            color: #000000;
+            padding: 0;
+        }
+
+        .contactList ul {
+            margin-bottom: 0.5rem;
+        }
+
+        .aui-list .aui-list-item-text {
+            display: -webkit-box;
+            font-size: var(--fontsize8);
+        }
+
+        .aui-list .aui-list-item-right,
+        .aui-list-item-title-row em {
+            margin-left: 0;
+            position: absolute;
+            right: 0;
+            top: 0.98rem;
+        }
+
+        footer {
+            padding: 0.5rem 0.98rem;
+            display: flex;
+            justify-content: space-between;
+            box-shadow: inset 0rem 0.05rem 0.05rem 0rem #ededed;
+            background-color: #fff;
+        }
+
+        footer .selectedContact {
+            display: flex;
+            align-items: center;
+        }
+
+        footer .aui-btn {
+            width: 15rem;
+            height: 2.23rem;
+            border-radius: 1rem;
+            font-size: var(--fontsize7);
+            letter-spacing: 0.05rem;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-align-items: center;
+            align-items: center;
+            -webkit-justify-content: center;
+            justify-content: center;
+            outline: none;
+            margin: 0 auto;
+        }
+
+        .sureBtn {
+            background: #3883f8 !important;
+            color: #fff !important;
+        }
+
+        .cancelBtn {
+            background: #fff !important;
+            color: #3883f8 !important;
+            border: 1px solid #3883f8 !important;
+        }
+
+        .selectAll {
+            padding: 0.5rem 0;
+        }
+
+        .selectAll:active {
+            background-color: #f5f5f5;
+        }
+        #TopBar {
+            overflow-y: hidden;
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+        #TopBar {
+            font-size: var(--fontsize75);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #333333;
+            display: flex;
+            justify-content: flex-start !important;
+            align-items: center;
+            line-height: 1.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav" id="header">
+        <div class="aui-pull-left aui-btn" data-action='back'>
+            <span class="aui-iconfont aui-icon-left"></span>
+        </div>
+        <div class="aui-title">联系人</div>
+    </header>
+    <div class="aui-searchbar aui-border-b" id="searchMyMessage">
+        <div class="aui-searchbar-input aui-border-radius">
+            <i class="aui-iconfont aui-icon-search"></i>
+            <input type="search" placeholder="搜索" id="mySearchInput">
+            <div class="aui-searchbar-clear-btn">
+                <i class="aui-iconfont aui-icon-close"></i>
+            </div>
+        </div>
+    </div>
+    <div class="aui-card-list org">
+        <div class="aui-card-list-header" id='TopBar'>
+            <span class="superiorText" data-action="resetDatas"></span>
+            <!-- <span class="juniorText">>南京水务公司子公司1</span> -->
+        </div>
+    </div>
+    <!-- <div class="aui-card-list">
+        <div class="selectAll" tapmode data-action="selectAll">
+            <div class="aui-card-list-header">
+                <div class="aui-radio"></div>全选
+            </div>
+        </div>
+    </div> -->
+    <div class="aui-content contactList" id="contactListDemo">
+        <div style="display:none">
+            <ul class="aui-list aui-media-list hasJunior">
+                <li class="aui-list-item aui-list-item-middle">
+                    <div class="aui-media-list-item-inner" tapmode data-action="select">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-text">
+                                <div class="aui-radio"></div>
+                                <div class="aui-list-item-inner">南京江宁水务公司子公司1（10人）</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="aui-list-item-right junior active" tapmode data-action="selectJunior">
+                        <div class="juniorImg"></div>
+                        <span>下级</span>
+                    </div>
+                </li>
+                <li class="aui-list-item aui-list-item-middle">
+                    <div class="aui-media-list-item-inner" tapmode data-action="select">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-text">
+                                <div class="aui-radio"></div>
+                                <div class="aui-list-item-inner">南京江宁水务公司子公司2（11人）</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="aui-list-item-right junior active" tapmode data-action="selectJunior">
+                        <div class="juniorImg"></div>
+                        <span>下级</span>
+                    </div>
+                </li>
+                <li class="aui-list-item aui-list-item-middle">
+                    <div class="aui-media-list-item-inner" tapmode data-action="select">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-text">
+                                <div class="aui-radio"></div>
+                                <div class="aui-list-item-inner">南京江宁水务公司子公司3（3/12）</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="aui-list-item-right junior active" tapmode data-action="selectJunior">
+                        <div class="juniorImg"></div>
+                        <span>下级</span>
+                    </div>
+                </li>
+                <li class="aui-list-item aui-list-item-middle">
+                    <div class="aui-media-list-item-inner" tapmode data-action="select">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-text">
+                                <div class="aui-radio"></div>
+                                <div class="aui-list-item-inner">南京江宁水务公司子公司4（13人）</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="aui-list-item-right junior active" tapmode data-action="selectJunior">
+                        <div class="juniorImg"></div>
+                        <span>下级</span>
+                    </div>
+                </li>
+            </ul>
+            <ul class="aui-list aui-media-list">
+                <li class="aui-list-item aui-list-item-middle">
+                    <div class="aui-media-list-item-inner" tapmode data-action="select">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-text">
+                                <div class="aui-radio"></div>
+                                <div class="aui-list-item-inner">管理员</div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                <li class="aui-list-item aui-list-item-middle">
+                    <div class="aui-media-list-item-inner" tapmode data-action="select">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-text">
+                                <div class="aui-radio"></div>
+                                <div class="aui-list-item-inner">杨溢</div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+    <footer>
+        <!-- <div class="selectedContact" tapmode data-action="checkSelected">
+            <div class="icon"></div>
+            已选择：<span id="number">40</span>人
+        </div> -->
+        <!-- <div class="aui-btn sureBtn">确定（1/200）</div> -->
+        <div class="aui-btn sureBtn" data-action='sureBtn'>确定</div>
+    </footer>
+
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/diy/public.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/hammer.min.js"></script>
+<script type="text/javascript" src="../../../script/aui-dialog.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/diy/template.js"></script>
+<script type="text/template" id='orgAndCantactList'>
+    {{if children.length>0 }}
+    <ul class="aui-list aui-media-list hasJunior">
+        {{each children value i}} {{if value.children.length == 0 && value.cantacts.length == 0}}
+        <li class="aui-list-item aui-list-item-middle" param='{{value}}'>
+            <div class="aui-media-list-item-inner" tapmode data-action="select">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-text">
+                        <div class="aui-list-item-inner">{{value.orgName}}（{{value.cantactCount + value.cantacts.length}}人）</div>
+                    </div>
+                </div>
+            </div>
+        </li>
+        {{ else if value.children.length > 0 || value.cantacts.length > 0}}
+        <li class="aui-list-item aui-list-item-middle" param='{{value}}'>
+            <div class="aui-media-list-item-inner" tapmode data-action="select">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-text">
+                        <!--用于显示选择的用户用户数 -->
+                        {{if selecteDatas.orgId == value.orgId || selecteDatas.orgId == orgId}} {{if (value.cantactCount + value.cantacts.length) == selectNumber && (value.cantactCount + value.cantacts.length) !=0 && selectNumber!=0}}
+                        <div class="aui-list-item-inner">{{value.orgName}}（{{selectNumber}}/{{value.cantactCount + value.cantacts.length}}）</div>
+                        {{else}} {{ if (value.cantactCount + value.cantacts.length) !=0 && selectNumber!=0}}
+                        <div class="aui-list-item-inner">{{value.orgName}}（{{selectNumber}}/{{value.cantactCount + value.cantacts.length}}）</div>
+                        {{else}}
+                        <div class="aui-list-item-inner">{{value.orgName}}（{{value.cantactCount + value.cantacts.length}}人）</div>
+                        {{/if}} {{/if}} {{else if selecteDatas.parentId == value.orgId }} {{if (value.cantactCount + value.cantacts.length) == selectNumber && (value.cantactCount + value.cantacts.length) !=0 && selectNumber!=0}}
+                        <div class="aui-list-item-inner">{{value.orgName}}（{{selectNumber}}/{{value.cantactCount + value.cantacts.length}}）</div>
+                        {{else}} {{ if (value.cantactCount + value.cantacts.length) !=0 && selectNumber!=0}}
+                        <div class="aui-list-item-inner">{{value.orgName}}（{{selectNumber}}/{{value.cantactCount + value.cantacts.length}}）</div>
+                        {{else}}
+                        <div class="aui-list-item-inner">{{value.orgName}}（{{value.cantactCount + value.cantacts.length}}人）</div>
+                        {{/if}} {{/if}} {{ else if selecteDatas.parentId == parentId }} {{if (value.cantactCount + value.cantacts.length) == selectNumber && (value.cantactCount + value.cantacts.length) !=0 && selectNumber!=0}}
+                        <div class="aui-list-item-inner">{{value.orgName}}（{{selectNumber}}/{{value.cantactCount + value.cantacts.length}}）</div>
+                        {{else}} {{ if (value.cantactCount + value.cantacts.length) !=0 && selectNumber!=0}}
+                        <div class="aui-list-item-inner">{{value.orgName}}（{{selectNumber}}/{{value.cantactCount + value.cantacts.length}}）</div>
+                        {{else}}
+                        <div class="aui-list-item-inner">{{value.orgName}}（{{value.cantactCount + value.cantacts.length}}人）</div>
+                        {{/if}} {{/if}} {{else}}
+                        <div class="aui-list-item-inner">{{value.orgName}}（{{value.cantactCount + value.cantacts.length}}人）</div>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+            <div class="aui-list-item-right junior active" tapmode data-action="selectJunior" param='{{value}}' selftorgId='{{orgId}}' parentId='{{parentId}}'>
+                <div class="juniorImg"></div>
+                <span>下级</span>
+            </div>
+        </li>
+        {{/if}} {{/each}}
+    </ul>
+    {{/if}} {{if cantacts.length > 0}}
+    <ul class="aui-list aui-media-list">
+        {{each cantacts value j}}
+        <li class="aui-list-item aui-list-item-middle" param="{{value}}">
+            <div class="aui-media-list-item-inner" tapmode data-action="select">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-text">
+                        {{if selecteDatas.contactId == value.contactId}}
+                        <div class="aui-radio aui-checked" param='{{value}}' selftorgId='{{orgId}}' parentId='{{parentId}}'></div>
+                        {{ else }}
+                        <div class="aui-radio" param='{{value}}' selftorgId='{{orgId}}' parentId='{{parentId}}'></div>
+                        {{/if}}
+                        <div class="aui-list-item-inner">{{value.contactName}}</div>
+                    </div>
+                </div>
+            </div>
+        </li>
+        {{/each}}
+    </ul>
+    {{/if}}
+
+
+
+</script>
+<script type="text/template" id='filterList'>
+    <ul class="aui-list aui-media-list">
+        {{each result value i}}
+        <li class="aui-list-item aui-list-item-middle" param="{{value}}">
+            <div class="aui-media-list-item-inner" tapmode data-action="select">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-text">
+                        <div class="aui-radio" param='{{value}}'></div>
+                        <div class="aui-list-item-inner">{{value.contactName}}</div>
+                    </div>
+                </div>
+            </div>
+        </li>
+        {{/each}}
+    </ul>
+</script>
+<script type="text/javascript">
+    var ParamDatas;
+    apiready = function() {
+        api.addEventListener({
+            name: 'changedFontSize'
+        }, function(ret, err) {
+            if (ret) {
+                changeFontSize();
+            }
+        });
+        api.parseTapmode();
+        var header = $api.byId('header');
+        // 实现沉浸式状态栏效果
+        $api.fixStatusBar(header);
+        fnReady();
+        ParamDatas = api.pageParam.data;
+        cardId = api.pageParam.cardId;
+        // ParamDatas ={
+        //           "contactId": 10426,
+        //           "userId": 0,
+        //           "orgId": 10253,
+        //           "contactName": "张丽丽",
+        //           "tel": "15320286454",
+        //           "mobile": "",
+        //           "email": "",
+        //           "qq": "",
+        //           "dingding": "",
+        //           "wexin": "",
+        //           "sort": 0,
+        //           "creationTime": "2019-02-28T11:07:58",
+        //           "creatorUserName": "测试"
+        //         };
+        // 组织机构接口
+        GetFormatOrgagencyStatisticsCantact();
+
+    };
+
+    //搜索条设置
+    var mysearchBar = document.querySelector("#searchMyMessage");
+    var mysearchBarInput = document.querySelector("#searchMyMessage input");
+    var mysearchBarClearBtn = document.querySelector("#searchMyMessage .aui-searchbar-clear-btn");
+    if (mysearchBar) {
+        mysearchBarInput.oninput = function() {
+            if (this.value.length) {
+                mysearchBarClearBtn.style.display = 'block';
+                GetFormatOrgagencyStatisticsCantact();
+            } else {
+                mysearchBarClearBtn.style.display = 'none';
+            }
+        }
+    }
+    mysearchBarClearBtn.onclick = function() {
+        this.style.display = 'none';
+        mysearchBarInput.value = '';
+        myKeyWord = "";
+        GetFormatOrgagencyStatisticsCantact();
+    }
+
+    var myKeyWord = "";
+    // 适配苹果手机的输入法
+    var flag = false;
+    $('#mySearchInput').on({
+        'compositionstart': function() {
+            flag = true;
+        },
+        'compositionend': function() {
+            flag = false;
+            if (!flag) {
+                myKeyWord = $(this).val();
+            }
+        },
+        'input propertychange': function() {
+            if (!flag) {
+                myKeyWord = $(this).val();
+            }
+        }
+    });
+
+
+  var dialog = new auiDialog();
+    var actionList = {
+        'back': function() {
+          // 添加提示
+          dialog.alert({
+              title:"确定取消选择联系人吗",
+              buttons:['确定','取消']
+          },function(ret){
+            if(ret && ret.buttonIndex == 1){
+              if(ParamDatas == 0 || ParamDatas == undefined || ParamDatas == null){
+                 $api.rmStorage('selectedContact');
+              }
+              api.closeWin();
+            }
+
+          })
+
+        },
+        'sureBtn': function() {
+            var selectedContact = $api.getStorage('selectedContact');
+
+            api.sendEvent({
+                name: 'choseContact',
+                extra: {
+                    value: selectedContact,
+                    cardId:cardId
+                }
+            });
+            api.closeWin();
+        },
+        'select': function() {
+            $(this).find('.aui-radio').toggleClass('aui-checked');
+            // 单选
+            $(this).parent().siblings().find('.aui-radio').removeClass('aui-checked');
+            $(this).parent().parent().siblings().find('.aui-radio').removeClass('aui-checked');
+            // 单选结束
+            if ($(this).find('.aui-radio').hasClass('aui-checked')) {
+                $(this).find('.junior').removeClass('active');
+                var selecteDatas = $('.aui-checked').attr('param');
+                selecteDatas = JSON.parse(selecteDatas);
+                var parentId = $('.aui-checked').attr('parentId');
+                selecteDatas.parentId = parentId;
+                var superiorTextData = $('.superiorText').attr('OnlyDate');
+                superiorTextData = JSON.parse(superiorTextData);
+                superiorTextData.selectNumber = 1;
+                superiorTextData.selecteDatas = selecteDatas;
+                superiorTextData = JSON.stringify(superiorTextData);
+                $('.superiorText').attr('OnlyDate', superiorTextData);
+                // 当前选中的等级的前面所有
+                var juniorArrays = $('.juniorText');
+                for (var i = 0; i < juniorArrays.length; i++) {
+                    var datas = $(juniorArrays[i]).attr('OnlyDate');
+                    // datas = JSON.parse(datas);
+                    datas.selectNumber = 1;
+                    datas.selecteDatas = selecteDatas;
+                    datas = JSON.stringify(datas);
+                    $(juniorArrays[i]).attr('OnlyDate', datas);
+                }
+
+                $api.setStorage('selectedContact', selecteDatas);
+                var selectedContact = $api.getStorage('selectedContact');
+
+            }
+            else {
+                $(this).find('.junior').addClass('active');
+                $api.rmStorage('selectedContact');
+                var superiorTextData = $('.superiorText').attr('OnlyDate');
+                var juniorArrays = $('.juniorText');
+                superiorTextData = JSON.parse(superiorTextData);
+                superiorTextData.selectNumber = 0;
+                superiorTextData.selecteDatas = {};
+                superiorTextData = JSON.stringify(superiorTextData);
+                $('.superiorText').attr('OnlyDate', superiorTextData);
+                for (var i = 0; i < juniorArrays.length; i++) {
+                    var datas = $(juniorArrays[i]).attr('OnlyDate');
+                    datas = JSON.parse(datas);
+                    datas.selectNumber = 0;
+                    datas.selecteDatas = {};
+                    datas = JSON.stringify(datas);
+                    $(juniorArrays[i]).attr('OnlyDate', datas);
+                }
+
+            }
+        },
+        // 'selectAll': function() {
+        //     $(this).find('.aui-radio').toggleClass('aui-radio-checked');
+        //     if ($(this).find('.aui-radio').hasClass('aui-radio-checked')) {
+        //         $('.contactList .aui-radio').addClass('aui-radio-checked');
+        //         $('.contactList .junior').removeClass('active');
+        //     } else {
+        //         $('.contactList .aui-radio').removeClass('aui-radio-checked');
+        //         $('.contactList .junior').addClass('active');
+        //     }
+        // },
+        'selectJunior': function(event) {
+            event = event || window.event;
+            event.stopPropagation();
+            if ($(this).hasClass('active')) {
+                var datas = $(this).attr('param');
+                datas = JSON.parse(datas);
+                var contaListObj = {};
+                contaListObj = {
+                    orgId: datas.orgId,
+                    orgName: datas.orgName,
+                    cantacts: datas.cantacts,
+                    children: datas.children,
+                    Sum: datas.cantactCount + datas.cantacts.length,
+                    parentId: datas.parentId,
+                    selectNumber: 0,
+                    selecteDatas: {
+                        contactId: '',
+                        userId: '',
+                        orgId: '',
+                        contactName: '',
+                    }
+                };
+                var HomeDatas = $('.superiorText').attr('OnlyDate');
+                HomeDatas = JSON.parse(HomeDatas);
+                if (HomeDatas.selectNumber != 0) {
+                    // 需要判断这的下级有没有选中
+                    datas.selectNumber = HomeDatas.selectNumber;
+                    datas.selecteDatas = HomeDatas.selecteDatas;
+                } else {
+                    // 需要判断这的下级有没有选中
+                    datas.selectNumber = 0;
+                    datas.selecteDatas = {
+                        contactId: '',
+                        userId: '',
+                        orgId: '',
+                        contactName: '',
+
+                    };
+                }
+
+                contaListObj = JSON.stringify(contaListObj);
+                var htmlContent = '<span class="juniorText" data-action="resetDatas" OnlyDate=' + contaListObj + ' >>' + datas.orgName + '</span>';
+                $('#TopBar').append(htmlContent);
+                var ele = document.getElementById('TopBar');
+                ele.scrollLeft = ele.scrollWidth;
+                $('#contactListDemo').html('');
+                var str = template('orgAndCantactList', datas);
+                $('#contactListDemo').append(str);
+                operationDom();
+                $('.superiorText').css({'color':'#3883f8'});
+                var JuniorNumber = $('.juniorText');
+                  for(var i=0;i<JuniorNumber.length;i++){
+                    $(JuniorNumber[i]).css({'color':'#3883f8'});
+                  }
+                  $(JuniorNumber[JuniorNumber.length-1]).css({'color':'black'});
+
+
+            }
+
+        },
+        'resetDatas': function() {
+            $(this).nextAll().remove();
+            $(this).css({'color':'black'});
+            var datas = $(this).attr('OnlyDate');
+            datas = JSON.parse(datas);
+            // console.log(JSON.stringify(datas));
+            if ($('.aui-checked').length != 0) {
+                //  有选中的联系人，修改此父级的数据
+                var selecteDatas = $('.aui-checked').attr('param');
+                selecteDatas = JSON.parse(selecteDatas);
+                var parentId = $('.aui-checked').attr('parentId');
+                selecteDatas.parentId = parentId;
+                datas.selectNumber = 1;
+                datas.selecteDatas = selecteDatas;
+                var updateDatas;
+                updateDatas = JSON.stringify(datas);
+                $(this).attr('OnlyDate', updateDatas);
+
+                //  修改此联系人所有的父级信息
+                var preAllDatas = $(this).prevAll();
+                // console.log(preAllDatas.length);
+                for (var i = 0; i < preAllDatas.length; i++) {
+                    var prevParam = $(preAllDatas[i]).attr('OnlyDate');
+                    prevParam = JSON.parse(prevParam);
+                    prevParam.selectNumber = 1;
+                    prevParam.selecteDatas = selecteDatas;
+                    prevParam = JSON.stringify(prevParam);
+                    $(preAllDatas[i]).attr('OnlyDate', prevParam);
+                }
+
+            }
+
+            $('#contactListDemo').html('');
+            var str = template('orgAndCantactList', datas);
+            $('#contactListDemo').append(str);
+            operationDom();
+
+        }
+    }
+
+    // 联系人接口
+    function GetFormatOrgagencyStatisticsCantact() {
+        var filter = $('#mySearchInput').val() ? $('#mySearchInput').val() : '';
+        fnGet('services/app/AppOrgagency/GetFormatOrgagencyStatisticsCantact?Filter=' + filter, {}, false, function(ret, err) {
+            if (ret) {
+                if (ret.success && ret.result != null) {
+                    $('#contactListDemo').html('');
+                    // 判断是否有筛选条件，有筛选条件，使用的数据是allContact里面的
+                    if (filter == '') {
+                        var result = ret.result.organizationAndCantact;
+                        var contaListObj = {};
+                        contaListObj = {
+                            orgId: result.orgId,
+                            orgName: result.orgName,
+                            cantacts: result.cantacts,
+                            children: result.children,
+                            Sum: result.cantactCount + result.cantacts.length,
+                            parentId: result.parentId,
+                            selectNumber: 0,
+                            selecteDatas: {
+                                contactId: '',
+                                userId: '',
+                                orgId: '',
+                                contactName: '',
+                                parentId: result.parentId
+                            },
+                        };
+                        result.selectNumber = 0;
+                        result.selecteDatas = {
+                            contactId: '',
+                            userId: '',
+                            orgId: '',
+                            contactName: '',
+                            parentId: '',
+
+                        };
+
+                        if (!($.isEmptyObject(ParamDatas))) {
+                            $api.setStorage('selectedContact', ParamDatas);
+                            contaListObj.selectNumber = 1;
+                            contaListObj.selecteDatas.contactId = ParamDatas.id;
+                            contaListObj.selecteDatas.userId = '';
+                            contaListObj.selecteDatas.orgId = '';
+                            contaListObj.selecteDatas.contactName = ParamDatas.contactName;
+                            contaListObj.selecteDatas.parentId = ParamDatas.parentId;
+                            result.selectNumber = 1;
+                            result.selecteDatas = {
+                                contactId:ParamDatas.id,
+                                userId: '',
+                                orgId: '',
+                                contactName: ParamDatas.contactName,
+                                parentId: ParamDatas.parentId,
+                            };
+
+                        }
+                        contaListObj = JSON.stringify(contaListObj);
+
+                        // 最开始最上端的组织机构的数据
+                        $('.superiorText').text(result.orgName);
+                        $('.superiorText').attr('OnlyDate', contaListObj);
+                        var str = template('orgAndCantactList', result);
+                        $('#contactListDemo').append(str);
+                    } else {
+                        var result = ret.result.cantactAll;
+                        var datas = {
+                            result: result
+                        }
+                        var str = template('filterList', datas);
+                        $('#contactListDemo').append(str);
+                    }
+
+                    operationDom();
+                    fnReadyOpenWin();
+                } else {
+                    api.toast({
+                        msg: '数据请求失败',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+
+                }
+            }
+            api.hideProgress();
+        });
+    }
+</script>
+
+</html>

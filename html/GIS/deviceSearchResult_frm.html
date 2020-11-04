@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>设备类型列表页面</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #FFF;
+        }
+
+        .aui-list {
+            background-image: none;
+        }
+    </style>
+</head>
+
+<body>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/diy/public.js"></script>
+<script type="text/javascript" src="../../script/remote.js"></script>
+<script type="text/javascript" src="../../script/zepto.js"></script>
+<script type="text/javascript" src="../../script/moment.js"></script>
+<script type="text/javascript" src="../../script/diy/template.js"></script>
+<script type="text/template" id="resultTpl">
+    <ul class="aui-list aui-media-list">
+        {{each items value i}}
+        <li class="aui-list-item aui-list-item-middle">
+            <div class="aui-media-list-item-inner" tapmode data-action="selectResult" data-param="{{value}}">
+                <div class="aui-list-item-inner">
+                    {{value.name}}
+                </div>
+            </div>
+        </li>
+        {{/each}}
+    </ul>
+</script>
+<script type="text/javascript">
+    var url;
+    apiready = function() {
+        fnReady();
+        // $('body').html('');
+        listData = api.pageParam.listData
+        var list = {
+            items: listData
+        }
+        var str = template('resultTpl', list);
+        $('body').html('');
+        $('body').append(str);
+        api.parseTapmode();
+        operationDom();
+    };
+
+    var actionList = {
+        'selectResult': function() {
+            var data = JSON.parse($(this).attr('data-param'));
+            api.sendEvent({
+                name: 'chooseDeviceType',
+                extra: {
+                    deviceType: data,
+                }
+            });
+            setTimeout(function() {
+                api.closeWin({});
+            }, 200);
+        }
+    }
+</script>
+
+</html>

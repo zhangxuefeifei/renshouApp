@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>备注资料管理</title>
+    <link rel="stylesheet" href="../../../css/api.css">
+    <link rel="stylesheet" href="../../../css/aui.css">
+    <link rel="stylesheet" href="../../../css/rolldate.css">
+    <link rel="stylesheet" href="../css/dialogAlert.css">
+    <link rel="stylesheet" href="../css/ol.css">
+    <link rel="stylesheet" href="../css/pointpipeinfo.css">
+    <style rel="stylesheet">
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: #EEEEEE;
+        }
+
+        header.aui-bar-nav {
+            background: #EEEEEE;
+            font-size: 0.8rem;
+            font-family: PingFangSC-Semibold, PingFang SC;
+            font-weight: 600;
+            color: #333;
+        }
+
+        header.aui-bar-nav .aui-btn .aui-iconfont {
+            color: #333;
+            width: 1.2rem;
+            height: 1.2rem;
+            font-weight: bold;
+            border: none;
+        }
+
+        header .aui-icon-left:before {
+            content: url('../image/closeWin.png');
+            width: 1.2rem;
+            height: 1.2rem;
+        }
+
+        header .screen_box {
+            width: auto;
+            height: 2.2rem;
+            line-height: 2.2rem;
+            display: flex;
+            flex-direction: row;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav" id='header'>
+        <div class="aui-pull-left aui-btn aui-margin-l-10" onclick="closeWin()" tapmode>
+            <span class="aui-iconfont aui-icon-left"></span>
+        </div>
+        <div class="aui-title">备注资料管理</div>
+    </header>
+    <!-- 上传 -->
+    <br />
+    <div style="text-align:center;" id="imgBtnWrap"></div>
+    <div style="height:20px;"></div>
+    <div style="padding-left:9%;">描&nbsp;述</div>
+    <div style="text-align:center;">
+        <textarea style="margin:0 auto;border:0;border-radius:5px;background-color:#DADFED;width: 303px;height: 100px;padding: 10px;resize: none;" placeholder="" id="describe"></textarea>
+    </div>
+    <br />
+    <br />
+    <br />
+    <div style="text-align:center;">
+        <div style="margin:0 auto;line-height: 35px;width:303px;height:35px;background-color:#6F7EF6;border-radius:17px;color:white;text-align:center;" onclick="submit();">提&nbsp;交</div>
+    </div>
+
+
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/moment.js"></script>
+<script type="text/javascript" src="../../../script/rolldateMin.js"></script>
+<script type="text/javascript" src="../../../script/aui-tab.js"></script>
+<script type="text/javascript" src="../../../script/hammer.min.js"></script>
+<script type="text/javascript" src="../../../script/template.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+
+
+
+<script type="text/javascript">
+    apiready = function() {
+        // 页面初始化，沉浸式等
+        initWindow();
+        var ret = api.pageParam;
+        loadview(ret);
+
+    }
+
+    function loadview(ret) {
+        if (ret.ret.data) {
+            var imgHTML = '<img class="imgCon" src="../image/thumbVideo.png" style="margin:0 auto;width:303px;height:178px;" οnclick="openPreview(this)">';
+            $api.before($api.byId('imgBtnWrap'), imgHTML)
+        } else {
+            if (ret.ret.list.length != 0) {
+                var imgHTML = '<img class="imgCon" src="' + ret.ret.list[0].thumbPath + '" style="margin:0 auto;width:303px;height:178px;" οnclick="openPreview(this)">';
+                $api.before($api.byId('imgBtnWrap'), imgHTML)
+            }
+        }
+
+    }
+    //提交
+    function submit() {
+        if ($('#describe').val() == "") {
+            api.toast({
+                msg: '请填写描述内容',
+                duration: 2000,
+                location: 'middle'
+            });
+        } else {
+
+
+            var ret = api.pageParam.ret;
+            var files = {};
+
+            if (ret.data) {
+                files["filename"] = ret.data;
+            } else {
+                if (ret.list.length != 0) {
+                    files["filename"] = ret.list[0].path;
+                } else {
+                    api.toast({
+                        msg: '文件未选择',
+                        duration: 2000,
+                        location: 'middle'
+                    });
+                    return;
+                }
+            }
+            fnPost('UploadFiles/UploadProfilePicture', {
+                files: files
+            }, '', true, false, function(ret, err) {
+                if (ret && ret.success) {
+                    var submitData = {
+                        "number": api.pageParam.number,
+                        "remark": $('#describe').val(),
+                        "videoUrl": ret.result.items[0].url
+                    };
+                    fnPost('services/SNTGIS/GISRemarks/InsertRemark', {
+                        body: JSON.stringify(submitData)
+                    }, 'application/json', true, false, function(ret, err) {
+                        if (ret && ret.success) {
+                            api.toast({
+                                msg: '提交成功！',
+                                duration: 2000,
+                                location: 'top'
+                            });
+                            api.sendEvent({
+                                name: 'refreshvediolist',
+                            });
+                            setTimeout(function() {
+                                api.closeWin({});
+                            }, 300);
+                        }
+                    })
+                }
+                else{
+                  api.toast({
+                      msg: '提交失败！',
+                      duration: 2000,
+                      location: 'top'
+                  });
+                }
+            })
+
+        }
+    }
+</script>
+
+</html>

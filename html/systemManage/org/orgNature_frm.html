@@ -1,0 +1,271 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>机构性质页面</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/aui1.css" />
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: transparent;
+        }
+
+        .aui-card-list {
+            border-radius: 1.33vw;
+            width: 81.2vw;
+            height: 100vh;
+            border-radius: 0;
+            background-color: #ffffff;
+            position: absolute;
+            margin-bottom: 0;
+            -webkit-box-orient: vertical;
+            -webkit-flex-flow: column;
+            flex-flow: column;
+            display: flex;
+            overflow-x: hidden;
+            right: -81.2vw;
+            -webkit-transition: all 0.35s;
+            transition: all 0.35s;
+        }
+
+        .aui-card-list-header.aui-card-list-user {
+            padding: 1.7rem 0.65rem 0.7rem 0.65rem;
+        }
+
+        .aui-card-list-user-name {
+            font-size: var(--fontsize85);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #323232;
+        }
+
+        .aui-card-list-content-padded {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            padding: 2.13vw 0 0 3.5vw;
+        }
+
+        .label {
+            width: 22.4vw;
+            height: 1.5rem;
+            line-height: 1.5rem;
+            margin-right: 3.5vw;
+            margin-bottom: 2.13vw;
+            border-radius: 0.13rem;
+            background-color: #f0f0f0;
+            display: inline-block;
+            text-align: center;
+            font-size: var(--fontsize65);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #333333;
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .label.active {
+            color: #4f79e8;
+            background-color: #e5ebfa;
+        }
+
+        .label .gouxuan {
+            width: 0.8rem;
+            height: 0.73rem;
+            background-image: url('../../../image/systemManage/gouxuan.png');
+            background-size: 100%;
+            position: absolute;
+            right: 0;
+            bottom: 0;
+        }
+
+        .aui-card-list-footer {
+            padding: 0;
+        }
+
+        .aui-btn {
+            height: 2.45rem;
+            line-height: 2.45rem;
+            width: 50%;
+            border-radius: 0;
+            font-size: var(--fontsize85);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+        }
+
+        .sureBtn {
+            background-color: #4f79e8;
+            color: #fff;
+        }
+
+        .cancelBtn {
+            background-color: #fff;
+            color: #333333;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="aui-card-list">
+        <div class="aui-card-list-header aui-card-list-user aui-border-b">
+            <div class="aui-card-list-user-name">
+                机构性质
+            </div>
+        </div>
+        <div class="aui-card-list-content-padded aui-border-b" id="tabList">
+            <!-- <div class="label active" tapmode data-action="changeParent" data-param="{{value}}">部门
+                <div class="gouxuan"></div>
+            </div>
+            <div class="label" tapmode data-action="changeParent" data-param="{{value}}">机构</div> -->
+        </div>
+        <div class="aui-card-list-footer">
+            <div class="aui-btn sureBtn" tapmode data-action="sure">确定</div>
+            <div class="aui-btn cancelBtn" tapmode data-action="cancel">取消</div>
+        </div>
+    </div>
+
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/diy/public.js"></script>
+<script type="text/javascript" src="../../../script/diy/template.js"></script>
+<script type="text/template" id="tabTpl">
+    {{each items value i}}
+    <div class="label" tapmode data-action="changeNature" data-param="{{value}}">{{value.name}}</div>
+    {{/each}}
+</script>
+<script type="text/javascript">
+    document.body.addEventListener('touchstart', function() {});
+    var nameData = [];
+    var gouxuan = '<div class="gouxuan"></div>';
+    var nature = null;
+    var natureName = "";
+    apiready = function() {
+        api.addEventListener({
+            name: 'changedFontSize'
+        }, function(ret, err) {
+            if (ret) {
+                changeFontSize();
+            }
+        });
+        api.parseTapmode();
+        setTimeout(function() {
+            $('.aui-card-list').css('right', '0');
+        }, 50);
+        type = api.pageParam.from;
+        activeOne = api.pageParam.activeOne;
+        setTablist();
+        fnReady();
+    };
+
+    function setTablist() {
+        fnGet('services/app/Dictionary/GetDictionaryByCateCode?cateCode=OrgNature', {}, false, function(ret, err) {
+            if (ret) {
+                if (ret.success) {
+                    var nameData = ret.result;
+                    var list = {
+                        items: nameData
+                    };
+                    var str = template('tabTpl', list);
+                    $('#tabList').html(str);
+                    operationDom();
+                    api.parseTapmode();
+                    var labelList = $('.label');
+                    for (var i = 0; i < labelList.length; i++) {
+                        if (JSON.parse($(labelList[i]).attr('data-param')).name == activeOne) {
+                            $(labelList[i]).addClass('active');
+                            $(labelList[i]).append(gouxuan);
+                        }
+                    }
+                }
+            }
+        })
+    }
+
+    var actionList = {
+        'close': function() {
+            $('.aui-card-list').css('right', '-81.2vw');
+            setTimeout(function() {
+                api.closeFrame({});
+            }, 500);
+        },
+        'sure': function() {
+            $('.aui-card-list').css('right', '-81.2vw');
+            setTimeout(function() {
+                api.closeFrame({});
+            }, 350);
+            if (type == 'list') {
+                api.sendEvent({
+                    name: 'changedNature',
+                    extra: {
+                        nature: nature,
+                        natureName: natureName
+                    }
+                });
+            } else if (type == 'addOrUpdate') {
+                api.sendEvent({
+                    name: 'setNature',
+                    extra: {
+                        nature: nature,
+                        natureName: natureName
+                    }
+                });
+            } else {
+                api.sendEvent({
+                    name: 'setOrgSelectNature',
+                    extra: {
+                        nature: nature,
+                        natureName: natureName
+                    }
+                });
+            }
+        },
+        'cancel': function() {
+            $('.aui-card-list').css('right', '-81.2vw');
+            setTimeout(function() {
+                api.closeFrame({});
+            }, 350);
+        },
+        'changeNature': function() {
+            var preList = $(this).prevAll();
+            for (var i = 0; i < preList.length; i++) {
+                $(preList[i]).removeClass('active');
+                $(preList[i]).find('.gouxuan').remove();
+            }
+            var nextList = $(this).nextAll();
+            for (var i = 0; i < nextList.length; i++) {
+                $(nextList[i]).removeClass('active');
+                $(nextList[i]).find('.gouxuan').remove();
+            }
+            $(this).toggleClass('active');
+            if ($(this).hasClass('active')) {
+                $(this).append(gouxuan);
+                nature = JSON.parse($(this).attr('data-param')).value;
+                natureName = JSON.parse($(this).attr('data-param')).name;
+            } else {
+                $(this).find('.gouxuan').remove();
+                nature = null;
+                natureName = "";
+            }
+
+        }
+    }
+</script>
+
+</html>

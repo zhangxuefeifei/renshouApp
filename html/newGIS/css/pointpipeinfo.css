@@ -1,0 +1,118 @@
+/*管点管线信息框*/
+
+.point_pipe_mask {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 1004;
+    background:transparent;
+    display: none;
+}
+.point_pipe_box {
+    width: 100%;
+    background: #fff;
+    min-height: 3rem;
+    position: absolute;
+    bottom: 0rem;
+    z-index: 1005;
+    font-size: 0.7rem;
+    padding: 0.5rem 0 0.8rem 0;
+    border-radius: 0.4rem 0.4rem 0 0;
+    display: none;
+}
+
+.point_pipe_box .btns {
+    position: absolute;
+    top: -1rem;
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.point_pipe_box .btns div {
+    width: 2.5rem;
+    height: 2rem;
+    line-height: 2rem;
+    border: 1px solid rgba(121, 121, 121, 0.7);
+    text-align: center;
+    border-radius: 0.3rem;
+    margin-right: 0.5rem;
+    font-size: 0.7rem;
+}
+
+.point_pipe_box .btns .infoDetails{
+    border: none;
+    width: 2rem;
+    height: 1.9rem;
+    background: url('../image/infoDetails.png');
+    background-size: 100% 100%;
+}
+
+.point_pipe_box .btns .infoDelete{
+    border: none;
+    width: 2rem;
+    height: 1.9rem;
+    background: url('../image/delete.png');
+    background-size: 100% 100%;
+}
+
+.point_pipe_box .btns .navigation{
+    border: none;
+    width: 2rem;
+    height: 2rem;
+    background: url('../image/navigation.png');
+    background-size: 100% 100%;
+}
+
+
+.point_pipe_box .btns .infoEdite{
+    border: none;
+    width: 1.9rem;
+    height: 1.9rem;
+    background: url('../image/edit.png');
+    background-size: 100% 100%;
+}
+.hasbookmark{
+  border: none!important;
+  width: 2.05rem!important;
+  height: 1.9rem!important;
+  background: url('../image/bookmark.png');
+  background-size: 100% 100%;
+
+}
+.no_bookmark {
+  width: 2.2rem !important;
+  height: 2.3rem!important;
+  background: url('../image/no_bookmark.png');
+  background-size: 100% 100%;
+  border: none!important;
+  position: relative;
+  top: -0.3rem;
+}
+
+.point_pipe_box .aui-row {
+    margin-top: 0.6rem;
+    color: #666;
+    font-size: 0.6rem;
+}
+
+.m_t_1rem {
+    margin-top: 1rem!important;
+    color: #333!important;
+    font-size: 0.8rem!important;
+    font-weight: bold;
+}
+
+.point_pipe_box div[class*='aui-col-xs-'] {
+    padding-left: 1.75rem;
+}
+
+.dot {
+    width: 0.2rem;
+    height: 0.2rem;
+    background: rgba(113, 128, 248, 1);
+    border-radius: 0.3rem;
+    margin-right: 0.3rem;
+    display: inline-block;
+margin-bottom: 0.1rem;
+}

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>专题地图</title>
+    <link rel="stylesheet" href="../../../css/api.css">
+    <link rel="stylesheet" href="../../../css/aui.css">
+    <link rel="stylesheet" href="../css/ol.css">
+    <link rel="stylesheet" href="../css/pointpipeinfo.css">
+    <link rel="stylesheet" href="../css/thematicIcon.css">
+    <style rel="stylesheet">
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            overflow-y: hidden;
+        }
+
+        .flex-box {
+            display: flex;
+            flex-direction: column;
+        }
+        header.aui-bar-nav {
+            background: #fff;
+            font-size: 0.8rem;
+            font-family: PingFangSC-Semibold, PingFang SC;
+            font-weight: 600;
+            color: #333;
+            position: absolute;
+            background: transparent;
+        }
+
+        header.aui-bar-nav .aui-btn .aui-iconfont {
+            color: #333;
+            width: 1.2rem;
+            height: 1.2rem;
+            font-weight: bold;
+            border: none;
+        }
+        header .aui-icon-left:before {
+          content:url('../image/closeWin.png');
+          width: 1.2rem;
+          height: 1.2rem;
+        }
+        /*其他类*/
+
+        .otherThematic_box {
+            display: flex;
+            flex-direction: row;
+            position: absolute;
+            top: 3rem;
+            width: 18rem;
+            height: 3rem;
+            line-height: 3rem;
+            z-index: 1005;
+            margin-top: 0.5rem;
+            overflow: hidden;
+            overflow-x: scroll!important;
+        }
+
+        .otherThematic_box .btns {
+            flex-shrink: 0;
+            width: 3.5rem;
+            height: 1.85rem;
+            line-height: 1.85rem;
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0rem 0.2rem 0.4rem 0rem rgba(0, 0, 0, 0.08), 0rem 0rem 0.05rem 0rem rgba(0, 0, 0, 0.08);
+            font-size: 0.6rem;
+            color: #0A2463;
+            border-radius: 8rem;
+            border: none;
+            margin: 0.5rem;
+            text-align: center;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .btns.btns_active {
+            color: #fff;
+            background: rgba(111, 126, 246, 1);
+            box-shadow: 0rem 0.2rem 0.4rem 0rem rgba(0, 0, 0, 0.08), 0rem 0rem 0.05rem 0rem rgba(0, 0, 0, 0.08);
+        }
+
+        .map {
+            width: 100%;
+            height: 100%;
+        }
+
+        .qita,
+        .guanjian,
+        .famen {
+            display: none;
+        }
+       .m_t_1rem{
+         margin-top: 0.3rem!important;
+       }
+    </style>
+
+</head>
+
+<body class="flex-box" id='flex-box'>
+  <!--  地图 -->
+  <div class="map" id="map"></div>
+    <header class="aui-bar aui-bar-nav" id='header'>
+        <div class="aui-pull-left aui-btn" onclick="closeWin()" tapmode>
+            <span class="aui-iconfont aui-icon-left"></span>
+        </div>
+        <div class="aui-title"></div>
+    </header>
+    <div class="otherThematic_box  guanjian">
+        <div class="btns btns_active" tapmode onclick="changeThematic(this,'guanjianlei')">全部</div>
+        <div class="btns" tapmode onclick="changeThematic(this,'wantou')">弯头</div>
+        <div class="btns" tapmode onclick="changeThematic(this,'gaidu')">盖堵</div>
+        <div class="btns" tapmode onclick="changeThematic(this,'santong')">三通</div>
+        <div class="btns" tapmode onclick="changeThematic(this,'sitong')">四通</div>
+        <div class="btns" tapmode onclick="changeThematic(this,'wutong')">五通</div>
+    </div>
+    <div class="otherThematic_box  famen">
+        <div class="btns btns_active" tapmode onclick="changeThematic(this,'famenlei')">全部</div>
+        <div class="btns" tapmode onclick="changeThematic(this,'diefa')">蝶阀</div>
+        <div class="btns" tapmode onclick="changeThematic(this,'zhafa')">闸阀</div>
+        <div class="btns" tapmode onclick="changeThematic(this,'yalifa')">压力阀</div>
+        <div class="btns" tapmode onclick="changeThematic(this,'paiqifa')">排气阀</div>
+        <div class="btns" tapmode onclick="changeThematic(this,'jianyafa')">减压阀</div>
+        <div class="btns" tapmode onclick="changeThematic(this,'paiwufa')">排污阀</div>
+        <div class="btns" tapmode onclick="changeThematic(this,'xuansaifa')">旋塞阀</div>
+        <div class="btns" tapmode onclick="changeThematic(this,'qitafamen')">其他阀门</div>
+    </div>
+    <div class="otherThematic_box  qita">
+        <div class="btns btns_active" tapmode onclick="changeThematic(this,'qitalei')">全部</div>
+        <div class="btns" tapmode onclick="changeThematic(this,'chushuikou')">出水口</div>
+        <div class="btns" tapmode onclick="changeThematic(this,'yuliukou')">预留口</div>
+        <div class="btns" tapmode onclick="changeThematic(this,'feipucha')">非普查</div>
+        <div class="btns" tapmode onclick="changeThematic(this,'bianzhi')">变质</div>
+    </div>
+    <div class="icon_box">
+      <ul class='guanjianIcon'>
+          <li><span class="guanjian1"></span>弯头</li>
+          <li><span class="guanjian2"></span>盖堵</li>
+          <li><span class="guanjian3"></span>三通</li>
+          <li><span class="guanjian4"></span>四通</li>
+          <li><span class="guanjian5"></span>五通</li>
+      </ul>
+        <ul class='famenIcon'>
+            <li><span class="famen1"></span>蝶阀</li>
+            <li><span class="famen2"></span>闸阀</li>
+            <li><span class="famen3"></span>压力阀</li>
+            <li><span class="famen4"></span>排气阀</li>
+            <li><span class="famen5"></span>减压阀</li>
+            <li><span class="famen6"></span>排污阀</li>
+            <li><span class="famen7"></span>旋转阀</li>
+            <li><span class="famen8"></span>其他阀</li>
+        </ul>
+        <ul class='qitaIcon'>
+            <li><span class="qita1"></span>出水口</li>
+            <li><span class="qita2"></span>预留口</li>
+            <li><span class="qita3"></span>非普查</li>
+            <li><span class="qita4"></span>变质</li>
+        </ul>
+    </div>
+
+
+
+    <!-- 管点。管线信息框 -->
+  <div class="point_pipe_mask" tapmode onclick="hidePointOrPipeInfo()">
+   </div>
+    <div class="point_pipe_box">
+    </div>
+
+
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/template.js"></script>
+
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/ol-debug.js"></script>
+<script type="text/javascript" src="../script/base64.js"></script>
+<!-- 初始化地图 -->
+<script type="text/javascript" src="../script/initmap.js"></script>
+<!-- 专题图的所有图标js ,必须在addordeletelayer。js 前面-->
+<script type="text/javascript" src="../script/thematicIcon.js"></script>
+<!-- 添加图层js,管点管线等操作  -->
+<script type="text/javascript" src="../script/addordeletelayer.js"></script>
+
+
+<!-- 管点信息模板 -->
+<script type="text/template" id='pointInfoDemo'>
+  <div class="aui-row m_t_1rem">
+      <div class="aui-col-xs-12 aui-text-left">管点编号: <span>{{pointnumbe}}</span></div>
+  </div>
+  <div class="aui-row">
+      <div class="aui-col-xs-6 aui-text-left"> <span class='dot'></span> 经度: <span>{{lon}}</span></div>
+      <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>纬度: <span>{{lat}}</span></div>
+  </div>
+  <div class="aui-row">
+      <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>设备类型: <span>{{pointtype}}</span></div>
+      <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>高程: <span>{{elevation}}</span></div>
+  </div>
+  <div class="aui-row">
+      <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>埋深: <span>{{deep}}</span></div>
+      <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>埋设日期: <span>{{buildtime}}</span></div>
+  </div>
+  <div class="aui-row">
+      <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>型号: <span>{{unittype}}</span></div>
+  </div>
+  <div class="aui-row">
+      <div class="aui-col-xs-12 aui-text-left"><span class='dot'></span>所属道路: <span>{{location}}</span></div>
+  </div>
+  <div class="aui-row">
+      <div class="aui-col-xs-12 aui-text-left"><span class='dot'></span>材料厂商: <span>{{firm}}</span></div>
+  </div>
+  <div class="aui-row">
+      <div class="aui-col-xs-12 aui-text-left"><span class='dot'></span>所属单位: <span>{{buildunit}}</span></div>
+  </div>
+</script>
+
+
+
+<script type="text/javascript">
+    apiready = function() {
+            api.setWinAttr({
+                bounces: false
+            });
+            // 初始化，包括沉浸式等
+            initWindow();
+            // 初始化地图
+            initMap();
+            loadDelayTHMS(function(){
+             initData();
+            });
+        }
+        // 关闭页面，并删除地图层
+    function closeWin() {
+        api.closeWin();
+        removeAddLayer('thematiclayer', 8)
+    }
+    // 初始化页面数据（加载相关专题地图）
+    function initData() {
+        var name = api.pageParam.name;
+        var type = api.pageParam.type;
+        var thematicName = api.pageParam.thematicName;
+        $('.aui-title').text(thematicName + '专题图');
+        if (type == 'line') {
+            lineRenderingthematicMap(name);
+        } else {
+            switch (thematicName) {
+                case '管件类':
+                    $('.guanjian').css({
+                        "display": "flex"
+                    });
+                      $('.icon_box').show();
+                      $('.guanjianIcon').show();
+                    name = 'guanjianlei';
+                    break;
+                case '阀门类':
+                    $('.famen').css({
+                        "display": "flex"
+                    });
+                      $('.icon_box').show();
+                      $('.famenIcon').show();
+                    name = 'famenlei';
+                    break;
+                case '其他类':
+                    $('.qita').css({
+                        "display": "flex"
+                    });
+                      $('.icon_box').show();
+                      $('.qitaIcon').show();
+                    name = 'qitalei';
+                    break;
+            }
+            pointRenderingthematicMap(name);
+        }
+    }
+
+    function changeThematic(that, name) {
+      hidePointOrPipeInfo();
+        if (!($(that).hasClass('btns_active'))) {
+            $(that).addClass('btns_active');
+            $(that).siblings().removeClass('btns_active');
+        }
+        if(name =='guanjianlei'){
+            $('.icon_box').show();
+            $('.guanjianIcon').show();
+        } else if(name =='famenlei'){
+          $('.icon_box').show();
+          $('.famenIcon').show();
+        } else if( name =='qitalei'){
+          $('.icon_box').show();
+          $('.qitaIcon').show();
+        } else {
+          $('.icon_box').hide();
+          $('.icon_box ul').hide();
+        }
+        pointRenderingthematicMap(name);
+    }
+
+    function hidePointOrPipeInfo() {
+      $('.point_pipe_mask').hide();
+      $('.point_pipe_box').hide();
+    }
+
+</script>
+
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>更多菜单页面</title>
+    <link rel="stylesheet" type="text/css" href="../../css/aui1.css" />
+    <link rel=stylesheet type=text/css href=../../css/rolldate.css />
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: transparent;
+        }
+
+        .aui-card-list {
+            border-radius: 1.33vw;
+            width: 100vw;
+            height: 127.47vw;
+            background-color: #ffffff;
+            border-radius: 5.33vw 5.33vw 0vw 0vw;
+            position: absolute;
+            bottom: 0;
+            margin-bottom: 0;
+            -webkit-box-orient: vertical;
+            -webkit-flex-flow: column;
+            flex-flow: column;
+            display: flex;
+            overflow-x: hidden;
+            bottom: -2000px;
+            -webkit-transition: all 0.5s;
+            transition: all 0.5s;
+        }
+
+        .close {
+            width: 4.53vw;
+            height: 4.53vw;
+            background-image: url('../../image/decision/close.png');
+            background-size: 100%;
+            float: right;
+        }
+
+        .aui-card-list-user-name {
+            justify-content: flex-end;
+        }
+
+        .aui-card-list-header.aui-card-list-user {
+            padding: 3.47vw 3.07vw;
+        }
+
+        .aui-card-list-content-padded {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+            padding: 1.6vw 0 0 2.725vw;
+        }
+
+        .label {
+            width: 28.9vw;
+            height: 11.47vw;
+            line-height: 11.47vw;
+            margin-right: 2.725vw;
+            margin-bottom: 1.6vw;
+            border-radius: 1.33vw;
+            background-color: #f0f0f0;
+            display: inline-block;
+            text-align: center;
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0vw;
+            color: #333333;
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .label.active {
+            color: #0c9ff4;
+            background-color: #def0fa;
+        }
+
+        .label .gouxuan {
+            width: 5.735vw;
+            height: 5.735vw;
+            background-image: url('../../image/decision/gouxuan.png');
+            background-size: 100%;
+            position: absolute;
+            right: 0;
+            bottom: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="aui-card-list">
+        <div class="aui-card-list-header aui-card-list-user">
+            <div class="aui-card-list-user-name">
+                <div class="close" tapmode data-action="close"></div>
+            </div>
+        </div>
+        <div class="aui-card-list-content-padded" id="tabList">
+          <div class="label" tapmode data-action="changeParent" data-param="{{value}}">{{value}}</div>
+        </div>
+    </div>
+
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/zepto.js"></script>
+<script type="text/javascript" src="../../script/diy/public.js"></script>
+<script type="text/javascript" src="../../script/diy/template.js"></script>
+<script type="text/template" id="tabTpl">
+    {{each items value i}}
+    <div class="label" tapmode data-action="changeParent" data-param="{{value}}">{{value}}</div>
+    {{/each}}
+</script>
+<script type="text/javascript">
+    document.body.addEventListener('touchstart', function() {});
+    var nameData = [];
+    var gouxuan = '<div class="gouxuan"></div>';
+    apiready = function() {
+        api.addEventListener({
+            name: 'changedFontSize'
+        }, function(ret, err) {
+            if (ret) {
+                changeFontSize();
+            }
+        });
+        api.parseTapmode();
+        $('.aui-card-list').css('bottom', '0');
+        nameData = api.pageParam.nameData;
+        activeOne = api.pageParam.activeOne;
+        setTablist();
+        fnReady();
+    };
+
+    function setTablist() {
+        var list = {
+            items: nameData
+        };
+        var str = template('tabTpl', list);
+        $('#tabList').html(str);
+        operationDom();
+        api.parseTapmode();
+        var labelList = $('.label');
+        for (var i = 0; i < labelList.length; i++) {
+            if ($(labelList[i]).attr('data-param') == activeOne) {
+                $(labelList[i]).addClass('active');
+                $(labelList[i]).append(gouxuan);
+            }
+        }
+    }
+
+    var actionList = {
+        'close': function() {
+            $('.aui-card-list').css('bottom', '-2000px');
+            setTimeout(function() {
+                api.closeFrame({});
+            }, 500);
+        },
+        'changeParent': function() {
+            var preList = $(this).prevAll();
+            for (var i = 0; i < preList.length; i++) {
+                $(preList[i]).removeClass('active');
+                $(preList[i]).find('.gouxuan').remove();
+            }
+            var nextList = $(this).nextAll();
+            for (var i = 0; i < nextList.length; i++) {
+                $(nextList[i]).removeClass('active');
+                $(nextList[i]).find('.gouxuan').remove();
+            }
+            $(this).addClass('active');
+            $(this).append(gouxuan);
+            var parent = $(this).attr('data-param');
+            api.sendEvent({
+                name: 'changedParent',
+                extra: {
+                    parent: parent,
+                }
+            });
+            $('.aui-card-list').css('bottom', '-2000px');
+            setTimeout(function() {
+                api.closeFrame({});
+            }, 500);
+        }
+    }
+</script>
+
+</html>

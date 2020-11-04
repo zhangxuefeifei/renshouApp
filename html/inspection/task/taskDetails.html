@@ -1,0 +1,830 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>任务详情页面</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/aui1.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/dialog.css" />
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+        }
+
+        .flex-con {
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .aui-bar-nav {
+            top: 0;
+            z-index: 1;
+            background-color: #fff;
+            color: #333333;
+            font-size: var(--fontsize9);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+        }
+
+        .aui-bar-nav .aui-btn .aui-iconfont {
+            color: #999;
+            font-weight: 900;
+        }
+
+        .aui-tab {
+            width: 100%;
+        }
+
+        .aui-tab-item {
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0vw;
+            color: #333333;
+        }
+
+        .aui-tab-item.aui-active {
+            border-bottom: 0.1rem solid #4f79e7;
+        }
+
+        .aui-tab-item.aui-active,
+        .aui-tab-item.aui-active .aui-iconfont {
+            color: #4f79e7;
+        }
+
+        .aui-tab-item .aui-iconfont {
+            color: #999999;
+            font-weight: 900;
+            margin-left: 0.15rem;
+        }
+
+        .aui-list .aui-list-item-media {
+            width: 3rem
+        }
+
+        .aui-list .aui-list-item-title {
+            font-size: 0.8rem;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #333333;
+        }
+
+        #taskDetails {
+            padding: 0.9rem 0.75rem;
+        }
+
+        #taskDetails .aui-list,
+        #taskDetails .aui-list .aui-list-item {
+            background-image: none;
+        }
+
+        #taskDetails .aui-list {
+            background-color: transparent
+        }
+
+        #taskDetails .aui-list .aui-list-item {
+            padding-left: 0;
+            min-height: 0;
+        }
+
+        #taskDetails .aui-list .aui-list-item:active {
+            background-color: transparent
+        }
+
+        #taskDetails .aui-list .aui-list-item-inner {
+            padding-right: 0;
+            min-height: 0;
+            justify-content: flex-start;
+            padding-bottom: 0.5rem
+        }
+
+        #taskDetails .aui-list .aui-list-item:last-child .aui-list-item-inner {
+            padding-bottom: 0;
+        }
+
+        #taskDetails .aui-list .aui-list-item-title {
+            font-size: 0.7rem;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #333333;
+            height: 100%;
+        }
+
+        #taskDetails .aui-list .aui-list-item-title.titleWidth {
+            width: 5.4rem;
+        }
+
+        #taskDetails .aui-list .aui-list-item-text {
+            font-size: 0.7rem;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+        }
+
+        #toInsp,
+        #insped {
+            padding-top: 0.6rem;
+            background-color: #f5f5f5;
+            height: 100%;
+        }
+
+        #insped .aui-list .aui-list-item-right,
+        .aui-list-item-title-row em {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .toInspect {
+            background: url(../../../image/inspection/red.png);
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+        }
+
+        .complete {
+            background: url(../../../image/inspection/blue.png);
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+        }
+
+        .normal {
+            background: url(../../../image/inspection/green.png);
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+        }
+
+        .error {
+            background: url(../../../image/inspection/orange.png);
+            background-repeat: no-repeat;
+            background-size: 100% 100%;
+        }
+
+        .aui-list .aui-list-item.dashed {
+            border-bottom: dashed 0.05rem #e6e6e6;
+        }
+
+        .taskTitle {
+            width: 70vw;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-break: break-all;
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+        }
+
+        .aui-list .aui-list-item-text {
+            font-size: 0.65rem;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #333333;
+        }
+
+        .text {
+            color: #999999;
+        }
+
+        .status {
+            width: 2.6rem;
+            height: 0.83rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #ffffff;
+        }
+
+        .footer {
+            background-color: #f5f5f5;
+            padding: 0.63rem 1.88rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .footer .aui-btn {
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0.08rem;
+            height: 2.2rem;
+            line-height: inherit;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5rem;
+            width: 35vw;
+        }
+
+        .sureBtn {
+            background: #4f79e8;
+            color: #fff;
+        }
+
+        .sureBtn2 {
+            background: #4f79e8;
+            color: #fff;
+            width: 25vw !important;
+        }
+
+        .daohangBtn {
+            background: transparent;
+            color: #4f79e8;
+            border: solid 1px #4f79e8;
+        }
+
+        .daohangBtn2 {
+            background: transparent;
+            color: #4f79e8;
+            border: solid 1px #4f79e8;
+            width: 25vw !important;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrap" class="flex-wrap flex-vertical">
+        <header class="aui-bar aui-bar-nav aui-border-b" id="header">
+            <div class="aui-pull-left aui-btn" tapmode data-action="back">
+                <span class="aui-iconfont aui-icon-left"></span>
+            </div>
+            <div class="aui-title">任务详情</div>
+        </header>
+        <div class="aui-tab aui-border-b" id="tab">
+            <div class="aui-tab-item aui-active">基础信息</div>
+            <div class="aui-tab-item">待巡点</div>
+            <div class="aui-tab-item">已巡点</div>
+            <div class="aui-tab-item">路径</div>
+        </div>
+        <div class="flex-con">
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/diy/public.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/aui-tab.js"></script>
+<script type="text/javascript" src="../../../script/aui-dialog.js"></script>
+<script type="text/javascript" src="../../../script/diy/template.js"></script>
+<script type="text/template" id="btnTpl">
+    {{if TaskStatus != 4 && TaskStatus != 5}}
+    <div class="footer" id="footer">
+        {{if TaskStatus == 1 || TaskStatus == 3}}
+        <div class="aui-btn daohangBtn2" tapmode data-action="pauseTask">
+            暂停
+        </div>
+        <div class="aui-btn daohangBtn2" tapmode data-action="closeTask">
+            关闭
+        </div>
+        <div class="aui-btn sureBtn2" tapmode data-action="completeTask">
+            完成
+        </div>
+        {{/if}} {{if TaskStatus == 0}}
+        <div class="aui-btn daohangBtn" tapmode data-action="startTask">
+            启动
+        </div>
+        <div class="aui-btn sureBtn" tapmode data-action="closeTask">
+            关闭
+        </div>
+        {{/if}} {{if TaskStatus == 2}}
+        <div class="aui-btn daohangBtn" tapmode data-action="restartTask">
+            重启
+        </div>
+        <div class="aui-btn sureBtn" tapmode data-action="closeTask">
+            关闭
+        </div>
+        {{/if}}
+    </div>
+    {{/if}}
+</script>
+<script type="text/template" id="taskDetailsTpl">
+    <section id="taskDetails">
+        <ul class="aui-list">
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-title">任务名称：</div>
+                    <div class="aui-list-item-text">{{item.taskName}}</div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-title">任务状态：</div>
+                    <div class="aui-list-item-text">{{item.taskStatusString}}</div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-title">任务负责人：</div>
+                    <div class="aui-list-item-text">{{item.personInChargeName}}</div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-title">预计开始时间：</div>
+                    <div class="aui-list-item-text">{{item.planBeginTime}}</div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-title">预计结束时间：</div>
+                    <div class="aui-list-item-text">{{item.planEndTime}}</div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-title">实际结束时间：</div>
+                    <div class="aui-list-item-text">{{if item.endTime == null}}暂无{{else}}{{item.endTime}}{{/if}}</div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-title">暂停时长：</div>
+                    <div class="aui-list-item-text">{{item.suspendTimeString}}</div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-title">任务类别：</div>
+                    <div class="aui-list-item-text">{{item.taskTypeString}}</div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-title">巡检线路：</div>
+                    <div class="aui-list-item-text">{{item.routeName}}</div>
+                </div>
+            </li>
+            <li class="aui-list-item">
+                <div class="aui-list-item-inner">
+                    <div class="aui-list-item-title titleWidth">任务备注：</div>
+                    <div class="aui-list-item-text">{{item.taskRemark}}
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </section>
+</script>
+<script type="text/template" id="toInspTpl">
+    <section id="toInsp">
+        <ul class="aui-list aui-media-list">
+            {{each items value i}} {{if value.inspectionStatus == 0}} {{if TaskStatus == 1 || TaskStatus == 3}}
+            <li class="aui-list-item aui-list-item-middle" data-param="{{value}}" tapmode data-action="openEditEquipment">
+                {{else}}
+                <li class="aui-list-item aui-list-item-middle open-win" win='./EquipmentPointDetails' param="{{value}}">
+                    {{/if}}
+                    <div class="aui-media-list-item-inner">
+                        <div class="aui-list-item-inner">
+                            <div class="aui-list-item-text">
+                                <div class="aui-list-item-title taskTitle">{{value.deviceName}}（{{value.deviceCode}}）</div>
+                                <div class="aui-list-item-right">
+                                    <div class="status toInspect">
+                                        待巡检
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+                {{/if}} {{/each}}
+        </ul>
+    </section>
+</script>
+<script type="text/template" id="inspedTpl">
+    <section id="insped">
+        <ul class="aui-list aui-media-list">
+            {{each items value i}} {{if value.inspectionStatus == 1}}
+            <li class="aui-list-item aui-list-item-middle open-win" win='./EquipmentPointDetails' param='{{value}}'>
+                <div class="aui-media-list-item-inner">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-list-item-text">
+                            <div class="aui-list-item-title taskTitle">{{value.deviceName}}（{{value.deviceCode}}）</div>
+                            <div class="aui-list-item-right">
+                                <div class="status complete">
+                                    已巡检
+                                </div>
+                                {{if value.deviceStatus == 0}}
+                                <div class="status normal">
+                                    {{value.deviceStatusString}}
+                                </div>
+                                {{/if}} {{if value.deviceStatus == 1}}
+                                <div class="status normal">
+                                    {{value.deviceStatusString}}
+                                </div>
+                                {{/if}} {{if value.deviceStatus == 2}}
+                                <div class="status error">
+                                    {{value.deviceStatusString}}
+                                </div>
+                                {{/if}}
+                            </div>
+                        </div>
+                        <div class="aui-list-item-text">
+                            <span>巡检时间：<span class="text">{{value.inspectionTime}}</span></span>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            {{/if}} {{/each}}
+        </ul>
+    </section>
+</script>
+<script type="text/javascript">
+    var taskInfo;
+    apiready = function() {
+        api.addEventListener({
+            name: 'changedFontSize'
+        }, function(ret, err) {
+            if (ret) {
+                changeFontSize();
+            }
+        });
+        api.parseTapmode();
+        var header = $api.byId('header');
+        var tab = $api.byId('tab');
+        // 实现沉浸式状态栏效果
+        $api.fixStatusBar(header);
+        headerH = $api.offset(header).h;
+        tabH = $api.offset(tab).h;
+        taskId = api.pageParam.id;
+        fnReady();
+        getTaskInfo();
+        isLogin = $api.getStorage('loginInsepection');
+        api.addEventListener({
+            name: 'refreshTaskDetails'
+        }, function(ret, err) {
+            if (ret) {
+                getTaskInfo();
+            }
+        });
+        aMap = api.require('aMap');
+        aMap.open({
+            rect: {
+                x: 20,
+                y: headerH + 20 + tabH,
+                w: api.winWidth - 40,
+                h: 300
+            },
+            showUserLocation: true,
+            zoomLevel: 16,
+            fixedOn: api.frameName,
+            fixed: true,
+            showsAccuracyRing: false
+        }, function(ret, err) {
+            if (ret.status) {
+                aMap.setMapAttr({
+                    overlookEnabled: false,
+                    rotateEnabled: false
+                });
+            }
+        });
+        aMap.hide();
+    };
+
+    var actionList = {
+        'back': function() {
+            api.closeWin();
+        },
+        'openEditEquipment': function() {
+            var data = JSON.parse($(this).attr('data-param'));
+            api.openWin({
+                name: 'editEquipment',
+                url: './editEquipment.html',
+                pageParam: {
+                    id: data.id
+                }
+            });
+        },
+        'startTask': function() {
+            var taskData = {
+                id: taskId,
+                isStartWork: true
+            }
+            var that = this;
+            if (isLogin) {
+                fnPost('services/GISInspection/Task/StartTask', {
+                    body: JSON.stringify(taskData)
+                }, 'application/json', true, false, function(ret, err) {
+                    if (ret && ret.success) {
+                        getTaskInfo();
+                        api.sendEvent({
+                            name: 'refreshMyTaskList',
+                            extra: {
+                                taskId: taskId,
+                                type: 'start'
+                            }
+                        });
+                    }
+                })
+            } else {
+                api.toast({
+                    msg: '请先在巡检首页登陆上线！',
+                    duration: 2000,
+                    location: 'top'
+                });
+            }
+        },
+        'pauseTask': function() {
+            var that = this;
+            fnPost('services/GISInspection/Task/PauseTask', {
+                body: JSON.stringify([taskId])
+            }, 'application/json', true, false, function(ret, err) {
+                if (ret && ret.success) {
+                    getTaskInfo();
+                    api.sendEvent({
+                        name: 'refreshMyTaskList',
+                        extra: {
+                            taskId: taskId,
+                            type: 'pause'
+                        }
+                    });
+                }
+            })
+        },
+        'closeTask': function() {
+            var that = this;
+            var taskData = {
+                closingReason: "",
+                id: taskId
+            }
+            var dialog = new auiDialog();
+            dialog.alert({
+                title: '确定关闭任务吗？',
+                buttons: ['确定', '取消']
+            }, function(ret) {
+                if (ret.buttonIndex == 1) {
+                    fnPost('services/GISInspection/Task/CloseTask', {
+                        body: JSON.stringify(taskData)
+                    }, 'application/json', true, false, function(ret, err) {
+                        if (ret && ret.success) {
+                            getTaskInfo();
+                            api.sendEvent({
+                                name: 'refreshMyTaskList',
+                                extra: {
+                                    taskId: taskId,
+                                    type: 'close'
+                                }
+                            });
+                        }
+                    })
+                }
+            })
+
+        },
+        'completeTask': function() {
+            var that = this;
+            fnPost('services/GISInspection/Task/CompleteTask?id=' + taskId + '', {
+                body: JSON.stringify({})
+            }, 'application/json', true, false, function(ret, err) {
+                if (ret && ret.success) {
+                    getTaskInfo();
+                    api.sendEvent({
+                        name: 'refreshMyTaskList',
+                        extra: {
+                            taskId: taskId,
+                            type: 'complete'
+                        }
+                    });
+                }
+            })
+        },
+        'restartTask': function() {
+            var taskData = {
+                id: taskId,
+                isStartWork: true
+            }
+            var that = this;
+            if (isLogin) {
+                fnPost('services/GISInspection/Task/RestartTask', {
+                    body: JSON.stringify(taskData)
+                }, 'application/json', true, false, function(ret, err) {
+                    if (ret && ret.success) {
+                        getTaskInfo();
+                        api.sendEvent({
+                            name: 'refreshMyTaskList',
+                            extra: {
+                                taskId: taskId,
+                                type: 'restart'
+                            }
+                        });
+                    }
+                })
+            } else {
+                api.toast({
+                    msg: '请先在巡检首页登陆上线！',
+                    duration: 2000,
+                    location: 'top'
+                });
+            }
+        }
+    }
+
+    var activeIndex = 1;
+
+    var tab = new auiTab({
+        element: document.getElementById("tab"),
+    }, function(ret) {
+        if (ret.index == 1) {
+            activeIndex = 1;
+            aMap.hide();
+            setInfo();
+        } else if (ret.index == 2) {
+            activeIndex = 2;
+            aMap.hide();
+            setInfo();
+        } else if (ret.index == 3) {
+            activeIndex = 3;
+            aMap.hide();
+            setInfo();
+        } else if (ret.index == 4) {
+            activeIndex = 4;
+            aMap.show();
+            setInfo();
+        }
+    })
+
+    function getTaskInfo() {
+        fnGet('services/GISInspection/Task/GetTaskById?id=' + taskId + '', {}, false, function(ret, err) {
+            if (ret && ret.success) {
+                taskInfo = ret.result;
+                taskInfo.basicInfo.planBeginTime = taskInfo.basicInfo.planBeginTime.replace('T', ' ');
+                taskInfo.basicInfo.planEndTime = taskInfo.basicInfo.planEndTime.replace('T', ' ');
+                if (taskInfo.basicInfo.endTime != null) {
+                    taskInfo.basicInfo.endTime = taskInfo.basicInfo.endTime.replace('T', ' ');
+                }
+                for (var i = 0; i < taskInfo.deviceInfos.length; i++) {
+                    var time = taskInfo.deviceInfos[i].inspectionTime;
+                    if (time != null) {
+                        taskInfo.deviceInfos[i].inspectionTime = time.replace('T', ' ');
+                    }
+                }
+                setInfo();
+            }
+        })
+    }
+
+    function setInfo() {
+        $('.flex-con').html('');
+        $('#footer').remove();
+        if (activeIndex == 1) {
+            if (taskInfo.basicInfo != undefined) {
+                var list = {
+                    item: taskInfo.basicInfo
+                }
+                var str = template('taskDetailsTpl', list);
+                $('.flex-con').html(str);
+            } else {
+                $('.flex-con').html('');
+                api.toast({
+                    msg: '暂时没有数据！',
+                    duration: 2000,
+                    location: 'top'
+                });
+            }
+        } else if (activeIndex == 2) {
+            if (taskInfo.deviceInfos != undefined && taskInfo.basicInfo != undefined) {
+                var list = {
+                    items: taskInfo.deviceInfos,
+                    TaskStatus: taskInfo.basicInfo.taskStatus
+                }
+                var str = template('toInspTpl', list);
+                $('.flex-con').html(str);
+            } else {
+                $('.flex-con').html('');
+                api.toast({
+                    msg: '暂时没有数据！',
+                    duration: 2000,
+                    location: 'top'
+                });
+            }
+        } else if (activeIndex == 3) {
+            if (taskInfo.deviceInfos != undefined) {
+                var list = {
+                    items: taskInfo.deviceInfos
+                }
+                var str = template('inspedTpl', list);
+                $('.flex-con').html(str);
+            } else {
+                $('.flex-con').html('');
+                api.toast({
+                    msg: '暂时没有数据！',
+                    duration: 2000,
+                    location: 'top'
+                });
+            }
+        } else if (activeIndex == 4) {
+            if (taskInfo.routeInfo != undefined) {
+                var planPoints = [];
+                var usePoints = [];
+                var start = [];
+                if (taskInfo.routeInfo.planPoints != null) {
+                    planPoints = taskInfo.routeInfo.planPoints.split(';');
+                }
+                if (taskInfo.routeInfo.usePoints != null) {
+                    usePoints = taskInfo.routeInfo.usePoints.split(';');
+                }
+                if (taskInfo.routeInfo.startPoint != null) {
+                    start = taskInfo.routeInfo.startPoint.split(',');
+                }
+                var startPoint = {
+                    lon: 0,
+                    lat: 0
+                }
+                if (start.length != 0) {
+                    startPoint = {
+                        lon: parseFloat(start[0]),
+                        lat: parseFloat(start[1])
+                    }
+                }
+                var planPointsData = [];
+                var usePointsData = [];
+                for (var i = 0; i < planPoints.length; i++) {
+                    if (planPoints[i] != "") {
+                        var plan = planPoints[i].split(',');
+                        var data = {
+                            lon: parseFloat(plan[0]),
+                            lat: parseFloat(plan[1])
+                        };
+                        if (data.lon != 0 && data.lat != 0) {
+                            planPointsData.push(data)
+                        }
+                    }
+                }
+                for (var i = 0; i < usePoints.length; i++) {
+                    if (usePoints[i] != "") {
+                        var use = usePoints[i].split(',');
+                        var data = {
+                            lon: parseFloat(use[0]),
+                            lat: parseFloat(use[1])
+                        };
+                        if (data.lon != 0 && data.lat != 0) {
+                            usePointsData.push(data)
+                        }
+                    }
+                }
+                if (startPoint.lon != 0 && startPoint.lat != 0) {
+                    aMap.setCenter({
+                        coords: {
+                            lon: startPoint.lon,
+                            lat: startPoint.lat
+                        },
+                        animation: true
+                    });
+                }
+                aMap.addLine({
+                    id: 1,
+                    styles: {
+                        type: 'arrow',
+                        borderColor: '#217CFA',
+                        borderWidth: 18,
+                        lineDash: false,
+                        strokeImg: ''
+                    },
+                    points: planPointsData
+                });
+                aMap.addLine({
+                    id: 2,
+                    styles: {
+                        type: 'arrow',
+                        borderColor: '#FFFF00',
+                        borderWidth: 18,
+                        lineDash: false,
+                        strokeImg: ''
+                    },
+                    points: usePointsData
+                });
+            } else {
+                $('.flex-con').html('');
+                api.toast({
+                    msg: '暂时没有数据！',
+                    duration: 2000,
+                    location: 'top'
+                });
+                aMap.hide();
+            }
+        }
+        var btnList = {
+            TaskStatus: taskInfo.basicInfo.taskStatus
+        }
+        var btnStr = template('btnTpl', btnList);
+        $('.flex-con').after(btnStr);
+        operationDom();
+        fnReady();
+        api.parseTapmode();
+    }
+</script>
+
+</html>

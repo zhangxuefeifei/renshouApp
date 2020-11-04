@@ -1,0 +1,942 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>公司经营管理统计页面</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/aui1.css" />
+    <link rel=stylesheet type=text/css href=../../../css/rolldate.css />
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #F0F0F0;
+            -webkit-box-orient: vertical;
+            -webkit-flex-flow: column;
+            flex-flow: column;
+            display: flex;
+            overflow-x: hidden;
+        }
+
+        .aui-bar-nav {
+            top: 0;
+            z-index: 1;
+            background-color: #0c9ff4;
+            color: #FFF;
+            font-size: var(--fontsize9);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+        }
+
+        .aui-bar-nav .aui-btn .aui-iconfont {
+            color: #FFF;
+            font-weight: 900;
+        }
+
+        .aui-tab {
+            width: 100%;
+            border-bottom: solid 0.03rem #e6e6e6;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .aui-tab-item {
+            font-size: var(--fontsize7);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0vw;
+            color: #333333;
+            min-width: 18.75vw;
+        }
+
+        .aui-tab-item.aui-active {
+            border-bottom: 0.05rem solid #0c9ff4;
+        }
+
+        .aui-tab-item.aui-active,
+        .aui-tab-item.aui-active .aui-iconfont {
+            color: #0c9ff4;
+        }
+
+        .aui-tab-item .aui-iconfont {
+            color: #999999;
+            font-weight: 900;
+            margin-left: 0.15rem;
+        }
+
+        .aui-card-list-header {
+            padding: 4.13vw 3.2vw;
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0vw;
+            color: #262626;
+        }
+
+        .timeIcon {
+            width: 4.27vw;
+            height: 4.27vw;
+            background-image: url('../../../image/decision/time.png');
+            background-size: 100% 100%;
+        }
+
+        .aui-card-list-header input {
+            width: 74.67vw;
+            height: 7.73vw;
+            border-radius: 0.4vw;
+            border: solid 1px #dcdcdc;
+            font-size: var(--fontsize7);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0.4vw;
+            color: #262626;
+            padding: 2vw 3.33vw;
+        }
+
+        .downArrow {
+            width: 2.93vw;
+            height: 1.6vw;
+            position: absolute;
+            top: 7.2vw;
+            right: 6.27vw;
+            background-image: url('../../../image/decision/downArrow.png');
+            background-size: 100% 100%;
+        }
+
+        .close {
+            width: 4.0vw;
+            height: 4.0vw;
+            position: absolute;
+            top: 6vw;
+            right: 12vw;
+            background-image: url('../../../image/message_frame/close2.png');
+            background-size: 100% 100%;
+        }
+
+        section {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .aui-card-list {
+            border-radius: 1.33vw;
+        }
+
+        .line {
+            width: 0.8vw;
+            height: 4vw;
+            background-color: #0c9ff4;
+            margin-right: 2vw;
+        }
+
+        section .aui-card-list-header {
+            padding: 2.67vw 3.2vw;
+        }
+
+        .aui-card-list-user-name {
+            justify-content: space-between;
+            font-size: var(--fontsize7);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0vw;
+            color: #0c9ff4;
+        }
+
+        .aui-card-list-user-name .left {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        .aui-card-list-user-name a {
+            color: #0c9ff4;
+            float: right;
+        }
+
+        .noData {
+            width: 100%;
+            height: 30vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--fontsize7);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0vw;
+            color: #0c9ff4;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="aui-bar aui-bar-nav" id="header">
+        <div class="aui-pull-left aui-btn" tapmode data-action='back'>
+            <span class="aui-iconfont aui-icon-left"></span>
+        </div>
+        <div class="aui-title">公司经营管理统计</div>
+    </header>
+    <div class="aui-tab" id="tab">
+        <div class="aui-tab-item aui-active">水量统计</div>
+        <div class="aui-tab-item">营收统计</div>
+        <div class="aui-tab-item">费用统计</div>
+        <div class="aui-tab-item">工单统计</div>
+    </div>
+
+    <div class="aui-card-list">
+        <div class="aui-card-list-header">
+            <div class="timeIcon"></div>时间：
+            <input tapmode placeholder="请选择时间" type="text" name="input_date" id="Time" readonly="readonly" />
+            <div class="downArrow"></div>
+        </div>
+    </div>
+
+    <section id="water">
+        <div class="aui-card-list">
+
+            <div class="aui-card-list-header aui-card-list-user">
+                <div class="aui-card-list-user-name">
+                    <div class="left">
+                        <div class="line">
+                        </div>全年供水量和售水量统计
+                    </div>
+                </div>
+            </div>
+
+            <div class="aui-card-list-content-padded">
+                <div id="waterEchart" style="width:90vw;height:150vw">
+                </div>
+                <div class="noData">
+                    暂无数据！
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="revenue">
+        <div class="aui-card-list">
+
+            <div class="aui-card-list-header aui-card-list-user">
+                <div class="aui-card-list-user-name">
+                    <div class="left">
+                        <div class="line">
+                        </div>全年应收费用与实收费用统计
+                    </div>
+                </div>
+            </div>
+
+            <div class="aui-card-list-content-padded">
+                <div id="revenueEchart" style="width:90vw;height:150vw">
+                </div>
+                <div class="noData">
+                    暂无数据！
+                </div>
+            </div>
+
+        </div>
+        <div class="aui-card-list">
+
+            <div class="aui-card-list-header aui-card-list-user">
+                <div class="aui-card-list-user-name">
+                    <div class="left">
+                        <div class="line">
+                        </div>全年实收率
+                    </div>
+                </div>
+            </div>
+
+            <div class="aui-card-list-content-padded">
+                <div id="revenueEchart1" style="width:90vw;height:100vw">
+                </div>
+                <div class="noData">
+                    暂无数据！
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="cost">
+        <div class="aui-card-list">
+
+            <div class="aui-card-list-header aui-card-list-user">
+                <div class="aui-card-list-user-name">
+                    <div class="left">
+                        <div class="line">
+                        </div>全年营业费用与工程费用统计
+                    </div>
+                </div>
+            </div>
+
+            <div class="aui-card-list-content-padded">
+                <div id="costEchart" style="width:90vw;height:150vw">
+                </div>
+                <div class="noData">
+                    暂无数据！
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="workOrder">
+        <div class="aui-card-list">
+
+            <div class="aui-card-list-header aui-card-list-user">
+                <div class="aui-card-list-user-name">
+                    <div class="left">
+                        <div class="line">
+                        </div>全年工单和话务量统计
+                    </div>
+                </div>
+            </div>
+
+            <div class="aui-card-list-content-padded">
+                <div id="workOrderEchart" style="width:90vw;height:150vw">
+                </div>
+                <div class="noData">
+                    暂无数据！
+                </div>
+            </div>
+
+        </div>
+
+        <div class="aui-card-list">
+
+            <div class="aui-card-list-header aui-card-list-user">
+                <div class="aui-card-list-user-name">
+                    <div class="left">
+                        <div class="line">
+                        </div>全年工单和话务量统计
+                    </div>
+                </div>
+            </div>
+
+            <div class="aui-card-list-content-padded">
+                <div id="trafficEchart" style="width:90vw;height:80vw">
+                </div>
+                <div class="noData">
+                    暂无数据！
+                </div>
+            </div>
+
+        </div>
+    </section>
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/diy/public.js"></script>
+<script type="text/javascript" src="../../../script/aui-tab.js"></script>
+<script type="text/javascript" src="../../../script/rolldate.js"></script>
+<script type="text/javascript" src="../../../script/echarts.min.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/moment.js"></script>
+<script type="text/javascript">
+    document.body.addEventListener('touchstart', function() {});
+    apiready = function() {
+        api.addEventListener({
+            name: 'changedFontSize'
+        }, function(ret, err) {
+            if (ret) {
+                changeFontSize();
+            }
+        });
+        api.parseTapmode();
+        var header = $api.byId('header');
+        // 实现沉浸式状态栏效果
+        $api.fixStatusBar(header);
+        headerH = $api.offset(header).h;
+        fnReady();
+        $('#water').show();
+        $('#waterEchart').hide();
+        $('#revenue').hide();
+        $('#cost').hide();
+        $('#workOrder').hide();
+        $('.noData').show();
+        getWater();
+    };
+    var actionList = {
+        'back': function() {
+            api.closeWin();
+        },
+    }
+
+    var index = 1;
+
+    var tab = new auiTab({
+        element: document.getElementById("tab"),
+    }, function(ret) {
+        if (ret.index == 1) {
+            index = 1;
+            getWater();
+            $('#water').show();
+            $('#revenue').hide();
+            $('#cost').hide();
+            $('#workOrder').hide();
+        } else if (ret.index == 2) {
+            index = 2;
+            getRevenue();
+            $('#water').hide();
+            $('#revenue').show();
+            $('#cost').hide();
+            $('#workOrder').hide();
+        } else if (ret.index == 3) {
+            index = 3;
+            getCost();
+            $('#water').hide();
+            $('#revenue').hide();
+            $('#cost').show();
+            $('#workOrder').hide();
+        } else if (ret.index == 4) {
+            index = 4;
+            getWorkOrder();
+            $('#water').hide();
+            $('#revenue').hide();
+            $('#cost').hide();
+            $('#workOrder').show();
+        }
+    });
+
+    TimeInit('Time');
+
+    var Time = "";
+    //时间选择器
+    function TimeInit(inputId) {
+        var el = '#' + inputId;
+        var format = "YYYY";
+        var dateError = false;
+        new rolldate.Date({
+            el: el,
+            format: format,
+            beginYear: 2000,
+            endYear: 2100,
+            tapBefore: function(el) {
+                // console.log('插件开始触发');
+            },
+            moveEnd: function(el, iscroll) {
+                // console.log('滚动结束');
+            },
+            confirmBefore: function(el, date) {
+                Time = date;
+                Time = Time.replaceAll('-', '');
+                var closeHtml = '<div class="close" tapmode onclick="clearTime(&quot;' + inputId + '&quot;)"></div>';
+                $('#' + inputId + '').parent().append(closeHtml);
+                if (index == 1) {
+                    getWater();
+                } else if (index == 2) {
+                    getRevenue();
+                } else if (index == 3) {
+                    getCost();
+                } else if (index == 4) {
+                    getWorkOrder();
+                }
+            },
+            confirmEnd: function(el, date) {}
+        })
+    }
+
+    //点击关闭图标删除时间
+    function clearTime(inputId) {
+        $('#' + inputId + '').val("");
+        $('#' + inputId + '').parent().find('.close').remove();
+        Time = "";
+        if (index == 1) {
+            getWater();
+        } else if (index == 2) {
+            getRevenue();
+        } else if (index == 3) {
+            getCost();
+        } else if (index == 4) {
+            getWorkOrder();
+        }
+    }
+
+    //水量统计
+    function getWater() {
+        var url = 'services/Report/OrgYearStatistics/GetWaterQuantityStatistics';
+        if (Time != "") {
+            url = url + '?year=' + Time + '';
+        } else {
+            var time = moment().format('YYYY');
+            url = url + '?year=' + time + '';
+        }
+        fnGet(url, {}, false, function(ret, err) {
+            if (ret) {
+                if (ret.success) {
+                    var nameData = [];
+                    var saledata = [];
+                    var providedata = [];
+                    var autoHeight = 0;
+                    if (ret.result != null) {
+                        $('#waterEchart').show();
+                        $('#waterEchart').next('.noData').hide();
+                        nameData = ret.result.histogram.nameList;
+                        for (var i = 0; i < nameData.length; i++) {
+                            nameData[i] = nameData[i].trim();
+                        }
+                        saledata = ret.result.histogram.dataList[0].reverse();
+                        providedata = ret.result.histogram.dataList[1].reverse();
+                        autoHeight = nameData.length * 70 + 50;
+                    } else {
+                        $('#waterEchart').hide();
+                        $('#waterEchart').next('.noData').show();
+                    }
+                    var chartName = echarts.init(document.getElementById("waterEchart"));
+                    option = {
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'line',
+
+                            }
+                        },
+                        grid: {
+                            left: '3%',
+                            right: '15%',
+                            bottom: 10,
+                            top: 30,
+                            containLabel: true
+                        },
+                        color: ['#2BB0FD', '#10E1C4', '#7FD709', '#FDEF4D', '#FDC963', '#FFA75D', '#FD7A72', '#FE4747', '#FF61D2', '#B962FE', '#5B5AE9', '#2A8AFB'],
+                        legend: {
+                            orient: 'horizontal',
+                            icon: 'circle',
+                            x: 'right',
+                            data: ['供水量', '售水量']
+                        },
+                        xAxis: [{
+                            type: 'value',
+                            name: '(吨)',
+                            axisLabel: {
+                                rotate: 40
+                            },
+                        }],
+                        yAxis: [{
+                            type: 'category',
+                            data: ['12月', '11月', '10月', '9月', '8月', '7月', '6月', '5月', '4月', '3月', '2月', '1月'],
+                            axisLabel: {
+                                interval: 0,
+                                formatter: function(value) {
+                                    if (value.length > 5) {
+                                        return value.substring(0, 5) + "...";
+                                    } else {
+                                        return value;
+                                    }
+                                }
+                            }
+                            // axisPointer: {
+                            //     type: 'shadow'
+                            // }
+                        }],
+                        series: [{
+                            name: '供水量',
+                            type: 'bar',
+                            data: saledata
+                        }, {
+                            name: '售水量',
+                            type: 'bar',
+                            data: providedata
+                        }]
+                    };
+                    chartName.setOption(option);
+                }
+            }
+        })
+    }
+
+    //营收统计
+    function getRevenue() {
+        var url = 'services/Report/OrgYearStatistics/GetIncomeComparisonStatistics';
+        if (Time != "") {
+            url = url + '?year=' + Time + '';
+        } else {
+            var time = moment().format('YYYY');
+            url = url + '?year=' + time + '';
+        }
+        fnGet(url, {}, false, function(ret, err) {
+            if (ret) {
+                if (ret.success) {
+                    var nameData = [];
+                    var saledata = [];
+                    var providedata = [];
+                    var autoHeight = 0;
+                    var pieChart;
+                    if (ret.result != null) {
+                        $('#revenueEchart').show();
+                        $('#revenueEchart1').show();
+                        $('#revenueEchart').next('.noData').hide();
+                        $('#revenueEchart1').next('.noData').hide();
+                        nameData = ret.result.histogram.nameList;
+                        for (var i = 0; i < nameData.length; i++) {
+                            nameData[i] = nameData[i].trim();
+                        }
+                        saledata = ret.result.histogram.dataList[0].reverse();
+                        providedata = ret.result.histogram.dataList[1].reverse();
+                        autoHeight = nameData.length * 70 + 50;
+                        pieChart = ret.result.pieChart;
+                    } else {
+                        $('#revenueEchart').hide();
+                        $('#revenueEchart1').hide();
+                        $('#revenueEchart').next('.noData').show();
+                        $('#revenueEchart1').hide();
+                    }
+                    var chartName = echarts.init(document.getElementById("revenueEchart"));
+                    option = {
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'line',
+
+                            }
+                        },
+                        grid: {
+                            left: '3%',
+                            right: '15%',
+                            bottom: 10,
+                            top: 30,
+                            containLabel: true
+                        },
+                        color: ['#2BB0FD', '#10E1C4', '#7FD709', '#FDEF4D', '#FDC963', '#FFA75D', '#FD7A72', '#FE4747', '#FF61D2', '#B962FE', '#5B5AE9', '#2A8AFB'],
+                        legend: {
+                            orient: 'horizontal',
+                            icon: 'circle',
+                            x: 'right',
+                            data: ['应收', '实收']
+                        },
+                        xAxis: [{
+                            type: 'value',
+                            name: '(元)',
+                            axisLabel: {
+                                rotate: 40
+                            },
+                        }],
+                        yAxis: [{
+                            type: 'category',
+                            data: ['12月', '11月', '10月', '9月', '8月', '7月', '6月', '5月', '4月', '3月', '2月', '1月'],
+                            axisLabel: {
+                                interval: 0,
+                                formatter: function(value) {
+                                    if (value.length > 5) {
+                                        return value.substring(0, 5) + "...";
+                                    } else {
+                                        return value;
+                                    }
+                                }
+                            }
+                        }],
+                        series: [{
+                            name: '应收',
+                            type: 'bar',
+                            data: saledata
+                        }, {
+                            name: '实收',
+                            type: 'bar',
+                            data: providedata
+                        }]
+                    };
+                    chartName.setOption(option);
+
+                    var chartName1 = echarts.init(document.getElementById("revenueEchart1"));
+                    var option1 = {
+                        color: ['#2BB0FD', '#10E1C4', '#7FD709', '#FDEF4D', '#FDC963', '#FFA75D', '#FD7A72', '#FE4747', '#FF61D2', '#B962FE', '#5B5AE9', '#2A8AFB'],
+                        tooltip: {
+                            trigger: 'item',
+                            formatter: "{b} : {c} ({d}%)",
+                            position: 'top'
+                        },
+                        // legend: { // orient: 'vertical', // left: 'left', // data: ['实收','未收'], // formatter:function(name){ // for(var i=0;i<pieChart.length;i++){ // if(name==p ieChart[i].name){ // return name+ ':'+pieChart[i].name.value; // } // } // } // },
+                        series: [{
+                            type: 'pie',
+                            radius: '40%',
+                            center: ['50%', '50%'],
+                            label: {
+                                formatter: '{b}:{d}%'
+                            },
+                            data: pieChart,
+
+                        }]
+                    };
+
+                    chartName1.setOption(option1);
+                }
+            }
+        })
+    }
+
+    //费用统计
+    function getCost() {
+        var url = 'services/Report/OrgYearStatistics/GetEngineeringStatistics';
+        if (Time != "") {
+            url = url + '?year=' + Time + '';
+        } else {
+            var time = moment().format('YYYY');
+            url = url + '?year=' + time + '';
+        }
+        fnGet(url, {}, false, function(ret, err) {
+            if (ret) {
+                if (ret.success) {
+                    var nameData = [];
+                    var saledata = [];
+                    var providedata = [];
+                    var autoHeight = 0;
+                    if (ret.result != null) {
+                        $('#costEchart').show();
+                        $('#costEchart').next('.noData').hide();
+                        nameData = ret.result.histogram.nameList;
+                        for (var i = 0; i < nameData.length; i++) {
+                            nameData[i] = nameData[i].trim();
+                        }
+                        saledata = ret.result.histogram.dataList[0].reverse();
+                        providedata = ret.result.histogram.dataList[1].reverse();
+                        autoHeight = nameData.length * 70 + 50;
+                    } else {
+                        $('#costEchart').hide();
+                        $('#costEchart').next('.noData').show();
+                    }
+                    var chartName = echarts.init(document.getElementById("costEchart"));
+                    option = {
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'line',
+
+                            }
+                        },
+                        grid: {
+                            left: '3%',
+                            right: '15%',
+                            bottom: 10,
+                            top: 30,
+                            containLabel: true
+                        },
+                        color: ['#2BB0FD', '#10E1C4', '#7FD709', '#FDEF4D', '#FDC963', '#FFA75D', '#FD7A72', '#FE4747', '#FF61D2', '#B962FE', '#5B5AE9', '#2A8AFB'],
+                        legend: {
+                            orient: 'horizontal',
+                            icon: 'circle',
+                            x: 'right',
+                            data: ['营业费用', '工程费用']
+                        },
+                        xAxis: [{
+                            type: 'value',
+                            name: '(元)',
+                            axisLabel: {
+                                rotate: 40
+                            },
+                        }],
+                        yAxis: [{
+                            type: 'category',
+                            data: ['12月', '11月', '10月', '9月', '8月', '7月', '6月', '5月', '4月', '3月', '2月', '1月'],
+                            axisLabel: {
+                                interval: 0,
+                                formatter: function(value) {
+                                    if (value.length > 5) {
+                                        return value.substring(0, 5) + "...";
+                                    } else {
+                                        return value;
+                                    }
+                                }
+                            }
+                        }],
+                        series: [{
+                            name: '营业费用',
+                            type: 'bar',
+                            data: saledata
+                        }, {
+                            name: '工程费用',
+                            type: 'bar',
+                            data: providedata
+                        }]
+                    };
+                    chartName.setOption(option);
+                }
+            }
+        })
+    }
+
+    //工单统计
+    function getWorkOrder() {
+        var url = 'services/Report/OrgYearStatistics/GetWorkOrderStatistics';
+        if (Time != "") {
+            url = url + '?year=' + Time + '';
+        } else {
+            var time = moment().format('YYYY');
+            url = url + '?year=' + time + '';
+        }
+        fnGet(url, {}, false, function(ret, err) {
+            if (ret) {
+                if (ret.success) {
+                    var nameData = [];
+                    var saledata = [];
+                    var providedata = [];
+                    var huaData = [];
+                    var saleLineData = [];
+                    var provideLineData = [];
+                    var huaLineData = [];
+                    var autoHeight = 0;
+                    if (ret.result != null) {
+                        $('#workOrderEchart').show();
+                        $('#workOrderEchart').next('.noData').hide();
+                        $('#trafficEchart').show();
+                        $('#trafficEchart').next('.noData').hide();
+                        nameData = ret.result.histogram.nameList;
+                        for (var i = 0; i < nameData.length; i++) {
+                            nameData[i] = nameData[i].trim();
+                        }
+                        var k = 0;
+                        var j = 0;
+                        var l = 0;
+                        saledata = ret.result.histogram.dataList[0];
+                        for (var i = 0; i < saledata.length; i += 3) {
+                            saleLineData[k] = saledata[i] + saledata[i + 1] + saledata[i + 2];
+                            k++;
+                        }
+                        saledata = saledata.reverse();
+                        providedata = ret.result.histogram.dataList[2];
+                        for (var i = 0; i < providedata.length; i += 3) {
+                            provideLineData[j] = providedata[i] + providedata[i + 1] + providedata[i + 2];
+                            j++;
+                        }
+                        providedata = providedata.reverse();
+                        huaData = ret.result.histogram.dataList[1];
+                        for (var i = 0; i < huaData.length; i += 3) {
+                            huaLineData[l] = huaData[i] + huaData[i + 1] + huaData[i + 2];
+                            l++;
+                        }
+                        huaData = huaData.reverse();
+                        autoHeight = nameData.length * 70 + 50;
+                    } else {
+                        $('#workOrderEchart').hide();
+                        $('#workOrderEchart').next('.noData').show();
+                        $('#trafficEchart').hide();
+                        $('#trafficEchart').next('.noData').show();
+                    }
+                    var chartName = echarts.init(document.getElementById("workOrderEchart"));
+                    var trafficchartName = echarts.init(document.getElementById("trafficEchart"));
+                    option = {
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'line',
+
+                            }
+                        },
+                        grid: {
+                            left: '3%',
+                            right: '15%',
+                            bottom: 10,
+                            top: 30,
+                            containLabel: true
+                        },
+                        color: ['#2BB0FD', '#10E1C4', '#7FD709', '#FDEF4D', '#FDC963', '#FFA75D', '#FD7A72', '#FE4747', '#FF61D2', '#B962FE', '#5B5AE9', '#2A8AFB'],
+                        legend: {
+                            orient: 'horizontal',
+                            icon: 'circle',
+                            x: 'right',
+                            data: ['客服工单', '报装工单', '话务量']
+                        },
+                        xAxis: [{
+                            type: 'value',
+                            name: '(个)',
+                            axisLabel: {
+                                rotate: 40
+                            },
+                        }],
+                        yAxis: [{
+                            type: 'category',
+                            data: ['12月', '11月', '10月', '9月', '8月', '7月', '6月', '5月', '4月', '3月', '2月', '1月'],
+                            axisLabel: {
+                                interval: 0,
+                                formatter: function(value) {
+                                    if (value.length > 5) {
+                                        return value.substring(0, 5) + "...";
+                                    } else {
+                                        return value;
+                                    }
+                                }
+                            }
+                        }],
+                        series: [{
+                            name: '客服工单',
+                            type: 'bar',
+                            data: saledata
+                        }, {
+                            name: '报装工单',
+                            type: 'bar',
+                            data: providedata
+                        }, {
+                            name: '话务量',
+                            type: 'bar',
+                            data: huaData
+                        }]
+                    };
+                    trafficoption = {
+                        tooltip: {
+                            trigger: 'axis',
+                            axisPointer: {
+                                type: 'line',
+                            }
+                        },
+                        grid: {
+                            left: '3%',
+                            right: '15%',
+                            bottom: 10,
+                            top: 30,
+                            containLabel: true
+                        },
+                        color: ['#2BB0FD', '#10E1C4', '#7FD709', '#FDEF4D', '#FDC963', '#FFA75D', '#FD7A72', '#FE4747', '#FF61D2', '#B962FE', '#5B5AE9', '#2A8AFB'],
+                        legend: {
+                            orient: 'horizontal',
+                            icon: 'circle',
+                            x: 'right',
+                            data: ['客服工单', '报装工单', '话务量']
+                        },
+                        yAxis: [{
+                            type: 'value',
+                            name: '(个)',
+                        }],
+                        xAxis: [{
+                            type: 'category',
+                            data: ['第一季度', '第二季度', '第三季度', '第四季度'],
+                            axisLabel: {
+                                interval: 0,
+                                formatter: function(value) {
+                                    if (value.length > 5) {
+                                        return value.substring(0, 5) + "...";
+                                    } else {
+                                        return value;
+                                    }
+                                }
+                            }
+                        }],
+                        series: [{
+                            name: '客服工单',
+                            type: 'line',
+                            data: saleLineData
+                        }, {
+                            name: '报装工单',
+                            type: 'line',
+                            data: provideLineData
+                        }, {
+                            name: '话务量',
+                            type: 'line',
+                            data: huaLineData
+                        }]
+                    };
+                    chartName.setOption(option);
+                    trafficchartName.setOption(trafficoption);
+                }
+            }
+        })
+    }
+</script>
+
+</html>

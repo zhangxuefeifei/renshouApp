@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>收藏夹页面</title>
+    <link rel="stylesheet" href="../../../css/api.css">
+    <link rel="stylesheet" href="../../../css/aui.css">
+    <link rel="stylesheet" href="../css/ol.css">
+    <link rel="stylesheet" href="../css/pointpipeinfo.css">
+    <style rel="stylesheet">
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            overflow-y: scroll;
+            /*background:transparent;*/
+        }
+
+        .flex-box {
+            display: flex;
+            flex-direction: column;
+        }
+
+        header.aui-bar-nav {
+            background: transparent;
+            font-size: 0.8rem;
+            font-family: PingFangSC-Semibold, PingFang SC;
+            font-weight: 600;
+            color: #333;
+            position: absolute;
+            top: 0
+        }
+
+        header.aui-bar-nav .aui-btn .aui-iconfont {
+            color: #333;
+            width: 1.2rem;
+            height: 1.2rem;
+            font-weight: bold;
+            border: none;
+        }
+
+        header .aui-icon-left:before {
+            content: url('../image/closeWin.png');
+            width: 1.2rem;
+            height: 1.2rem;
+        }
+
+        .map {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+
+</head>
+
+<body class="flex-box" id='flex-box'>
+    <div class="map" id="map"></div>
+    <header class="aui-bar aui-bar-nav" id='header'>
+        <div class="aui-pull-left aui-btn aui-margin-l-10" onclick="closeWin()" tapmode>
+            <span class="aui-iconfont aui-icon-left"></span>
+        </div>
+        <div class="aui-title"></div>
+    </header>
+    <!--  地图 -->
+    <!-- 管点。管线信息框 -->
+    <div class="point_pipe_mask" tapmode onclick="hidePointOrPipeInfo()">
+    </div>
+    <div class="point_pipe_box">
+    </div>
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/template.js"></script>
+<script type="text/javascript" src="../script/common.js"></script>
+<script type="text/javascript" src="../script/ol-debug.js"></script>
+<script type="text/javascript" src="../script/base64.js"></script>
+<!-- 初始化地图 -->
+<script type="text/javascript" src="../script/initmap.js"></script>
+<script type="text/javascript" src="../script/addordeletelayer.js"></script>
+<script type="text/javascript" src="../script/searchQueryInfomation.js"></script>
+
+<script type="text/javascript" src="../script/coordtransform.js"></script>
+<!-- <script type="text/javascript" src="../script/GISmain.js"></script> -->
+<!-- 管点信息模板 -->
+<script type="text/template" id='pointInfoDemo'>
+    <div class="btns">
+        <!-- <div class='infoDelete' tapmode onclick='goNavHere(this)'></div> -->
+        <div class='navigation' tapmode onclick='gohere()'></div>
+        {{if bookmark}}
+        <div class='hasbookmark' id='pointbookmarkImage' tapmode number='{{pointnumbe}}' name="{{pointtype}}" location="{{location}}" params='{{result}}' onclick='bookmarkPointOrPipeLine(this,"Point","info")'></div>
+        {{else}}
+        <div class='no_bookmark' id='pointbookmarkImage' tapmode number='{{pointnumbe}}' name="{{pointtype}}" location="{{location}}" params='{{result}}' onclick='bookmarkPointOrPipeLine(this,"Point","info")'></div>
+        {{/if}}
+    </div>
+    <div class="aui-row m_t_1rem">
+        <div class="aui-col-xs-12 aui-text-left">管点编号: <span>{{pointnumbe}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"> <span class='dot'></span> 经度: <span>{{lon}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>纬度: <span>{{lat}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>设备类型: <span>{{pointtype}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>高程: <span>{{elevation}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>埋深: <span>{{deep}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>埋设日期: <span>{{buildtime}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>型号: <span>{{unittype}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-12 aui-text-left"><span class='dot'></span>所属道路: <span>{{location}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-12 aui-text-left"><span class='dot'></span>材料厂商: <span>{{firm}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-12 aui-text-left"><span class='dot'></span>所属单位: <span>{{buildunit}}</span></div>
+    </div>
+</script>
+<!-- 管线信息模板 -->
+<script type="text/template" id='pipeInfoDemo'>
+    <div class="btns">
+        <!-- <div tapmode params='{{result}}' onclick='deletePointOrPipeLine(this,"pipeline")'></div>
+      <div tapmode params='{{result}}' onclick='editPointOrPipeLine(this,"pipeline")'></div> -->
+        <div class='navigation' tapmode onclick='gohere()'></div>
+        {{if bookmark}}
+        <div class='hasbookmark' id='linebookmarkImage' tapmode number='{{linenumber}}' name="{{materename}}" location="{{location}}" params='{{result}}' onclick='bookmarkPointOrPipeLine(this,"Line","info")'></div>
+        {{else}}
+        <div class='no_bookmark' id='linebookmarkImage' tapmode number='{{linenumber}}' name="{{materename}}" location="{{location}}" params='{{result}}' onclick='bookmarkPointOrPipeLine(this,"Line","info")'></div>
+        {{/if}}
+    </div>
+    <div class="aui-row m_t_1rem">
+        <div class="aui-col-xs-12 aui-text-left">管线编号: <span>{{linenumber}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>起始编号: <span>{{fromnumber}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>终端编号: <span>{{tonumber}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>起始高程: <span>{{fromelevat}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>终端高程: <span>{{toelevat}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>起始埋深: <span>{{fromdeep}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>终端埋深: <span>{{todeep}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>管线管长: <span>{{length}}&nbsp;&nbsp;米</span></div>
+        {{if stateClass == 1}}
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>状态类别: <span>现有</span></div>
+        {{else if stateClass == 2}}
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>状态类别: <span>废弃</span></div>
+        {{else if stateClass == 3}}
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>状态类别: <span>在建</span></div>
+        {{else}}
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>状态类别: <span>规划</span></div>
+        {{/if}}
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>埋设日期: <span>{{buildtime}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>管线管径: <span>{{unittype}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>管线管材: <span>{{materename}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>埋设类型: <span>{{BuriedType}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>所属单位: <span>{{buildunit}}</span></div>
+        <div class="aui-col-xs-6 aui-text-left"><span class='dot'></span>所属道路: <span>{{location}}</span></div>
+    </div>
+    <div class="aui-row">
+        <div class="aui-col-xs-12 aui-text-left"><span class='dot'></span>材料厂商: <span>{{firm}}</span></div>
+    </div>
+</script>
+
+
+
+<script type="text/javascript">
+    apiready = function() {
+        // 页面初始化，沉浸式等
+        initWindow();
+        // console.log(JSON.parse(api.pageParam.data));
+        // 初始化页面数据。默认显示管点数据
+        initMap();
+        //加载管网数据
+        loadpipe();
+        getPointOrLineInfo();
+
+        // 监听新增收藏
+        api.addEventListener({
+            name: 'addBookMarkSuccess'
+        }, function(ret, err) {
+            if (ret) {
+                var type = ret.value.type;
+                if (type == 'Point') {
+                    $('#pointbookmarkImage').removeClass('no_bookmark').addClass('hasbookmark');
+                } else {
+                    $('#linebookmarkImage').removeClass('no_bookmark').addClass('hasbookmark');
+                }
+            }
+        });
+        // 监听是否按了返回键
+        api.addEventListener({
+            name: 'keyback'
+        }, function(ret, err) {
+          if(ret && ret.keyCode == 4){
+            closeWin();
+          }
+        });
+    }
+
+    function closeWin() {
+        api.closeWin();
+        api.sendEvent({
+            name: 'removeActive',
+        });
+
+    }
+
+    function getPointOrLineInfo() {
+        var params = api.pageParam;
+        queryPointOrLineInfo(params);
+    }
+    //添加管网数据
+    function loadpipe(){
+      pipepoint = new ol.layer.Tile({
+          visible: true,
+          maxResolution: 0.000010728836059570312,
+          source: new ol.source.TileWMS({
+              url: getAppMapSetConfig.wmsCommenUrl,
+              tileLoadFunction: getWMSSourceBySecurity,
+              params: {
+                  'FORMAT': 'image/png',
+                  'VERSION': '1.1.1',
+                  tiled: true,
+                  "LAYERS": getAppMapSetConfig.wmsPointName,
+                  "exceptions": 'application/vnd.ogc.se_inimage',
+                  tilesOrigin: 104.092185974121 + "," + 29.9510860443115
+              }
+          }),
+      });
+      var pipeLine = new ol.layer.Tile({
+          visible: true,
+          maxResolution: 1.194328566955879,
+          source: new ol.source.TileWMS({
+              url: getAppMapSetConfig.wmsCommenUrl,
+              tileLoadFunction: getWMSSourceBySecurity,
+              params: {
+                  'FORMAT': 'image/png',
+                  'VERSION': '1.1.1',
+                  tiled: true,
+                  "LAYERS": getAppMapSetConfig.wmsLineName,
+                  "exceptions": 'application/vnd.ogc.se_inimage',
+                  tilesOrigin: 104.092185974121 + "," + 29.9511852264404
+              }
+          })
+      });
+      map.addLayer(pipepoint);
+      map.addLayer(pipeLine);
+    }
+
+
+    function gohere(){
+      console.log(JSON.stringify(featurecoordinates))
+
+    }
+
+
+
+    // 管点，管线导航
+    function gohere() {
+        var navigator = api.require('navigator');
+
+        if (api.systemType == 'ios') {
+            MapNavigation(navigator, 'appleMap');
+        } else {
+            ifInstalled(navigator, 'bMap');
+        }
+    }
+    // 判断是否安装了其他地图
+    function ifInstalled(navigator, mapName) {
+        // ifInstalledNumber=0;
+        navigator.installed({
+            target: mapName
+        }, function(ret, err) {
+            if (ret.status) {
+                MapNavigation(navigator, mapName);
+            } else {
+                ifInstalled(navigator, 'aMap');
+            }
+        });
+    }
+    // 打开其他地图app进行导航
+    function MapNavigation(navigator, type) {
+        var startLon = null,
+            startLat = null,
+            startName = null,
+            endName = null;
+        var bMap = api.require('bMap');
+        bMap.getLocation({
+            accuracy: '100m',
+            autoStop: true,
+            filter: 1
+        }, function(ret, err) {
+            if (ret.status) {
+                startLon = ret.lon;
+                startLat = ret.lat;
+                bMap.getNameFromCoords({
+                    lon: startLon,
+                    lat: startLat
+                }, function(ret, err) {
+                    if (ret.status) {
+                        startName = ret.address; //获取起点的坐标名字
+                        var wgs84togcj02 = coordtransform.wgs84togcj02(parseFloat(featurecoordinates.lon), parseFloat(featurecoordinates.lat));  //高德地图
+                        var gcj02tobd09 = coordtransform.gcj02tobd09(wgs84togcj02[0], wgs84togcj02[1]);   //百度
+                        bMap.getNameFromCoords({
+                            lon: wgs84togcj02[0],
+                            lat: wgs84togcj02[1]
+                        }, function(ret, err) {
+                            if (ret.status) {
+                                endName = ret.address;
+
+                                if (type == 'bMap') {
+                                    var mapInfoDatas = {
+                                        start: { // 起点信息.
+                                            lon: startLon, // 经度.
+                                            lat: startLat, // 纬度.
+                                            name: startName
+                                        },
+                                        end: { // 终点信息.
+                                            lon: gcj02tobd09[0], // 经度
+                                            lat: gcj02tobd09[1], // 纬度
+                                            name: endName
+                                        },
+                                        mode: 'driving'
+                                    };
+                                    navigator.bMapNavigation(mapInfoDatas);
+                                } else if (type == 'aMap') {
+                                    var mapInfoDatas = {
+                                        start: { // 起点信息.
+                                            lon: startLon, // 经度.
+                                            lat: startLat, // 纬度.
+                                            name: startName
+                                        },
+                                        end: { // 终点信息.
+                                            lon: wgs84togcj02[0], // 经度
+                                            lat: wgs84togcj02[1], // 纬度
+                                            name: endName
+                                        },
+                                        mode: 'driving'
+                                    };
+                                    navigator.aMapPath(mapInfoDatas);
+                                } else if (type == 'appleMap') {
+                                    var mapInfoDatas = {
+                                        start: { // 起点信息.
+                                            lon: startLon, // 经度.
+                                            lat: startLat, // 纬度.
+                                            name: startName
+                                        },
+                                        end: { // 终点信息.
+                                            lon: wgs84togcj02[0], // 经度
+                                            lat: wgs84togcj02[1], // 纬度
+                                            name: endName
+                                        },
+                                        mode: 'driving'
+                                    };
+                                    navigator.appleNavigation(mapInfoDatas);
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
+
+</script>
+
+</html>

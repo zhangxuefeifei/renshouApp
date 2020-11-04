@@ -1,0 +1,535 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>新增或修改角色页面</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/aui1.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/city/demo.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/city/ydui.css" />
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #FFF;
+        }
+
+        .overHidden {
+            overflow: hidden;
+        }
+
+        .aui-bar-nav {
+            top: 0;
+            z-index: 3;
+            background-color: #fff;
+            color: #333333;
+            font-size: var(--fontsize9);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+        }
+
+        .aui-bar-nav .aui-btn .aui-iconfont {
+            color: #333333;
+            font-weight: 900;
+        }
+
+        .flex-con {
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .aui-list {
+            background-image: none;
+        }
+
+        .aui-list .aui-list-item-title {
+            font-size: var(--fontsize85);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #333333;
+        }
+
+        .aui-list .aui-list-item-text:first-child,
+        .aui-list .aui-list-item-text:last-child {
+            margin-bottom: 0;
+        }
+
+        .aui-list .aui-list-item-text {
+            font-size: var(--fontsize7);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+            margin-bottom: 0.65rem;
+        }
+
+        .aui-media-list .aui-list-item-inner {
+            padding: 0.75rem 0.75rem 0.75rem 0;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .Title {
+            width: var(--width42);
+            display: inline-flex;
+            justify-content: flex-end;
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #333333;
+        }
+
+        .Text {
+            width: calc(100% - var(--width42) - 0.2rem);
+            display: inline-flex;
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+            height: auto;
+        }
+
+        .contactLi {
+            padding-bottom: 0.75rem !important;
+            padding-left: 0.6rem !important;
+        }
+
+        .contactLi .aui-media-list .aui-list-item-inner {
+            padding-right: 0.6rem !important;
+        }
+
+        .contactCard {
+            width: calc(100% - 0.6rem);
+            height: auto;
+            background-color: #ffffff;
+            box-shadow: 0rem 0.2rem 0.68rem 0rem rgba(0, 0, 0, 0.2);
+            border: 1px solid #fff;
+            border-radius: 0.25rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .contactCard:last-child {
+            margin-bottom: 0
+        }
+
+        .aui-card-list {
+            height: 100%;
+            margin-bottom: 0;
+        }
+
+        .aui-card-list-content {
+            height: 100%;
+            padding: 1.2rem 0.8rem;
+        }
+
+        .cardRow {
+            height: auto;
+            display: -webkit-box;
+            margin-bottom: 1.2rem;
+            font-size: var(--fontsize65);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #999999;
+        }
+
+        .cardRow:last-child {
+            margin-bottom: 0;
+        }
+
+        .aui-col-xs-6,
+        .aui-col-xs-12 {
+            display: flex;
+        }
+
+        .rowTitle {
+            width: var(--width2);
+            display: inline-flex;
+            justify-content: flex-end;
+            color: #333333;
+        }
+
+        .rowText {
+            width: calc(100% - var(--width2) - 0.7rem);
+        }
+
+        .rowTitle-12 {
+            width: var(--width34);
+            display: inline-flex;
+            justify-content: flex-end;
+            color: #333333;
+        }
+
+        .rowText-12 {
+            width: calc(100% - var(--width42) -0.2rem);
+            display: inline-flex;
+        }
+
+        input {
+            height: inherit !important;
+            line-height: inherit !important;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+            color: #666666 !important;
+        }
+
+        .redDot {
+            color: #ff605f;
+        }
+
+        .dot {
+            color: transparent;
+        }
+
+        .aui-iconfont.aui-icon-right {
+            position: absolute;
+            right: 0.75rem;
+            font-size: var(--fontsize9);
+            color: #999999;
+            font-weight: 900;
+            pointer-events: none;
+        }
+
+        .aui-iconfont.aui-icon-close {
+            position: absolute;
+            right: 0.75rem;
+            font-size: var(--fontsize9);
+            color: #999999;
+            font-weight: 900;
+        }
+
+        .selectAreaText {
+            width: calc(100% - 0.9rem) !important;
+        }
+
+        .aui-list textarea {
+            margin: 0;
+            height: auto;
+            color: #666666;
+            font-size: var(--fontsize8) !important;
+            font-weight: normal;
+            letter-spacing: 0rem;
+            line-height: inherit;
+        }
+
+        input::-webkit-input-placeholder,
+        textarea::-webkit-input-placeholder {
+            color: #999999;
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+        }
+
+        #footer {
+            background-color: #f0f0f0;
+            padding: 0.63rem 1.88rem;
+        }
+
+        .sureOrgBtn {
+            background: #4f79e8;
+            color: #fff;
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0.08rem;
+            height: 2.2rem;
+            line-height: inherit;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5rem;
+        }
+
+        .TextActive {
+            color: #666666;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrap" class="flex-wrap flex-vertical">
+        <header class="aui-bar aui-bar-nav aui-border-b" id="header">
+            <div class="aui-pull-left aui-btn" tapmode data-action="back">
+                <span class="aui-iconfont aui-icon-left"></span>
+            </div>
+            <div class="aui-title">新增角色</div>
+        </header>
+
+        <div class="flex-con">
+            <div class="aui-content">
+                <ul class="aui-list aui-media-list">
+
+                    <li class="aui-list-item aui-list-item-middle">
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-inner">
+                                <span class="redDot">*</span>
+                                <span class="Title">组织机构：</span>
+                                <span class="Text" id="org" tapmode data-action="selectParent">请选择上级</span>
+                                <span class="aui-iconfont aui-icon-right" tapmode data-action="selectParent"></span>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="aui-list-item aui-list-item-middle">
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-inner">
+                                <span class="redDot">*</span>
+                                <span class="Title">角色名称：</span>
+                                <span class="Text"><textarea type="text" class="selectAreaText" id="roleName" rows="1" placeholder="请输入名称"></textarea></span>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="aui-list-item aui-list-item-middle">
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-inner">
+                                <span class="dot">*</span>
+                                <span class="Title">备注：</span>
+                                <span class="Text"><textarea type="text" rows="1" class="selectAreaText" id="remark" placeholder="请输入备注"></textarea></span>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="aui-list-item aui-list-item-middle">
+                        <div class="aui-media-list-item-inner">
+                            <div class="aui-list-item-inner">
+                                <span class="redDot">*</span>
+                                <span class="Title">排序：</span>
+                                <span class="Text"><input type="tel" oninput = "value=value.replace(/[^\d]/g,'')" pattern="[0-9]*" maxlength="10" value="0" id="sort" placeholder="请输入排序"></span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div id="footer">
+            <div class="aui-btn sureOrgBtn" tapmode data-action="nextStep">
+                下一步
+            </div>
+        </div>
+
+    </div>
+
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/diy/public.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/diy/template.js"></script>
+<script type="text/template" id="">
+</script>
+<script type="text/javascript">
+    var text1 = document.getElementById("remark");
+    var text2 = document.getElementById("roleName");
+    autoTextarea(text1);
+    autoTextarea(text2);
+    var orgId = 0;
+    var menuIds = [];
+    var hasReturned = false;
+    apiready = function() {
+        api.addEventListener({
+            name: 'changedFontSize'
+        }, function(ret, err) {
+            if (ret) {
+                changeFontSize();
+            }
+        });
+        api.parseTapmode();
+        var header = $api.byId('header');
+        // 实现沉浸式状态栏效果
+        $api.fixStatusBar(header);
+        fnReady();
+        type = api.pageParam.type;
+        if (type == 'update') {
+            getOrgs();
+            roleId = api.pageParam.roleId;
+            getRoleById();
+            $('#header .aui-title').html('修改角色');
+        }
+
+        Top = null;
+
+        api.addEventListener({
+            name: 'lockScroll'
+        }, function(ret, err) {
+            if (ret) {
+                Top = $(window).scrollTop();
+                $('body').css("top", -Top + "px"); //给body一个负的top值；
+                $('body').addClass('overHidden'); //使网页不可滚动
+            }
+        });
+
+        api.addEventListener({
+            name: 'unlockSrcoll'
+        }, function(ret, err) {
+            if (ret) {
+                $(window).scrollTop(Top);
+                $('body').removeAttr("style"); //去掉内联样式
+                $('body').removeClass('overHidden'); //使网页恢复可滚动
+            }
+        });
+
+        api.addEventListener({
+            name: 'returnToAdd' //返回新增修改页面时，保存已选的角色权限
+        }, function(ret, err) {
+            if (ret) {
+                menuIds = ret.value.menuIds;
+                hasReturned = true
+            }
+        });
+
+        api.addEventListener({
+            name: 'setRoleAddOrUpdateOrg' //选择组织机构确认后赋值
+        }, function(ret, err) {
+            if (ret) {
+                orgId = ret.value.selectedOrg.id;
+                $('#org').html(ret.value.selectedOrg.orgName);
+                $('#org').addClass('TextActive');
+            }
+        });
+    };
+
+    var actionList = {
+        'back': function() {
+            api.closeWin();
+        },
+        'selectParent': function() {
+            // console.log(JSON.stringify(selectedOrg));
+            api.openWin({
+                name: 'orgSelect',
+                url: '../org/orgSelect.html',
+                pageParam: {
+                    from: 'roleAddOrUpdate',
+                    orgId: orgId,
+                }
+            });
+        },
+        'nextStep': function() {
+            if (orgId == 0) {
+                api.toast({
+                    msg: '请先选择组织机构！',
+                    duration: 2000,
+                    location: 'top'
+                });
+                return
+            }
+            if ($('#roleName').val() == '') {
+                api.toast({
+                    msg: '请先输入角色名称！',
+                    duration: 2000,
+                    location: 'top'
+                });
+                return
+            }
+            if ($('#sort').val() == '') {
+                api.toast({
+                    msg: '请先输入排序！',
+                    duration: 2000,
+                    location: 'top'
+                });
+                return
+            }
+            var roleData = {
+                orgId: orgId,
+                roleName: $('#roleName').val(),
+                sort: $('#sort').val(),
+                remark: $('#remark').val(),
+                menuIds: []
+            }
+            if (type == 'update') {
+                roleData['id'] = roleId;
+            }
+            api.openWin({
+                name: 'rolePermission',
+                url: './rolePermission.html',
+                pageParam: {
+                    roleData: roleData,
+                    type: type,
+                    from: 'roleAddOrUpdate',
+                    menuIds: menuIds,
+                    hasReturned: hasReturned
+                }
+            });
+        }
+    }
+
+    var allOrgs = [];
+
+    //递归整理成带父级的组织机构
+    function getOrgWithParent(data, tempData) {
+        for (var index = 0; index < data.length; index++) {
+            var item = data[index];
+            if (item.parentOrgId != 0) {
+                tempData['o' + item.parentOrgId] = item.parentOrgId;
+            }
+            var org = {
+                orgId: item.orgId,
+                orgName: item.orgName,
+                nature: item.nature,
+                child: item.child,
+                childCount: item.childCount,
+                selectedCount: item.selectedCount,
+                parentOrgId: item.parentOrgId
+            };
+            $.extend(org, tempData);
+            allOrgs.push(org);
+            if (item.child && item.child.length > 0) {
+                getOrgWithParent(item.child, tempData);
+            } else {
+                delete tempData['o' + item.parentOrgId];
+            };
+        }
+    }
+
+    //获取组织机构用以显示机构名字
+    function getOrgs() {
+        var url = 'services/app/AppOrgagency/GetCurrentUserFormatOrgagency';
+        fnGet(url, {}, false, function(ret, err) {
+            if (ret) {
+                if (ret.success) {
+                    var orgData = ret.result;
+                    getOrgWithParent(orgData, {});
+                }
+            }
+        })
+    }
+
+    //修改时根据角色id显示默认信息
+    function getRoleById() {
+        fnGet('services/app/Role/GetRoleById?roleId=' + roleId + '', {}, false, function(ret, err) {
+            if (ret) {
+                if (ret.success) {
+                    var data = ret.result;
+                    for (var i = 0; i < allOrgs.length; i++) {
+                        if (allOrgs[i].orgId == data.orgId) {
+                            $('#org').html(allOrgs[i].orgName);
+                            $('#org').addClass('TextActive');
+                        }
+                    }
+                    orgId = data.orgId;
+                    $('#roleName').val(data.roleName);
+                    $('#remark').val(data.remark);
+                    $('#sort').val(data.sort);
+                    autoTextarea(text1);
+                    autoTextarea(text2);
+                }
+            }
+        })
+    }
+</script>
+
+</html>

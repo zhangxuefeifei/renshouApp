@@ -1,0 +1,312 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>设备点详情页面</title>
+    <link rel="stylesheet" type="text/css" href="../../../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../../../css/aui1.css" />
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: #f5f5f5;
+        }
+
+        .flex-con {
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .aui-bar-nav {
+            top: 0;
+            z-index: 1;
+            background-color: #fff;
+            color: #333333;
+            font-size: var(--fontsize9);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0rem;
+        }
+
+        .aui-bar-nav .aui-btn .aui-iconfont {
+            color: #999;
+            font-weight: 900;
+        }
+
+        .footer {
+            background-color: transparent;
+            padding: 0.63rem 1.88rem;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .footer .aui-btn {
+            font-size: var(--fontsize8);
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0.08rem;
+            height: 2.2rem;
+            line-height: inherit;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 5rem;
+            width: 35vw;
+        }
+
+        .sureBtn {
+            background: #4f79e8;
+            color: #fff;
+        }
+
+        .daohangBtn {
+            background: transparent;
+            color: #4f79e8;
+            border: solid 1px #4f79e8;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="wrap" class="flex-wrap flex-vertical">
+        <header class="aui-bar aui-bar-nav aui-border-b" id="header">
+            <div class="aui-pull-left aui-btn" tapmode data-action="back">
+                <span class="aui-iconfont aui-icon-left"></span>
+            </div>
+            <div class="aui-title">设备点详情</div>
+        </header>
+        <div class="flex-con" id="main">
+
+        </div>
+        <div class="footer" id="footer">
+            <div class="aui-btn daohangBtn" tapmode data-action="navigation">
+                导航
+            </div>
+            <div class="aui-btn sureBtn" tapmode data-action="sure">
+                提交
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../../script/api.js"></script>
+<script type="text/javascript" src="../../../script/common.js"></script>
+<script type="text/javascript" src="../../../script/diy/public.js"></script>
+<script type="text/javascript" src="../../../script/remote.js"></script>
+<script type="text/javascript" src="../../../script/zepto.js"></script>
+<script type="text/javascript" src="../../../script/diy/template.js"></script>
+<script type="text/template" id="taskTpl">
+</script>
+<script type="text/javascript">
+    var lon = "";
+    var lat = "";
+    apiready = function() {
+        api.addEventListener({
+            name: 'changedFontSize'
+        }, function(ret, err) {
+            if (ret) {
+                changeFontSize();
+            }
+        });
+        if (api.systemType != 'ios') {
+            $('.cardHeader').addClass('androidText');
+        }
+        api.parseTapmode();
+        var header = $api.byId('header');
+        // 实现沉浸式状态栏效果
+        $api.fixStatusBar(header);
+        headerH = $api.offset(header).h;
+        fnReady();
+        deviceId = api.pageParam.id;
+        api.openFrame({
+            name: 'editEquipment_frm',
+            url: './editEquipment_frm.html',
+            rect: {
+                x: 0,
+                y: headerH,
+                w: api.winWidth,
+                h: 'auto',
+                marginLeft: 0,
+                marginTop: 0,
+                marginBottom: $api.dom('#footer').offsetHeight,
+                marginRight: 0
+            },
+            pageParam: {
+                id: deviceId
+            },
+            bounces: false,
+            bgColor: 'rgba(0,0,0,0)',
+        });
+        api.addEventListener({
+            name: 'keyback'
+        }, function(ret, err) {
+            if ($api.getStorage('isPhotoView')) {
+                api.sendEvent({
+                    name: 'closePhotoBrowser',
+                });
+            } else {
+                api.closeWin({});
+            }
+        });
+        api.addEventListener({
+            name: 'reciveLocation'
+        }, function(ret, err) {
+            if (ret) {
+                lon = ret.value.lon;
+                lat = ret.value.lat
+            }
+        });
+
+        api.addEventListener({
+            name: 'receiveEqpPicture'
+        }, function(ret, err) {
+            if (ret) {
+                var picturePath = ret.value.picturePath;
+                if (ret.value.deviceStatus == 0) {
+                    api.toast({
+                        msg: '请先选择设备点状态！',
+                        duration: 2000,
+                        location: 'bottom'
+                    });
+                    return
+                }
+                var submitData = {
+                    "deviceStatus": ret.value.deviceStatus,
+                    "errorType": ret.value.errorType,
+                    "eventType": ret.value.eventType,
+                    "predictWaterLoss": ret.value.predictWaterLoss,
+                    "deviceLongitude": ret.value.deviceLongitude,
+                    "deviceLatitude": ret.value.deviceLatitude,
+                    "deviceRemark": ret.value.deviceRemark,
+                    "fileInfoDtos": [],
+                    "id": ret.value.id
+                }
+                var files = {};
+                for (var i = 0; i < picturePath.length; i++) {
+                    files['fileName' + i + ''] = picturePath[i];
+                }
+                if (picturePath.length != 0) {
+                    fnPost('UploadFiles/UploadProfilePicture', {
+                        files: files
+                    }, '', true, false, function(ret, err) {
+                        if (ret && ret.success) {
+                            for (var i = 0; i < ret.result.items.length; i++) {
+                                submitData.fileInfoDtos.push(ret.result.items[i]);
+                            }
+                            fnPost('services/GISInspection/Task/SubmitInspection', {
+                                body: JSON.stringify(submitData)
+                            }, 'application/json', true, false, function(ret, err) {
+                                if (ret && ret.success) {
+                                    api.toast({
+                                        msg: '提交成功！',
+                                        duration: 2000,
+                                        location: 'top'
+                                    });
+                                    api.sendEvent({
+                                        name: 'refreshTaskDetails',
+                                    });
+
+                                    setTimeout(function() {
+                                        api.closeWin({});
+                                    }, 300);
+                                }
+                            })
+                        }
+                    })
+                } else {
+                    fnPost('services/GISInspection/Task/SubmitInspection', {
+                        body: JSON.stringify(submitData)
+                    }, 'application/json', true, false, function(ret, err) {
+                        if (ret && ret.success) {
+                            api.toast({
+                                msg: '提交成功！',
+                                duration: 2000,
+                                location: 'top'
+                            });
+                            api.sendEvent({
+                                name: 'refreshTaskDetails',
+                            });
+
+                            setTimeout(function() {
+                                api.closeWin({});
+                            }, 300);
+                        }
+                    })
+                }
+            }
+        });
+        api.addEventListener({
+            name: 'chooseError'
+        }, function(ret, err) {
+            if (ret) {
+                $('.sureBtn').html('提交并上报')
+            }
+        });
+        api.addEventListener({
+            name: 'cancelError'
+        }, function(ret, err) {
+            if (ret) {
+                $('.sureBtn').html('提交')
+            }
+        });
+    };
+
+    var actionList = {
+        'back': function() {
+            api.closeWin();
+        },
+        'sure': function() {
+            api.sendEvent({
+                name: 'clickedEqpSureBtn',
+                extra: {}
+            });
+        },
+        'navigation': function() {
+            if (lon != "" && lat != "") {
+                api.actionSheet({
+                    title: '请选择路线',
+                    cancelTitle: '取消',
+                    buttons: ['开车', '公交', '步行', '骑行']
+                }, function(ret, err) {
+                    var index = ret.buttonIndex;
+                    var type = '';
+                    if (index == 1) {
+                        type = 'drive';
+                    } else if (index == 2) {
+                        type = 'transit';
+                    } else if (index == 3) {
+                        type = 'walk';
+                    } else if (index == 4) {
+                        type = 'riding';
+                    } else {
+                        type = '';
+                    }
+                    if (type != '') {
+                        api.openWin({
+                            name: 'navigation',
+                            url: './navigation.html',
+                            pageParam: {
+                                type: type,
+                                lon: lon,
+                                lat: lat
+                            }
+                        });
+                    }
+                });
+            } else {
+                api.toast({
+                    msg: '设备坐标不存在或格式有误！',
+                    duration: 2000,
+                    location: 'top'
+                });
+                return
+            }
+        }
+    }
+</script>
+
+</html>

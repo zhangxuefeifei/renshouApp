@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0, minimum-scale=1.0, user-scalable=0, initial-scale=1.0, width=device-width" />
+    <meta name="format-detection" content="telephone=no, email=no, date=no, address=no">
+    <title>坐标定位</title>
+    <link rel="stylesheet" type="text/css" href="../../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../../css/aui.css" />
+
+    <style media="screen">
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            background-color: transparent;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .aui-card-list {
+            width: 17.25rem;
+            height: 14.3rem;
+            margin-top: 30vh;
+            background: rgba(255, 255, 255, 1);
+            border-radius: 0.6rem;
+            border: 0.05rem solid rgba(250, 250, 250, 1);
+        }
+
+        .aui-card-list-header {
+            height: 2.55rem;
+            line-height: 2.55rem;
+            background-position-x: 0.75rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: -0.02rem;
+            color: #333333;
+        }
+
+        .aui-border-b {
+            background-size: 90% 1px;
+            background-repeat: no-repeat;
+            background-position: 0.75rem bottom;
+            background-image: linear-gradient(0, #eee, #eee 50%, transparent 50%);
+            background-image: -webkit-linear-gradient(90deg, #eee, #eee 50%, transparent 50%);
+        }
+
+        .aui-list.aui-list-in .aui-list-item {
+            background-image: none;
+        }
+
+        .aui-btn {
+            width: 40vw;
+            height: 2rem;
+            background-color: #CCCCCC;
+            border-radius: 1rem;
+            color: #333333;
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.02rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .sureBtn {
+            background-color: #7164F9;
+            color: #fff;
+        }
+
+        .body_content .aui-list-item:first-child {
+            margin-top: 1.7rem;
+            margin-bottom: 1rem;
+        }
+
+        input[type="number"] {
+            width: 15.75rem;
+            height: 2rem;
+            background: rgba(238, 238, 238, 1);
+            border-radius: 0.6rem;
+            line-height: 2rem;
+            padding-left: 0.5rem;
+        }
+
+         ::-webkit-input-placeholder {
+            color: #999;
+            font-size: 0.6rem;
+        }
+
+        .aui-list {
+            background-position: none;
+            background-image: none;
+        }
+
+        .title_center {
+            color: #333;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .aui-row {
+            width: 100%;
+        }
+        .aui-list .aui-list-item:active {
+          background: transparent;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="aui-card-list">
+        <div class="aui-card-list-header aui-border-b">
+            <span class="title_center"> 请输入定位坐标</span>
+            <span class="aui-pull-right" tapmode data-action="closeWin()"></span>
+        </div>
+        <div class="body_content">
+            <ul class="aui-list aui-list-in">
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-row">
+                            <div class="aui-col-xs-12"> <input type="number" id='lon' placeholder="请输入经度"></div>
+                        </div>
+
+                    </div>
+                </li>
+                <li class="aui-list-item">
+                    <div class="aui-list-item-inner">
+                        <div class="aui-row">
+                            <div class="aui-col-xs-12"> <input type="number" id='lat' placeholder="请输入纬度"></div>
+                        </div>
+
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="aui-card-list-footer aui-margin-t-10">
+            <div class="aui-btn sureBtn" tapmode onclick="closeFrme('sure')">
+                确定
+            </div>
+            <div class="aui-btn" tapmode onclick="closeFrme('cancel')">
+                取消
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../../script/api.js"></script>
+<script type="text/javascript" src="../../script/common.js"></script>
+<script type="text/javascript" src="../../script/remote.js"></script>
+<script type="text/javascript" src="../../script/zepto.js"></script>
+<script type="text/javascript" src="./script/common.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+        api.parseTapmode();
+    }
+
+    function closeFrme(type) {
+        if (type == 'sure') {
+            var lon = $('#lon').val();
+            var lat = $('#lat').val();
+            if (lon == '') {
+                api.toast({
+                    msg: '经度不能为空',
+                    duration: 2000,
+                    location: 'top'
+                });
+                return false;
+            }
+            if (lat == '') {
+                api.toast({
+                    msg: '纬度不能为空',
+                    duration: 2000,
+                    location: 'top'
+                });
+                return false;
+            }
+            if (lon != '' && lat != '') {
+                if(api.pageParam.type == 'location'){
+                  // 输入位置定位
+                  var data = {
+                      lon: lon,
+                      lat: lat
+                  }
+                  api.sendEvent({
+                      name: 'coordinateLaction',
+                      extra: {
+                          data: data,
+                      }
+                  });
+                  api.closeFrame();
+                } else {
+                  createNumber('Point',function(number){
+                    api.openWin({
+                        name: 'newAddPoint',
+                        url: 'pointOrpipemanage/newAddPoint.html',
+                        pageParam: {
+                            lon: lon,
+                            lat: lat,
+                            number:number
+                        }
+                    });
+                       api.closeFrame();
+                  })
+                }
+            }
+        } else {
+            api.closeFrame();
+        }
+    }
+</script>
+
+</html>
